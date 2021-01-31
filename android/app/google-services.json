@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "881348702093",
+    "project_id": "ataa-770e0",
+    "storage_bucket": "ataa-770e0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:881348702093:android:a20618dcaf0b53d27097c4",
+        "android_client_info": {
+          "package_name": "com.example.Ataa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "881348702093-hd6cv1lda9gla0sjcanrclsrrll5g5c3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.Ataa",
+            "certificate_hash": "f20b11cd50a33806c2a2d53afacdd57658e27354"
+          }
+        },
+        {
+          "client_id": "881348702093-kvbvgarfd3pv1fe08aj5bgfb1983il0q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqxc53i_A1Dn8ntROwX4chV4f62EVa9Bc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "881348702093-kvbvgarfd3pv1fe08aj5bgfb1983il0q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
