@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(Login());
 }
 
@@ -8,9 +11,7 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: "Just a demo",
-        home: LoginPage());
+        debugShowCheckedModeBanner: false, title: "Log In", home: LoginPage());
   }
 }
 
@@ -28,34 +29,37 @@ class _LoginPageState extends State<LoginPage> {
         Container(
           child: Stack(
             children: [
-              Padding(
-                padding: EdgeInsets.only(top: 220, left: 110),
-                child: Text(
-                  'HELLO THERE!',
-                  style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
-                ),
-              ),
+              Image(
+                  alignment: Alignment.topCenter,
+                  image: AssetImage('assets/Images/Ataa-Logo.png')),
               Container(
-                padding: EdgeInsets.only(top: 400),
+                padding: EdgeInsets.only(top: 350),
                 // alignment: Alignment.center,
                 margin: EdgeInsets.all(10.0),
                 child: Card(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
                   elevation: 100.0,
-                  color: Colors.lightGreen,
+                  color: Color.fromRGBO(28, 102, 74, 1),
                   shadowColor: Colors.grey,
                   child: Column(children: [
                     TextField(
                       decoration: InputDecoration(
                         enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.lightGreen)),
+                            borderSide: BorderSide(
+                                color: Color.fromRGBO(244, 234, 146, 1))),
                         focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.lightGreen)),
-                        prefixIcon: Icon(Icons.person),
+                            borderSide: BorderSide(
+                                color: Color.fromRGBO(244, 234, 146, 1))),
+                        prefixIcon: Icon(
+                          Icons.person,
+                          color: Color.fromRGBO(244, 234, 146, 1),
+                        ),
                         labelText: "USERNAME",
                         labelStyle: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Color.fromRGBO(244, 234, 146, 1)),
                       ),
                       textAlign: TextAlign.start,
                     ),
@@ -68,10 +72,15 @@ class _LoginPageState extends State<LoginPage> {
                             borderSide: BorderSide(color: Colors.lightGreen)),
                         focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.lightGreen)),
-                        prefixIcon: Icon(Icons.vpn_key),
+                        prefixIcon: Icon(
+                          Icons.vpn_key,
+                          color: Color.fromRGBO(244, 234, 146, 1),
+                        ),
                         labelText: "PASSWORD",
                         labelStyle: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Color.fromRGBO(244, 234, 146, 1)),
                       ),
                       textAlign: TextAlign.start,
                     ),
@@ -84,7 +93,11 @@ class _LoginPageState extends State<LoginPage> {
                         child: Text("Forgot Password",
                             style: TextStyle(
                                 fontSize: 20.0,
-                                decoration: TextDecoration.underline)),
+                                decoration: TextDecoration.underline,
+                                color: Color.fromRGBO(244, 234, 146, 1))),
+                        onTap: () {
+                          print("I was pressed");
+                        },
                       ),
                     ),
                     Padding(
@@ -94,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               Container(
-                padding: EdgeInsets.only(top: 620.0),
+                padding: EdgeInsets.only(top: 590.0),
                 // alignment: Alignment.bottomCenter,
                 // height: 100.0,
                 margin: EdgeInsets.all(10.0),
@@ -102,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                   Material(
                     borderRadius: BorderRadius.circular(20.0),
                     shadowColor: Colors.grey,
-                    color: Colors.lightGreen,
+                    color: Colors.white70,
                     elevation: 100.0,
                     child: GestureDetector(
                       onTap: () {},
@@ -110,7 +123,10 @@ class _LoginPageState extends State<LoginPage> {
                         heightFactor: 3.0,
                         child: Text(
                           "LOGIN",
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromRGBO(28, 102, 74, 1)),
                         ),
                       ),
                     ),
@@ -119,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                   Material(
                     borderRadius: BorderRadius.circular(20.0),
                     shadowColor: Colors.grey,
-                    color: Colors.lightGreen,
+                    color: Color.fromRGBO(28, 102, 74, 1),
                     elevation: 100.0,
                     child: GestureDetector(
                       onTap: () {},
@@ -127,7 +143,10 @@ class _LoginPageState extends State<LoginPage> {
                         heightFactor: 3.0,
                         child: Text(
                           "Sign Up",
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromRGBO(244, 234, 146, 1)),
                         ),
                       ),
                     ),
