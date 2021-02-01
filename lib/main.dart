@@ -103,18 +103,18 @@ class _LoginPageState extends State<LoginPage> {
                   color: Color.fromRGBO(28, 102, 74, 1),
                   shadowColor: Colors.grey,
                   child: Column(children: [
-                    textField(emailController, false, "Email"),
+                    textField(emailController, false, "البريد الإكتروني"),
                     SizedBox(
                       height: 10.0,
                     ),
-                    textField(passwordController, true, "Password"),
+                    textField(passwordController, true, "كلمة المرور"),
                     SizedBox(
                       height: 5.0,
                     ),
                     Container(
                       padding: EdgeInsets.only(left: 200.0),
                       child: InkWell(
-                        child: Text("Forgot Password",
+                        child: Text("نسيت كلمة المرور",
                             style: TextStyle(
                                 fontSize: 20.0,
                                 decoration: TextDecoration.underline,
@@ -157,7 +157,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Center(
                         heightFactor: 3.0,
                         child: Text(
-                          "LOGIN",
+                          "تسجيل الدخول",
                           style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -177,7 +177,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Center(
                         heightFactor: 3.0,
                         child: Text(
-                          "Sign Up",
+                          "حساب جديد",
                           style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
