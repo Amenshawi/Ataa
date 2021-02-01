@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:Ataa/HomePage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+var signedIn = false;
 
 auth_subscribe() {
   FirebaseAuth.instance.authStateChanges().listen((User user) {
@@ -17,6 +20,8 @@ login(String email, String password) async {
     UserCredential userCredential = await FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: password);
     print("user is signed in");
+    signedIn = true;
+    // return true;
   } on FirebaseAuthException catch (e) {
     if (e.code == 'user-not-found') {
       print('No user found for that email.');
@@ -150,6 +155,14 @@ class _LoginPageState extends State<LoginPage> {
                     child: GestureDetector(
                       onTap: () {
                         login(emailController.text, passwordController.text);
+                        if (signedIn) {
+                          emailController.text = "";
+                          passwordController.text = "";
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => homePage()),
+                          );
+                        }
                       },
                       child: Center(
                         heightFactor: 3.0,
