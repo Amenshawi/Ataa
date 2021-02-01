@@ -15,12 +15,16 @@ auth_subscribe() {
   });
 }
 
-login(String email, String password) async {
+login(String email, String password, BuildContext context) async {
   try {
     UserCredential userCredential = await FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: password);
     print("user is signed in");
     signedIn = true;
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => homePage()),
+    );
     // return true;
   } on FirebaseAuthException catch (e) {
     if (e.code == 'user-not-found') {
@@ -154,15 +158,16 @@ class _LoginPageState extends State<LoginPage> {
                     elevation: 100.0,
                     child: GestureDetector(
                       onTap: () {
-                        login(emailController.text, passwordController.text);
-                        if (signedIn) {
-                          emailController.text = "";
-                          passwordController.text = "";
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => homePage()),
-                          );
-                        }
+                        login(emailController.text, passwordController.text,
+                            context);
+                        // if (signedIn) {
+                        //   emailController.text = "";
+                        //   passwordController.text = "";
+                        //   Navigator.pushReplacement(
+                        //     context,
+                        //     MaterialPageRoute(builder: (context) => homePage()),
+                        //   );
+                        // }
                       },
                       child: Center(
                         heightFactor: 3.0,
