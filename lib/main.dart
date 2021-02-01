@@ -1,9 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+auth_subscribe() {
+  FirebaseAuth.instance.authStateChanges().listen((User user) {
+    if (user == null) {
+      print('User is currently signed out!');
+    } else {
+      print('User is signed in!');
+    }
+  });
+}
+
+login(String email, String password) async {
+  try {
+    UserCredential userCredential = await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: password);
+    print("user is signed in");
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'user-not-found') {
+      print('No user found for that email.');
+    } else if (e.code == 'wrong-password') {
+      print('Wrong password provided for that user.');
+    }
+  }
+}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  FirebaseAuth auth = FirebaseAuth.instance;
   runApp(Login());
 }
 
@@ -23,6 +49,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
+    var emailController = TextEditingController();
+    var passwordController = TextEditingController();
     return Scaffold(
         body: Column(
       children: [
@@ -44,6 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                   shadowColor: Colors.grey,
                   child: Column(children: [
                     TextField(
+                      controller: emailController,
                       decoration: InputDecoration(
                         enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
@@ -55,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
                           Icons.person,
                           color: Color.fromRGBO(244, 234, 146, 1),
                         ),
-                        labelText: "USERNAME",
+                        labelText: "Email",
                         labelStyle: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
@@ -67,6 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                       height: 10.0,
                     ),
                     TextField(
+                      controller: passwordController,
                       decoration: InputDecoration(
                         enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.lightGreen)),
@@ -118,7 +148,9 @@ class _LoginPageState extends State<LoginPage> {
                     color: Colors.white70,
                     elevation: 100.0,
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        login(emailController.text, passwordController.text);
+                      },
                       child: Center(
                         heightFactor: 3.0,
                         child: Text(
