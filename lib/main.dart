@@ -35,6 +35,29 @@ login(String email, String password, BuildContext context) async {
   }
 }
 
+textField(c, bool password, String labelText) {
+  return TextField(
+    controller: c,
+    obscureText: password,
+    decoration: InputDecoration(
+      enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Color.fromRGBO(244, 234, 146, 1))),
+      focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Color.fromRGBO(244, 234, 146, 1))),
+      prefixIcon: Icon(
+        Icons.person,
+        color: Color.fromRGBO(244, 234, 146, 1),
+      ),
+      labelText: labelText,
+      labelStyle: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+          color: Color.fromRGBO(244, 234, 146, 1)),
+    ),
+    textAlign: TextAlign.start,
+  );
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -80,49 +103,11 @@ class _LoginPageState extends State<LoginPage> {
                   color: Color.fromRGBO(28, 102, 74, 1),
                   shadowColor: Colors.grey,
                   child: Column(children: [
-                    TextField(
-                      controller: emailController,
-                      decoration: InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Color.fromRGBO(244, 234, 146, 1))),
-                        focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Color.fromRGBO(244, 234, 146, 1))),
-                        prefixIcon: Icon(
-                          Icons.person,
-                          color: Color.fromRGBO(244, 234, 146, 1),
-                        ),
-                        labelText: "Email",
-                        labelStyle: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            color: Color.fromRGBO(244, 234, 146, 1)),
-                      ),
-                      textAlign: TextAlign.start,
-                    ),
+                    textField(emailController, false, "Email"),
                     SizedBox(
                       height: 10.0,
                     ),
-                    TextField(
-                      controller: passwordController,
-                      decoration: InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.lightGreen)),
-                        focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.lightGreen)),
-                        prefixIcon: Icon(
-                          Icons.vpn_key,
-                          color: Color.fromRGBO(244, 234, 146, 1),
-                        ),
-                        labelText: "PASSWORD",
-                        labelStyle: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            color: Color.fromRGBO(244, 234, 146, 1)),
-                      ),
-                      textAlign: TextAlign.start,
-                    ),
+                    textField(passwordController, true, "Password"),
                     SizedBox(
                       height: 5.0,
                     ),
