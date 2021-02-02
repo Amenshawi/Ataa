@@ -1,9 +1,11 @@
+import 'package:Ataa/ForgetPassword.dart';
 import 'package:flutter/material.dart';
 import 'package:Ataa/HomePage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 var signedIn = false;
+var visible = false;
 
 auth_subscribe() {
   FirebaseAuth.instance.authStateChanges().listen((User user) {
@@ -20,22 +22,40 @@ login(String email, String password, BuildContext context) async {
     UserCredential userCredential = await FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: password);
     print("user is signed in");
-    signedIn = true;
+    // signedIn = true;
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => homePage()),
+      MaterialPageRoute(builder: (context) => HomePage()),
     );
     // return true;
   } on FirebaseAuthException catch (e) {
     if (e.code == 'user-not-found') {
+      print("Email not found");
       print('No user found for that email.');
     } else if (e.code == 'wrong-password') {
-      print('Wrong password provided for that user.');
+      print("Wrong password or email");
+      visible = true;
+
+      //   showDialog(
+      //       context: context,
+      //       builder: (_) => new AlertDialog(
+      //             title: new Text("Material Dialog"),
+      //             content: new Text("Hey! I'm Coflutter!"),
+      //             actions: <Widget>[
+      //               FlatButton(
+      //                 child: Text('Close me!'),
+      //                 onPressed: () {
+      //                   Navigator.of(context).pop();
+      //                 },
+      //               )
+      //             ],
+      //           ));
+      // }
     }
   }
 }
 
-textField(c, bool password, String labelText) {
+textField(c, bool password, String labelText, IconData iconName) {
   return TextField(
     controller: c,
     obscureText: password,
@@ -45,7 +65,7 @@ textField(c, bool password, String labelText) {
       focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: Color.fromRGBO(244, 234, 146, 1))),
       prefixIcon: Icon(
-        Icons.person,
+        iconName,
         color: Color.fromRGBO(244, 234, 146, 1),
       ),
       labelText: labelText,
@@ -84,114 +104,146 @@ class _LoginPageState extends State<LoginPage> {
     var emailController = TextEditingController();
     var passwordController = TextEditingController();
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Column(
-      children: [
-        Container(
-          child: Stack(
-            children: [
-              Image(
-                  alignment: Alignment.topCenter,
-                  image: AssetImage('assets/Images/Ataa-Logo.png')),
-              Container(
-                padding: EdgeInsets.only(top: 350),
-                // alignment: Alignment.center,
-                margin: EdgeInsets.all(10.0),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  elevation: 100.0,
-                  color: Color.fromRGBO(28, 102, 74, 1),
-                  shadowColor: Colors.grey,
-                  child: Column(children: [
-                    textField(emailController, false, "البريد الإكتروني"),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    textField(passwordController, true, "كلمة المرور"),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(left: 200.0),
-                      child: InkWell(
-                        child: Text("نسيت كلمة المرور",
-                            style: TextStyle(
-                                fontSize: 20.0,
-                                decoration: TextDecoration.underline,
-                                color: Color.fromRGBO(244, 234, 146, 1))),
-                        onTap: () {
-                          print("I was pressed");
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(10),
-                    )
-                  ]),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 590.0),
-                // alignment: Alignment.bottomCenter,
-                // height: 100.0,
-                margin: EdgeInsets.all(10.0),
-                child: Column(children: [
-                  Material(
-                    borderRadius: BorderRadius.circular(20.0),
-                    shadowColor: Colors.grey,
-                    color: Colors.white70,
-                    elevation: 100.0,
-                    child: GestureDetector(
-                      onTap: () {
-                        login(emailController.text, passwordController.text,
-                            context);
-                        // if (signedIn) {
-                        //   emailController.text = "";
-                        //   passwordController.text = "";
-                        //   Navigator.pushReplacement(
-                        //     context,
-                        //     MaterialPageRoute(builder: (context) => homePage()),
-                        //   );
-                        // }
-                      },
-                      child: Center(
-                        heightFactor: 3.0,
-                        child: Text(
-                          "تسجيل الدخول",
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Color.fromRGBO(28, 102, 74, 1)),
+          children: [
+            Container(
+              child: Stack(
+                children: [
+                  Image(
+                      alignment: Alignment.topCenter,
+                      image: AssetImage('assets/Images/Ataa-Logo.png')),
+                  Container(
+                    padding: EdgeInsets.only(top: 300),
+                    // alignment: Alignment.center,
+                    margin: EdgeInsets.all(10.0),
+                    // child:
+                    child: Column(children: [
+                      Container(
+                          margin: EdgeInsets.only(bottom: 25),
+                          child: Visibility(
+                              visible: visible,
+                              child: Text(
+                                "Invalid Email or Password!",
+                                style: TextStyle(
+                                    fontSize: 20, color: Colors.redAccent),
+                              ))),
+                      Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        elevation: 100.0,
+                        color: Color.fromRGBO(28, 102, 74, 1),
+                        shadowColor: Colors.grey,
+                        child: Column(children: [
+                          textField(
+                              emailController, false, "Email", Icons.person),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          textField(passwordController, true, "Password",
+                              Icons.vpn_key),
+                          SizedBox(
+                            height: 5.0,
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(left: 200.0),
+                            child: InkWell(
+                              child: Text("Forget Password",
+                                  style: TextStyle(
+                                      fontSize: 20.0,
+                                      decoration: TextDecoration.underline,
+                                      color: Color.fromRGBO(244, 234, 146, 1))),
+                              onTap: () {
+                                print("I was pressed");
+                                _forgetPassword(context);
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                          )
+                        ]),
+                      )
+                    ]),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(top: 590.0),
+                    // alignment: Alignment.bottomCenter,
+                    // height: 100.0,
+                    margin: EdgeInsets.all(10.0),
+                    child: Column(children: [
+                      Material(
+                        borderRadius: BorderRadius.circular(20.0),
+                        shadowColor: Colors.grey,
+                        color: Colors.white70,
+                        elevation: 100.0,
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              login(emailController.text,
+                                  passwordController.text, context);
+                            });
+
+                            // if (signedIn) {
+                            //   emailController.text = "";
+                            //   passwordController.text = "";
+                            //   Navigator.pushReplacement(
+                            //     context,
+                            //     MaterialPageRoute(builder: (context) => homePage()),
+                            //   );
+                            // }
+                          },
+                          child: Center(
+                            heightFactor: 3.0,
+                            child: Text(
+                              "Log In",
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromRGBO(28, 102, 74, 1)),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  SizedBox(height: 10.0),
-                  Material(
-                    borderRadius: BorderRadius.circular(20.0),
-                    shadowColor: Colors.grey,
-                    color: Color.fromRGBO(28, 102, 74, 1),
-                    elevation: 100.0,
-                    child: GestureDetector(
-                      onTap: () {},
-                      child: Center(
-                        heightFactor: 3.0,
-                        child: Text(
-                          "حساب جديد",
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Color.fromRGBO(244, 234, 146, 1)),
+                      SizedBox(height: 10.0),
+                      Material(
+                        borderRadius: BorderRadius.circular(20.0),
+                        shadowColor: Colors.grey,
+                        color: Color.fromRGBO(28, 102, 74, 1),
+                        elevation: 100.0,
+                        child: GestureDetector(
+                          onTap: () {},
+                          child: Center(
+                            heightFactor: 3.0,
+                            child: Text(
+                              "Sign Up",
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromRGBO(244, 234, 146, 1)),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                    ]),
                   ),
-                ]),
+                ],
               ),
-            ],
-          ),
-        )
-      ],
-    ));
+            )
+          ],
+        ));
   }
+}
+
+void _forgetPassword(context) {
+  showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+      ),
+      elevation: 100,
+      isScrollControlled: true,
+      builder: (BuildContext bc) {
+        return ForgetPassword();
+      });
 }
