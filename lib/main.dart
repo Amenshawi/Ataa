@@ -1,3 +1,4 @@
+import 'package:Ataa/SignupWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:Ataa/HomePage.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -85,34 +86,34 @@ class _LoginPageState extends State<LoginPage> {
     var passwordController = TextEditingController();
     return Scaffold(
         body: Column(
-      children: [
-        Container(
-          child: Stack(
-            children: [
-              Image(
+          children: [
+            Container(
+             child: Stack(
+               children: [
+                Image(
                   alignment: Alignment.topCenter,
                   image: AssetImage('assets/Images/Ataa-Logo.png')),
-              Container(
-                padding: EdgeInsets.only(top: 350),
-                // alignment: Alignment.center,
-                margin: EdgeInsets.all(10.0),
-                child: Card(
-                  shape: RoundedRectangleBorder(
+                Container(
+                 padding: EdgeInsets.only(top: 350),
+                 // alignment: Alignment.center,
+                 margin: EdgeInsets.all(10.0),
+                  child: Card(
+                    shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
-                  elevation: 100.0,
-                  color: Color.fromRGBO(28, 102, 74, 1),
-                  shadowColor: Colors.grey,
-                  child: Column(children: [
-                    textField(emailController, false, "البريد الإكتروني"),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    textField(passwordController, true, "كلمة المرور"),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(left: 200.0),
+                    elevation: 100.0,
+                    color: Color.fromRGBO(28, 102, 74, 1),
+                    shadowColor: Colors.grey,
+                    child: Column(children: [
+                      textField(emailController, false, "البريد الإكتروني"),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      textField(passwordController, true, "كلمة المرور"),
+                      SizedBox(
+                        height: 5.0,
+                      ),
+                      Container(
+                       padding: EdgeInsets.only(left: 200.0),
                       child: InkWell(
                         child: Text("نسيت كلمة المرور",
                             style: TextStyle(
@@ -173,7 +174,9 @@ class _LoginPageState extends State<LoginPage> {
                     color: Color.fromRGBO(28, 102, 74, 1),
                     elevation: 100.0,
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: (){
+                        Navigator.push(context,MaterialPageRoute(builder: (context) => SignupWidget()));
+                      },
                       child: Center(
                         heightFactor: 3.0,
                         child: Text(
