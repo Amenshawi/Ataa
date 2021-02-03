@@ -11,11 +11,13 @@ var visible = false;
 var signedIn = false;
 
 class Login extends StatelessWidget {
+  static const PrimaryColor = const Color(0xFF1c664a);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // Start the app with the "/" named route. In this case, the app starts
-      // on the FirstScreen widget.
+      theme: ThemeData(
+        primaryColor: PrimaryColor,
+      ),
       initialRoute: '/',
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
