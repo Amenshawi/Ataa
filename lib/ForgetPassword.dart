@@ -1,4 +1,3 @@
-import 'package:Ataa/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +17,8 @@ class _ForgetPasswordState extends State<ForgetPassword> {
         height: MediaQuery.of(context).size.height * .2,
         margin: EdgeInsets.all(30),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
           children: [
             Padding(
               padding: EdgeInsets.all(10),
@@ -38,39 +39,40 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                       color: Color.fromRGBO(28, 102, 74, 1))),
             ),
             SizedBox(height: 25),
-            Container(
-                padding: EdgeInsets.all(5),
-                child: FlatButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  color: Color.fromRGBO(28, 102, 74, 1),
-                  height: 40,
-                  minWidth: 80,
-                  child: Icon(
-                    Icons.navigate_next,
-                    color: Color.fromRGBO(244, 234, 146, 1),
-                  ),
-                  onPressed: () {
-                    if (emailController.text == "") {
-                      _dialog(
-                          context,
-                          "Ops!",
-                          Color.fromRGBO(208, 161, 76, 1),
-                          "You also forgot your email. Please provide your email!, so we can help you :)",
-                          "Got It");
-                    } else {
-                      FirebaseAuth.instance
-                          .sendPasswordResetEmail(email: emailController.text);
-                      emailController.text = "";
-                      _dialog(
-                          context,
-                          "Confirmation",
-                          Color.fromRGBO(208, 161, 76, 1),
-                          "Yay! Great, Now please check your mailbox for a reset password email :)",
-                          "Got It");
-                    }
-                  },
-                )),
+            Expanded(
+                child: Container(
+                    padding: EdgeInsets.all(5),
+                    child: FlatButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      color: Color.fromRGBO(28, 102, 74, 1),
+                      height: 40,
+                      minWidth: 80,
+                      child: Icon(
+                        Icons.navigate_next,
+                        color: Color.fromRGBO(244, 234, 146, 1),
+                      ),
+                      onPressed: () {
+                        if (emailController.text == "") {
+                          _dialog(
+                              context,
+                              "Ops!",
+                              Color.fromRGBO(208, 161, 76, 1),
+                              "You also forgot your email. Please provide your email!, so we can help you :)",
+                              "Got It");
+                        } else {
+                          FirebaseAuth.instance.sendPasswordResetEmail(
+                              email: emailController.text);
+                          emailController.text = "";
+                          _dialog(
+                              context,
+                              "Confirmation",
+                              Color.fromRGBO(208, 161, 76, 1),
+                              "Yay! Great, Now please check your mailbox for a reset password email :)",
+                              "Got It");
+                        }
+                      },
+                    ))),
           ],
         ));
   }
