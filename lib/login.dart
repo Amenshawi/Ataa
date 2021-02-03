@@ -52,6 +52,7 @@ class _LoginPageState extends State<LoginPage> {
     var emailController = TextEditingController();
     var passwordController = TextEditingController();
     return Scaffold(
+      resizeToAvoidBottomInset: false,
         body: Column(
       children: [
         Container(
@@ -61,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
                   alignment: Alignment.topCenter,
                   image: AssetImage('assets/Images/Ataa-Logo.png')),
               Container(
-                padding: EdgeInsets.only(top: 350),
+                padding: EdgeInsets.only(top: 300),
                 // alignment: Alignment.center,
                 margin: EdgeInsets.all(10.0),
                 child: Card(
@@ -99,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               Container(
-                padding: EdgeInsets.only(top: 590.0),
+                padding: EdgeInsets.only(top: 550.0),
                 // alignment: Alignment.bottomCenter,
                 // height: 100.0,
                 margin: EdgeInsets.all(10.0),
@@ -167,7 +168,22 @@ class _LoginPageState extends State<LoginPage> {
 }
 
 textField(c, bool password, String labelText) {
+ Icon icon;
+  if(password){
+     icon= Icon(Icons.vpn_key,
+     color: Color.fromRGBO(244, 234, 146, 0.8),
+     );
+  }else{
+    icon = Icon(Icons.person,
+    color: Color.fromRGBO(244, 234, 146, 0.8),
+    );
+  }
   return TextField(
+    style: TextStyle(
+      color: Color.fromRGBO(251,247,239,1),
+      fontWeight: FontWeight.bold,
+      fontSize: 22,
+    ),
     controller: c,
     obscureText: password,
     decoration: InputDecoration(
@@ -175,15 +191,12 @@ textField(c, bool password, String labelText) {
           borderSide: BorderSide(color: Color.fromRGBO(244, 234, 146, 1))),
       focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: Color.fromRGBO(244, 234, 146, 1))),
-      prefixIcon: Icon(
-        Icons.person,
-        color: Color.fromRGBO(244, 234, 146, 1),
-      ),
+      prefixIcon: icon,
       labelText: labelText,
       labelStyle: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 20,
-          color: Color.fromRGBO(244, 234, 146, 1)),
+          color: Color.fromRGBO(244, 234, 146, 0.7)),
     ),
     textAlign: TextAlign.start,
   );
