@@ -4,7 +4,6 @@ import 'package:Ataa/HomePage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-var signedIn = false;
 var visible = false;
 
 auth_subscribe() {
@@ -18,41 +17,23 @@ auth_subscribe() {
 }
 
 login(String email, String password, BuildContext context) async {
-  try {
-    UserCredential userCredential = await FirebaseAuth.instance
-        .signInWithEmailAndPassword(email: email, password: password);
-    print("user is signed in");
-    // signedIn = true;
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => HomePage()),
-    );
-    // return true;
-  } on FirebaseAuthException catch (e) {
-    if (e.code == 'user-not-found') {
-      print("Email not found");
-      print('No user found for that email.');
-    } else if (e.code == 'wrong-password') {
-      print("Wrong password or email");
-      visible = true;
-
-      //   showDialog(
-      //       context: context,
-      //       builder: (_) => new AlertDialog(
-      //             title: new Text("Material Dialog"),
-      //             content: new Text("Hey! I'm Coflutter!"),
-      //             actions: <Widget>[
-      //               FlatButton(
-      //                 child: Text('Close me!'),
-      //                 onPressed: () {
-      //                   Navigator.of(context).pop();
-      //                 },
-      //               )
-      //             ],
-      //           ));
-      // }
-    }
-  }
+  // try {
+  //   UserCredential userCredential = await FirebaseAuth.instance
+  //       .signInWithEmailAndPassword(email: email, password: password);
+  //   print("user is signed in");
+  //   Navigator.pushReplacement(
+  //     context,
+  //     MaterialPageRoute(builder: (context) => HomePage()),
+  //   );
+  // } on FirebaseAuthException catch (e) {
+  //   if (e.code == 'user-not-found') {
+  //     print("Email not found");
+  //     print('No user found for that email.');
+  //   } else if (e.code == 'wrong-password') {
+  //     print("Wrong password or email");
+  //     visible = true;
+  //   }
+  // }
 }
 
 textField(c, bool password, String labelText, IconData iconName) {
@@ -99,6 +80,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     var emailController = TextEditingController();
@@ -154,7 +136,6 @@ class _LoginPageState extends State<LoginPage> {
                                       decoration: TextDecoration.underline,
                                       color: Color.fromRGBO(244, 234, 146, 1))),
                               onTap: () {
-                                print("I was pressed");
                                 _forgetPassword(context);
                               },
                             ),
@@ -172,39 +153,40 @@ class _LoginPageState extends State<LoginPage> {
                     // height: 100.0,
                     margin: EdgeInsets.all(10.0),
                     child: Column(children: [
-                      Material(
-                        borderRadius: BorderRadius.circular(20.0),
-                        shadowColor: Colors.grey,
-                        color: Colors.white70,
-                        elevation: 100.0,
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              login(emailController.text,
-                                  passwordController.text, context);
-                            });
-
-                            // if (signedIn) {
-                            //   emailController.text = "";
-                            //   passwordController.text = "";
-                            //   Navigator.pushReplacement(
-                            //     context,
-                            //     MaterialPageRoute(builder: (context) => homePage()),
-                            //   );
-                            // }
-                          },
-                          child: Center(
-                            heightFactor: 3.0,
-                            child: Text(
-                              "Log In",
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromRGBO(28, 102, 74, 1)),
+                      isLoading
+                          ? Container(
+                              child: CircularProgressIndicator(
+                                backgroundColor:
+                                    Color.fromRGBO(244, 234, 146, 1),
+                                valueColor: AlwaysStoppedAnimation(
+                                    Color.fromRGBO(28, 102, 74, 1)),
+                              ),
+                            )
+                          : Material(
+                              borderRadius: BorderRadius.circular(20.0),
+                              shadowColor: Colors.grey,
+                              color: Colors.white70,
+                              elevation: 100.0,
+                              child: GestureDetector(
+                                onTap: () async {
+                                  setState(() {
+                                    isLoading = true;
+                                    loginAction(emailController.text,
+                                        passwordController.text);
+                                  });
+                                },
+                                child: Center(
+                                  heightFactor: 3.0,
+                                  child: Text(
+                                    "Log In",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color.fromRGBO(28, 102, 74, 1)),
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
                       SizedBox(height: 10.0),
                       Material(
                         borderRadius: BorderRadius.circular(20.0),
@@ -232,6 +214,36 @@ class _LoginPageState extends State<LoginPage> {
             )
           ],
         ));
+  }
+
+  Future<bool> loginAction(String email, String password) async {
+    //replace the below line of code with your login request
+    await new Future.delayed(const Duration(seconds: 3));
+    try {
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+      print("user is signed in");
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print("Email not found");
+        print('No user found for that email.');
+        setState(() {
+          isLoading = false;
+          visible = true;
+        });
+      } else if (e.code == 'wrong-password') {
+        print("Wrong password or email");
+        setState(() {
+          isLoading = false;
+          visible = true;
+        });
+      }
+    }
+    return true;
   }
 }
 

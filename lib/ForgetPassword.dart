@@ -1,4 +1,5 @@
 import 'package:Ataa/main.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ForgetPassword extends StatefulWidget {
@@ -7,15 +8,14 @@ class ForgetPassword extends StatefulWidget {
 }
 
 class _ForgetPasswordState extends State<ForgetPassword> {
-  String textFieldLabel_One = "Enter Your Email";
-  String textFieldLabel_Two = "Re-enter Password:";
+  var emailController = TextEditingController();
 
   bool isVisible = false;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: MediaQuery.of(context).size.height * .5,
+        height: MediaQuery.of(context).size.height * .2,
         margin: EdgeInsets.all(30),
         child: Column(
           children: [
@@ -23,6 +23,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
               padding: EdgeInsets.all(10),
             ),
             TextField(
+              controller: emailController,
               decoration: InputDecoration(
                   enabledBorder: UnderlineInputBorder(
                       borderSide:
@@ -30,62 +31,90 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                   focusedBorder: UnderlineInputBorder(
                       borderSide:
                           BorderSide(color: Color.fromRGBO(28, 102, 74, 1))),
-                  labelText: textFieldLabel_One,
+                  labelText: 'Enter Your Email',
                   labelStyle: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
                       color: Color.fromRGBO(28, 102, 74, 1))),
             ),
-            Visibility(
-              visible: isVisible,
-              child: Padding(
-                  padding: EdgeInsets.only(top: 25),
-                  child: TextField(
-                    decoration: InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Color.fromRGBO(28, 102, 74, 1))),
-                        focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Color.fromRGBO(28, 102, 74, 1))),
-                        labelText: textFieldLabel_Two,
-                        labelStyle: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                            color: Color.fromRGBO(28, 102, 74, 1))),
-                  )),
-            ),
-            SizedBox(height: 80),
-            Material(
-              borderRadius: BorderRadius.circular(20.0),
-              shadowColor: Colors.grey,
-              color: Color.fromRGBO(28, 102, 74, 1),
-              elevation: 100.0,
-              child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      if (textFieldLabel_One == "Enter Your Email") {
-                        textFieldLabel_One = "Enter The send code";
-                      } else if (textFieldLabel_One == "Enter The send code") {
-                        isVisible = true;
-                        textFieldLabel_One = "New Password: ";
-                      } else {
-                        print("i was pressed three times dude!");
-                      }
-                    });
+            SizedBox(height: 25),
+            Container(
+                padding: EdgeInsets.all(5),
+                child: FlatButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  color: Color.fromRGBO(28, 102, 74, 1),
+                  height: 40,
+                  minWidth: 80,
+                  child: Icon(
+                    Icons.navigate_next,
+                    color: Color.fromRGBO(244, 234, 146, 1),
+                  ),
+                  onPressed: () {
+                    if (emailController.text == "") {
+                      _dialog(
+                          context,
+                          "Ops!",
+                          Color.fromRGBO(208, 161, 76, 1),
+                          "You also forgot your email. Please provide your email!, so we can help you :)",
+                          "Got It");
+                    } else {
+                      FirebaseAuth.instance
+                          .sendPasswordResetEmail(email: emailController.text);
+                      emailController.text = "";
+                      _dialog(
+                          context,
+                          "Confirmation",
+                          Color.fromRGBO(208, 161, 76, 1),
+                          "Yay! Great, Now please check your mailbox for a reset password email :)",
+                          "Got It");
+                    }
                   },
-                  // onDoubleTap: () {
-                  //   setState(() {});
-                  // },
-                  child: Center(
-                    heightFactor: 2.0,
-                    child: Icon(
-                      Icons.navigate_next,
-                      color: Color.fromRGBO(244, 234, 146, 1),
-                    ),
-                  )),
-            )
+                )),
           ],
         ));
   }
+}
+
+void _dialog(context, String title, Color titleColor, String message,
+    String buttonLabel) {
+  Dialog errorDialog = Dialog(
+    shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0)), //this right here
+    child: Container(
+      height: 250.0,
+      width: 300.0,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Text(
+              title,
+              style: TextStyle(color: titleColor, fontSize: 30.0),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Text(
+              message,
+              style: TextStyle(
+                  color: Color.fromRGBO(28, 102, 74, 1), fontSize: 20),
+            ),
+          ),
+          Padding(padding: EdgeInsets.only(top: 25.0)),
+          FlatButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                buttonLabel,
+                style: TextStyle(
+                    color: Color.fromRGBO(28, 102, 74, 1), fontSize: 20),
+              ))
+        ],
+      ),
+    ),
+  );
+  showDialog(context: context, builder: (BuildContext bc) => errorDialog);
 }
