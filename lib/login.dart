@@ -1,4 +1,3 @@
-import 'package:Ataa/SignupWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:Ataa/HomePage.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -179,6 +178,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<bool> loginAction(String email, String password, _auth) async {
     try {
       dynamic result = await _auth.loginWithEmailAndPassword(email, password);
+      // make the user object here with the uid from the result
 
       print("user is signed in");
       Navigator.pushReplacement(

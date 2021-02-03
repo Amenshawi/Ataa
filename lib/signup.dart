@@ -26,6 +26,7 @@ class _SignupState extends State<SignupPage> {
   var passwordController = TextEditingController();
   var fnameController = TextEditingController();
   var lnameController = TextEditingController();
+  var bday = DateTime(0000);
   String error = '';
 
   // text field state
@@ -71,6 +72,7 @@ class _SignupState extends State<SignupPage> {
                     child: Column(
                       children: [
                         TextFormField(
+                          controller: fnameController,
                           style: TextStyle(
                             color: Color.fromRGBO(251, 247, 239, 1),
                             fontWeight: FontWeight.bold,
@@ -102,6 +104,7 @@ class _SignupState extends State<SignupPage> {
                         ),
                         SizedBox(height: 5.0),
                         TextFormField(
+                          controller: lnameController,
                           style: TextStyle(
                             color: Color.fromRGBO(251, 247, 239, 1),
                             fontWeight: FontWeight.bold,
@@ -143,6 +146,7 @@ class _SignupState extends State<SignupPage> {
                     child: Column(
                       children: [
                         TextFormField(
+                          controller: emailController,
                           style: TextStyle(
                             color: Color.fromRGBO(251, 247, 239, 1),
                             fontWeight: FontWeight.bold,
@@ -217,6 +221,7 @@ class _SignupState extends State<SignupPage> {
                     child: Column(
                       children: [
                         TextFormField(
+                          controller: passwordController,
                           obscureText: true,
                           style: TextStyle(
                             color: Color.fromRGBO(251, 247, 239, 1),
@@ -316,7 +321,7 @@ class _SignupState extends State<SignupPage> {
                               initialDateTime: DateTime.now(),
                               maximumDate: DateTime.now(),
                               onDateTimeChanged: (DateTime newDateTime) {
-                                // Do something
+                                bday = newDateTime;
                               },
                             ),
                             data: CupertinoThemeData(
@@ -360,9 +365,16 @@ class _SignupState extends State<SignupPage> {
                     elevation: 100.0,
                     child: GestureDetector(
                       onTap: () async {
-                        if (_formKey.currentState.validate()) {
-                          dynamic result = await _auth
-                              .signupWithEmailAndPassword(email, password);
+                        if (bday.year == 0000) {
+                          // PRompt the user to choose a date
+                        } else if (_formKey.currentState.validate()) {
+                          dynamic result =
+                              await _auth.signupWithEmailAndPassword(
+                                  emailController.text,
+                                  passwordController.text,
+                                  fnameController.text,
+                                  lnameController.text,
+                                  bday);
                           // need to add the other user data to the database here.
                           if (result == null) {
                             setState(() {

@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:Ataa/appUser.dart';
+import 'package:Ataa/database.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final database = Database();
 
   // create user obj based on firebase user
   AppUser _userFromFirebaseUser(User user) {
@@ -34,11 +36,13 @@ class AuthService {
   }
 
   // Signup with email and password
-  Future signupWithEmailAndPassword(String email, String password) async {
+  Future signupWithEmailAndPassword(String email, String password, String fname,
+      String lname, DateTime bday) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User user = result.user;
+      database.addUser(user.uid, fname, lname, bday);
       return _userFromFirebaseUser(user);
     } catch (error) {
       print(error.toString());
