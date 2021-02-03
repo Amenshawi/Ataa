@@ -22,9 +22,14 @@ login(String email, String password, BuildContext context, _auth) async {
 }
 
 class Login extends StatelessWidget {
+  static const PrimaryColor = const Color(0xFF1c664a);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        primaryColor: PrimaryColor,
+      ),
+
       // Start the app with the "/" named route. In this case, the app starts
       // on the FirstScreen widget.
       initialRoute: '/',
