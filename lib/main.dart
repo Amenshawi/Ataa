@@ -16,25 +16,25 @@ auth_subscribe() {
   });
 }
 
-login(String email, String password, BuildContext context) async {
-  // try {
-  //   UserCredential userCredential = await FirebaseAuth.instance
-  //       .signInWithEmailAndPassword(email: email, password: password);
-  //   print("user is signed in");
-  //   Navigator.pushReplacement(
-  //     context,
-  //     MaterialPageRoute(builder: (context) => HomePage()),
-  //   );
-  // } on FirebaseAuthException catch (e) {
-  //   if (e.code == 'user-not-found') {
-  //     print("Email not found");
-  //     print('No user found for that email.');
-  //   } else if (e.code == 'wrong-password') {
-  //     print("Wrong password or email");
-  //     visible = true;
-  //   }
-  // }
-}
+// login(String email, String password, BuildContext context) async {
+//   // try {
+//   //   UserCredential userCredential = await FirebaseAuth.instance
+//   //       .signInWithEmailAndPassword(email: email, password: password);
+//   //   print("user is signed in");
+//   //   Navigator.pushReplacement(
+//   //     context,
+//   //     MaterialPageRoute(builder: (context) => HomePage()),
+//   //   );
+//   // } on FirebaseAuthException catch (e) {
+//   //   if (e.code == 'user-not-found') {
+//   //     print("Email not found");
+//   //     print('No user found for that email.');
+//   //   } else if (e.code == 'wrong-password') {
+//   //     print("Wrong password or email");
+//   //     visible = true;
+//   //   }
+//   // }
+// }
 
 textField(c, bool password, String labelText, IconData iconName) {
   return TextField(
