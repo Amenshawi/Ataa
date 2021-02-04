@@ -50,17 +50,26 @@ class TabNavigationItem {
   static List<TabNavigationItem> get items => [
         TabNavigationItem(
           page: DonorPage(),
-          icon: Icon(Icons.clean_hands),
+          icon: Icon(
+            Icons.clean_hands,
+            size: 40,
+          ),
           title: "Donate",
         ),
         TabNavigationItem(
           page: RecieverPage(),
-          icon: Icon(Icons.clean_hands_outlined),
+          icon: Icon(
+            Icons.clean_hands_outlined,
+            size: 40,
+          ),
           title: "Recieve",
         ),
         TabNavigationItem(
           page: CharityStandsPage(),
-          icon: Icon(Icons.store_mall_directory_rounded),
+          icon: Icon(
+            Icons.store_mall_directory_rounded,
+            size: 40,
+          ),
           title: "Charity Stands",
         ),
       ];

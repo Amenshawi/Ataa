@@ -65,7 +65,9 @@ class _LoginPageState extends State<LoginPage> {
                               child: Text(
                                 "Invalid Email or Password!",
                                 style: TextStyle(
-                                    fontSize: 20, color: Colors.redAccent),
+                                    fontSize: 20,
+                                    color: Colors.redAccent,
+                                    fontWeight: FontWeight.bold),
                               ))),
                       Card(
                         shape: RoundedRectangleBorder(
@@ -106,12 +108,11 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   Container(
                     padding: EdgeInsets.only(top: 590.0),
-                    // alignment: Alignment.bottomCenter,
-                    // height: 100.0,
                     margin: EdgeInsets.all(10.0),
                     child: Column(children: [
                       isLoading
                           ? Container(
+                              padding: EdgeInsets.all(10),
                               child: CircularProgressIndicator(
                                 backgroundColor:
                                     Color.fromRGBO(244, 234, 146, 1),
@@ -186,6 +187,7 @@ class _LoginPageState extends State<LoginPage> {
       await _auth.loginWithEmailAndPassword(email, password);
 
       print("user is signed in");
+      isLoading = false;
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => HomePage()),
