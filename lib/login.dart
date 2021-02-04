@@ -182,8 +182,8 @@ class _LoginPageState extends State<LoginPage> {
           .hasMatch(email)) {
         throw ('invalid email');
       }
-      dynamic result = await _auth.loginWithEmailAndPassword(email, password);
-      // make the user object here with the uid from the result
+
+      await _auth.loginWithEmailAndPassword(email, password);
 
       print("user is signed in");
       Navigator.pushReplacement(

@@ -28,6 +28,7 @@ class AuthService {
       UserCredential result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       User user = result.user;
+      await database.fetchUserData(user.uid);
       return user;
     } catch (error) {
       print(error.toString());
@@ -42,7 +43,7 @@ class AuthService {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User user = result.user;
-      database.addUser(user.uid, fname, lname, bday);
+      await database.addUser(user.uid, fname, lname, bday);
       return _userFromFirebaseUser(user);
     } catch (error) {
       print(error.toString());
