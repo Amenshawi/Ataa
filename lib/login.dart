@@ -177,6 +177,11 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<bool> loginAction(String email, String password, _auth) async {
     try {
+      if (!RegExp(
+              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+          .hasMatch(email)) {
+        throw ('invalid email');
+      }
       dynamic result = await _auth.loginWithEmailAndPassword(email, password);
       // make the user object here with the uid from the result
 
@@ -200,6 +205,13 @@ class _LoginPageState extends State<LoginPage> {
           visible = true;
         });
       }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+        visible = true;
+      });
+
+      print(e);
     }
     return true;
   }

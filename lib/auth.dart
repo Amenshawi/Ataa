@@ -31,7 +31,7 @@ class AuthService {
       return user;
     } catch (error) {
       print(error.toString());
-      return error;
+      throw error;
     }
   }
 
