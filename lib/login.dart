@@ -40,7 +40,6 @@ class _LoginPageState extends State<LoginPage> {
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
-    final bottom = MediaQuery.of(context).viewInsets.bottom;
     var emailController = TextEditingController();
     var passwordController = TextEditingController();
     return Scaffold(

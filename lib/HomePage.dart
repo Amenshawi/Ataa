@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:Ataa/charityStandsScreen.dart';
-import 'package:Ataa/donorScreen.dart';
 import 'package:Ataa/recieverScreen.dart';
+import 'donorScreen.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -49,18 +49,27 @@ class TabNavigationItem {
 
   static List<TabNavigationItem> get items => [
         TabNavigationItem(
-          page: DonorPage(),
-          icon: Icon(Icons.clean_hands),
+          page: DonorScreen(),
+          icon: Icon(
+            Icons.clean_hands,
+            size: 40,
+          ),
           title: "Donate",
         ),
         TabNavigationItem(
           page: RecieverPage(),
-          icon: Icon(Icons.clean_hands_outlined),
+          icon: Icon(
+            Icons.clean_hands_outlined,
+            size: 40,
+          ),
           title: "Recieve",
         ),
         TabNavigationItem(
           page: CharityStandsPage(),
-          icon: Icon(Icons.store_mall_directory_rounded),
+          icon: Icon(
+            Icons.store_mall_directory_rounded,
+            size: 40,
+          ),
           title: "Charity Stands",
         ),
       ];
