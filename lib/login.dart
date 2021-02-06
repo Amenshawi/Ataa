@@ -36,6 +36,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String emailInput = '';
+  String passwordInput = '';
+  final _formKey = GlobalKey<FormState>();
   final AuthService _auth = AuthService();
   bool isLoading = false;
   @override
@@ -60,52 +63,55 @@ class _LoginPageState extends State<LoginPage> {
                       // alignment: Alignment.center,
                       margin: EdgeInsets.all(10.0),
                       // child:
-                      child: Column(children: [
-                        Container(
-                            margin: EdgeInsets.only(bottom: 25),
-                            child: Visibility(
-                                visible: visible,
-                                child: Text(
-                                  "Invalid Email or Password!",
-                                  style: TextStyle(
-                                      fontSize: 20, color: Colors.redAccent),
-                                ))),
-                        Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)),
-                          elevation: 100.0,
-                          color: Color.fromRGBO(28, 102, 74, 1),
-                          shadowColor: Colors.grey,
-                          child: Column(children: [
-                            textField(
-                                emailController, false, "Email", Icons.person),
-                            SizedBox(
-                              height: 10.0,
-                            ),
-                            textField(passwordController, true, "Password",
-                                Icons.vpn_key),
-                            SizedBox(
-                              height: 5.0,
-                            ),
-                            Container(
-                              padding: EdgeInsets.only(left: 200.0),
-                              child: InkWell(
-                                child: Text("Forget Password",
+                      child: Form(
+                        key: _formKey ,
+                        child: Column(children: [
+                          Container(
+                              margin: EdgeInsets.only(bottom: 25),
+                              child: Visibility(
+                                  visible: visible,
+                                  child: Text(
+                                    "Invalid Email or Password!",
                                     style: TextStyle(
-                                        fontSize: 20.0,
-                                        decoration: TextDecoration.underline,
-                                        color: Color.fromRGBO(244, 234, 146, 1))),
-                                onTap: () {
-                                  _forgetPassword(context);
-                                },
+                                        fontSize: 20, color: Colors.redAccent),
+                                  ))),
+                          Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                            elevation: 100.0,
+                            color: Color.fromRGBO(28, 102, 74, 1),
+                            shadowColor: Colors.grey,
+                            child: Column(children: [
+                              textField(
+                                  emailController, false, "Email", Icons.person, emailInput),
+                              SizedBox(
+                                height: 10.0,
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(10),
-                            )
-                          ]),
-                        )
-                      ]),
+                              textField(passwordController, true, "Password",
+                                  Icons.vpn_key, passwordInput),
+                              SizedBox(
+                                height: 5.0,
+                              ),
+                              Container(
+                                padding: EdgeInsets.only(left: 200.0),
+                                child: InkWell(
+                                  child: Text("Forget Password",
+                                      style: TextStyle(
+                                          fontSize: 20.0,
+                                          decoration: TextDecoration.underline,
+                                          color: Color.fromRGBO(244, 234, 146, 1))),
+                                  onTap: () {
+                                    _forgetPassword(context);
+                                  },
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(10),
+                              )
+                            ]),
+                          )
+                        ]),
+                      ),
                     ),
                     Container(
                       padding: EdgeInsets.only(top: 590.0),
@@ -234,7 +240,7 @@ void _forgetPassword(context) {
       });
 }
 
-textField(c, bool password, String labelText, IconData iconName) {
+textField(TextEditingController c, bool password, String labelText, IconData iconName, String changeValue) {
   return TextField(
     style: TextStyle(
       color: Color.fromRGBO(244,234,146,1.0),
@@ -258,5 +264,8 @@ textField(c, bool password, String labelText, IconData iconName) {
           color: Color.fromRGBO(244, 234, 146, 0.7)),
     ),
     textAlign: TextAlign.start,
+    onEditingComplete: (){
+     changeValue = c.text;
+    },
   );
 }
