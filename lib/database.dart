@@ -35,4 +35,21 @@ class Database {
       return user;
     }).catchError((error) => print("Failed to fetch user data: $error"));
   }
+
+  searchForCharity(String name) async {
+    var result = await firestore
+        .collection('charities')
+        .orderBy('name')
+        .startAt([name])
+        .endAt([name + '\uf8ff'])
+        .get()
+        .then((snapshot) {
+          for (var i = 0; i < snapshot.docs.length; i++) {
+            print(snapshot.docs[i].data()['name']);
+          }
+          return snapshot.docs;
+        })
+        .catchError((error) => print("Failed to search for charities: $error"));
+    return result;
+  }
 }
