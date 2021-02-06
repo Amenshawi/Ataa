@@ -1,289 +1,314 @@
+// ignore: non_constant_identifier_names
+import 'package:Ataa/database.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'searchSheet.dart';
 
-class DonorPage extends StatelessWidget {
+final Color backgroundColor = Colors.white;
+final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
+
+class DonorScreen extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "Donate Page",
-            style: TextStyle(
-                color: Color.fromRGBO(244, 234, 146, 1),
-                fontWeight: FontWeight.bold,
-                fontSize: 25),
-          ),
-          backgroundColor: Color.fromRGBO(28, 102, 74, 1),
-          elevation: 0,
-        ),
-        body: Donor());
+  _DonorScreenState createState() => _DonorScreenState();
+}
+
+class _DonorScreenState extends State<DonorScreen>
+    with SingleTickerProviderStateMixin {
+  bool isCollapsed = true;
+  double hieghtSize, widthSize;
+  final Duration duration = const Duration(milliseconds: 300);
+  AnimationController _controller;
+  Animation<double> _scaleAnimation;
+  Animation<double> _menuScaleAnimation;
+  Animation<Offset> _slideAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this, duration: duration);
+    _scaleAnimation = Tween<double>(begin: 1, end: 0.9).animate(_controller);
+    _menuScaleAnimation =
+        Tween<double>(begin: 0.5, end: 1).animate(_controller);
+    _slideAnimation = Tween<Offset>(begin: Offset(-1, 0), end: Offset(0, 0))
+        .animate(_controller);
   }
-}
 
-class Donor extends StatefulWidget {
   @override
-  _DonorState createState() => _DonorState();
-}
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
-class _DonorState extends State<Donor> {
-  bool folded = true;
   @override
   Widget build(BuildContext context) {
-    double hieghtSize = MediaQuery.of(context).size.height;
-    double widthSize = MediaQuery.of(context).size.width;
+    Size size = MediaQuery.of(context).size;
+    hieghtSize = size.height;
+    widthSize = size.width;
 
-    return Container(
-      width: double.infinity,
-      color: Color.fromRGBO(28, 102, 74, 1),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Hello Abadi',
-                    style: TextStyle(
-                        color: Color.fromRGBO(244, 234, 146, 1), fontSize: 40)),
-                SizedBox(height: 10),
-                Text('welcome back :)',
-                    style: TextStyle(
-                        color: Color.fromRGBO(244, 234, 146, 1), fontSize: 20)),
-              ],
-            ),
-          ),
-          SizedBox(height: 20),
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(50),
-                      topLeft: Radius.circular(50))),
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  children: [
-                    Center(
-                      child: AnimatedContainer(
-                        duration: Duration(microseconds: 400),
-                        width: folded ? 56 : 300,
-                        height: 56,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(32),
-                          color: Colors.white,
-                          boxShadow: kElevationToShadow[6],
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Expanded(
-                              child: Container(
-                                padding: EdgeInsets.only(left: 16),
-                                child: !folded
-                                    ? TextField(
-                                        decoration: InputDecoration(
-                                            hintText: 'Search',
-                                            hintStyle: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    28, 102, 74, 1)),
-                                            border: InputBorder.none),
-                                      )
-                                    : Text(""),
-                              ),
-                            ),
-                            AnimatedContainer(
-                                duration: Duration(microseconds: 400),
-                                child: Material(
-                                  type: MaterialType.transparency,
-                                  child: InkWell(
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(folded ? 32 : 0),
-                                      topRight: Radius.circular(32),
-                                      bottomLeft:
-                                          Radius.circular(folded ? 32 : 0),
-                                      bottomRight: Radius.circular(32),
-                                    ),
-                                    child: Padding(
-                                        padding: EdgeInsets.all(16.0),
-                                        child: Icon(
-                                          folded ? Icons.search : Icons.close,
-                                          color: Color.fromRGBO(28, 102, 74, 1),
-                                        )),
-                                    onTap: () {
-                                      setState(() {
-                                        print("i was pressed");
-                                        folded = !folded;
-                                      });
-                                    },
-                                  ),
-                                )),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Visibility(
-                        visible: !folded,
-                        child: IconButton(
-                          tooltip: "Search",
-                          icon: Icon(
-                            Icons.send,
-                            color: Color.fromRGBO(28, 102, 74, 1),
-                          ),
-                          onPressed: () {},
-                        )),
-                    SizedBox(height: 30),
-                    folded
-                        ? Container(
-                            width: widthSize,
-                            height: hieghtSize * .4,
-                            padding: EdgeInsets.all(10),
-                            margin: EdgeInsets.all(10),
-                            // color: Color.fromRGBO(28, 102, 74, 1),
-                            child: GridView.count(
-                              crossAxisCount: 2,
-                              children: [
-                                button("Make a donation", Icons.add),
-                                button("Schedul a donation", Icons.timer),
-                                button("Donations History", Icons.menu_book),
-                                button("Cancel Donation", Icons.cancel),
-                              ],
-                            ))
-                        : Expanded(child: listView())
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
+    return Scaffold(
+      backgroundColor: backgroundColor,
+      body: Stack(
+        children: [menu(context), donorPage(context)],
       ),
     );
   }
-}
 
-button(String name, IconData icon) {
-  return Container(
-      decoration: BoxDecoration(
-          border: Border.all(color: Color.fromRGBO(28, 102, 74, 1)),
-          borderRadius: BorderRadius.circular(20)),
-      margin: EdgeInsets.all(10),
-      child: Material(
-        type: MaterialType.transparency,
-        child: InkWell(
-          borderRadius: BorderRadius.all(Radius.circular(20)),
-          child: Column(
-            children: [
-              Icon(icon, color: Color.fromRGBO(28, 102, 74, 1), size: 60),
-              Text(
-                name,
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Color.fromRGBO(28, 102, 74, 1)),
-                textAlign: TextAlign.center,
-              )
-            ],
+  Widget donorPage(context) {
+    return AnimatedPositioned(
+      duration: duration,
+      top: 0,
+      bottom: 0,
+      left: isCollapsed ? 0 : 0.6 * widthSize,
+      right: isCollapsed ? 0 : -0.6 * widthSize,
+      child: ScaleTransition(
+        scale: _scaleAnimation,
+        child: Material(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(40), bottomLeft: Radius.circular(40)),
+          elevation: 8,
+          color: backgroundColor,
+          child: Container(
+            padding: EdgeInsets.only(top: 35),
+            width: double.infinity,
+            color: ataaGreen,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [menuIcon(), barName(), search(context)],
+                ),
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: welcomeMessage(),
+                ),
+                SizedBox(height: 20),
+                donorButtons(),
+              ],
+            ),
           ),
-          onTap: () {
-            print("See you next week :)");
-          },
         ),
-      ));
-}
+      ),
+    );
+  }
 
-listView() {
-  return ListView(
-    children: [
-      ListTile(
-        leading: Icon(Icons.home_work_outlined,
-            color: Color.fromRGBO(28, 102, 74, 1)),
-        title: Text(
-          "Abadi is the best",
-          style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              color: Color.fromRGBO(28, 102, 74, 1)),
+  Widget welcomeMessage() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Hello Abadi',
+            style: TextStyle(
+                color: Color.fromRGBO(244, 234, 146, 1), fontSize: 40)),
+        SizedBox(height: 10),
+        Text('welcome back :)',
+            style: TextStyle(
+                color: Color.fromRGBO(244, 234, 146, 1), fontSize: 20)),
+      ],
+    );
+  }
+
+  Widget barName() {
+    return Text(
+      "Donate Page",
+      style: TextStyle(
+          color: Color.fromRGBO(244, 234, 146, 1),
+          fontWeight: FontWeight.bold,
+          fontSize: 25),
+    );
+  }
+
+  Widget search(context) {
+    return Padding(
+        padding: EdgeInsets.all(10),
+        child: Align(
+          alignment: Alignment.topRight,
+          child: IconButton(
+            icon: Icon(
+              Icons.search,
+              color: Color.fromRGBO(244, 234, 146, 1),
+              size: 30,
+            ),
+            onPressed: () {
+              // print('Hi there');
+              searchSheet(context);
+              // print('Hi there 2');
+            },
+          ),
+        ));
+  }
+
+  button(String name, IconData icon) {
+    return Container(
+        decoration: BoxDecoration(
+            border: Border.all(color: ataaGreen),
+            borderRadius: BorderRadius.circular(20)),
+        margin: EdgeInsets.all(10),
+        child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+            child: Column(
+              children: [
+                Icon(icon, color: ataaGreen, size: 60),
+                Text(
+                  name,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: ataaGreen),
+                  textAlign: TextAlign.center,
+                )
+              ],
+            ),
+            onTap: () {
+              print("See you next week :)");
+            },
+          ),
+        ));
+  }
+
+  void searchSheet(context) {
+    showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
         ),
-        subtitle: Text(
-          "Yes i am",
-          style: TextStyle(color: Color.fromRGBO(28, 102, 74, 1)),
+        elevation: 100,
+        isScrollControlled: true,
+        builder: (BuildContext bc) {
+          return SearchSheet();
+        });
+  }
+
+  Widget menuIcon() {
+    return IconButton(
+      icon: Icon(
+        Icons.menu,
+        color: Color.fromRGBO(244, 234, 146, 1),
+        size: 35,
+      ),
+      onPressed: () {
+        setState(() {
+          if (isCollapsed)
+            _controller.forward();
+          else
+            _controller.reverse();
+          isCollapsed = !isCollapsed;
+        });
+      },
+    );
+  }
+
+  Widget menu(context) {
+    return SlideTransition(
+      position: _slideAnimation,
+      child: ScaleTransition(
+        scale: _menuScaleAnimation,
+        child: Padding(
+          padding:
+              EdgeInsets.only(left: widthSize * 0.05, top: hieghtSize * 0.1),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Column(
+              // mainAxisSize: MainAxisSize.max,
+              // mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(bottom: hieghtSize * 0.1),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CircleAvatar(
+                        radius: 30,
+                        // we can put a condition here if the user doesn't have a pic in the database, we will use his/her initails.
+                        backgroundColor: ataaGreen,
+                        child: Text(
+                          'AA',
+                          style: TextStyle(
+                              color: Color.fromRGBO(244, 234, 146, 1)),
+                        ), // just the user initials.
+                      ),
+                      SizedBox(height: hieghtSize * 0.02),
+                      Text(
+                        'Abadi Almutairi', // User name (sorry i didn't do it :) )
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: ataaGreen),
+                      ),
+                    ],
+                  ),
+                ),
+                category('Profile', Icons.person, () {
+                  // navigate to the profile page
+                }),
+                SizedBox(height: hieghtSize * 0.02),
+                category('History', Icons.history, () {
+                  // navigate to the profile page
+                }),
+                SizedBox(height: hieghtSize * 0.02),
+                category('About us', Icons.people, () {
+                  // navigate to the profile page
+                }),
+                SizedBox(height: hieghtSize * 0.02),
+                // category('Profile', Icons.person, () {
+                //   // navigate to the profile page
+                // }),
+                SizedBox(height: hieghtSize * 0.3),
+                category('Log Out', Icons.logout, () {
+                  // navigate to the profile page
+                }),
+              ],
+            ),
+          ),
         ),
       ),
-      ListTile(
-        leading: Icon(Icons.home_work_outlined,
-            color: Color.fromRGBO(28, 102, 74, 1)),
-        title: Text(
-          "Abadi is the best",
-          style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              color: Color.fromRGBO(28, 102, 74, 1)),
+    );
+  }
+
+  Widget category(String name, IconData icon, Function function) {
+    return InkWell(
+      child: Row(children: [
+        Icon(
+          icon,
+          color: ataaGreen,
+          size: 30,
         ),
-        subtitle: Text(
-          "Yes i am",
-          style: TextStyle(color: Color.fromRGBO(28, 102, 74, 1)),
-        ),
-      ),
-      ListTile(
-        leading: Icon(Icons.home_work_outlined,
-            color: Color.fromRGBO(28, 102, 74, 1)),
-        title: Text(
-          "Abadi is the best",
-          style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              color: Color.fromRGBO(28, 102, 74, 1)),
-        ),
-        subtitle: Text(
-          "Yes i am",
-          style: TextStyle(color: Color.fromRGBO(28, 102, 74, 1)),
-        ),
-      ),
-      ListTile(
-        leading: Icon(Icons.home_work_outlined,
-            color: Color.fromRGBO(28, 102, 74, 1)),
-        title: Text(
-          "Abadi is the best",
-          style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              color: Color.fromRGBO(28, 102, 74, 1)),
-        ),
-        subtitle: Text(
-          "Yes i am",
-          style: TextStyle(color: Color.fromRGBO(28, 102, 74, 1)),
-        ),
-      ),
-      ListTile(
-        leading: Icon(Icons.home_work_outlined,
-            color: Color.fromRGBO(28, 102, 74, 1)),
-        title: Text(
-          "Abadi is the best",
-          style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              color: Color.fromRGBO(28, 102, 74, 1)),
-        ),
-        subtitle: Text(
-          "Yes i am",
-          style: TextStyle(color: Color.fromRGBO(28, 102, 74, 1)),
-        ),
-      ),
-      ListTile(
-        leading: Icon(Icons.home_work_outlined,
-            color: Color.fromRGBO(28, 102, 74, 1)),
-        title: Text(
-          "Abadi is the best",
-          style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              color: Color.fromRGBO(28, 102, 74, 1)),
-        ),
-        subtitle: Text(
-          "Yes i am",
-          style: TextStyle(color: Color.fromRGBO(28, 102, 74, 1)),
-        ),
-      ),
-    ],
-  );
+        SizedBox(width: hieghtSize * 0.02),
+        Text(name, style: TextStyle(color: ataaGreen, fontSize: 22)),
+      ]),
+      onTap: () {
+        function();
+      },
+    );
+  }
+
+  Widget donorButtons() {
+    return Expanded(
+        child: Container(
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(50),
+                    topLeft: Radius.circular(50))),
+            child: Column(
+              children: [
+                SizedBox(height: 10),
+                Expanded(
+                    child: Container(
+                        padding: EdgeInsets.all(10),
+                        margin: EdgeInsets.all(10),
+                        child: GridView.count(
+                          crossAxisCount: 2,
+                          children: [
+                            button("Make a donation", Icons.add),
+                            button("Schedul a donation", Icons.timer),
+                            button("Donations History", Icons.menu_book),
+                            button("Cancel Donation", Icons.cancel),
+                          ],
+                        )))
+              ],
+            )));
+  }
 }

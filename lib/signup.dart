@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:Ataa/auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 
 class Signup extends StatelessWidget {
   @override
@@ -20,18 +21,18 @@ class SignupPage extends StatefulWidget {
 class _SignupState extends State<SignupPage> {
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
-
   //text controllers
   var emailController = TextEditingController();
+  var emailController2 = TextEditingController();
   var passwordController = TextEditingController();
+  var passwordController2 = TextEditingController();
   var fnameController = TextEditingController();
   var lnameController = TextEditingController();
-  var bday = DateTime(0000);
-  String error = '';
+  DateTime bday = DateTime.now();
+  var visibility = false;
 
   // text field state
-  String email = '';
-  String password = '';
+  String error = '';
 
   //implementing date picker method
 
@@ -63,237 +64,50 @@ class _SignupState extends State<SignupPage> {
               key: _formKey,
               child: Column(
                 children: <Widget>[
+                  Container(
+                          margin: EdgeInsets.only(bottom: 25),
+                          child: Visibility(
+                              visible: visibility,
+                              child: Text(
+                                error,
+                                style: TextStyle(
+                                    fontSize: 20, color: Colors.redAccent),
+                              ))),
                   SizedBox(height: 5.0),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    color: Color.fromRGBO(28, 102, 74, 1),
-                    shadowColor: Colors.grey,
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          controller: fnameController,
-                          style: TextStyle(
-                            color: Color.fromRGBO(251, 247, 239, 1),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22,
-                          ),
-                          decoration: InputDecoration(
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color.fromRGBO(244, 234, 146, 1))),
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color.fromRGBO(244, 234, 146, 1))),
-                            prefixIcon: Icon(
-                              Icons.person,
-                              color: Color.fromRGBO(244, 234, 146, 0.8),
-                            ),
-                            labelText: 'First Name',
-                            labelStyle: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                color: Color.fromRGBO(244, 234, 146, 0.7)),
-                          ),
-                          textAlign: TextAlign.start,
-                          validator: (val) =>
-                              val.isEmpty ? 'Enter your First Name' : null,
-                          onChanged: (val) {
-                            setState(() => email = val);
-                          },
-                        ),
-                        SizedBox(height: 5.0),
-                        TextFormField(
-                          controller: lnameController,
-                          style: TextStyle(
-                            color: Color.fromRGBO(251, 247, 239, 1),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22,
-                          ),
-                          decoration: InputDecoration(
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color.fromRGBO(244, 234, 146, 1))),
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color.fromRGBO(244, 234, 146, 1))),
-                            prefixIcon: Icon(
-                              Icons.person,
-                              color: Color.fromRGBO(244, 234, 146, 0.8),
-                            ),
-                            labelText: 'Last name',
-                            labelStyle: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                color: Color.fromRGBO(244, 234, 146, 0.7)),
-                          ),
-                          textAlign: TextAlign.start,
-                          validator: (val) =>
-                              val.isEmpty ? 'Enter your Last Name' : null,
-                          onChanged: (val) {
-                            setState(() => email = val);
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
+                  // name card
+                  inputcard(
+                    fnameController, lnameController,
+                    false, 'First Name', 'Last Name', 
+                    Icon(Icons.person, color: Color.fromRGBO(28, 102, 74, 0.7))),
+
                   SizedBox(height: 5.0),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    color: Color.fromRGBO(28, 102, 74, 1),
-                    shadowColor: Colors.grey,
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          controller: emailController,
-                          style: TextStyle(
-                            color: Color.fromRGBO(251, 247, 239, 1),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22,
-                          ),
-                          decoration: InputDecoration(
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color.fromRGBO(244, 234, 146, 1))),
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color.fromRGBO(244, 234, 146, 1))),
-                            prefixIcon: Icon(
-                              Icons.email,
-                              color: Color.fromRGBO(244, 234, 146, 0.8),
-                            ),
-                            labelText: 'Enter email',
-                            labelStyle: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                color: Color.fromRGBO(244, 234, 146, 0.7)),
-                          ),
-                          textAlign: TextAlign.start,
-                          validator: (val) =>
-                              val.isEmpty ? 'Enter an email' : null,
-                          onChanged: (val) {
-                            setState(() => email = val);
-                          },
-                        ),
-                        SizedBox(height: 5.0),
-                        TextFormField(
-                          style: TextStyle(
-                            color: Color.fromRGBO(251, 247, 239, 1),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22,
-                          ),
-                          decoration: InputDecoration(
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color.fromRGBO(244, 234, 146, 1))),
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color.fromRGBO(244, 234, 146, 1))),
-                            prefixIcon: Icon(
-                              Icons.email,
-                              color: Color.fromRGBO(244, 234, 146, 0.8),
-                            ),
-                            labelText: 'Re-enter email',
-                            labelStyle: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                color: Color.fromRGBO(244, 234, 146, 0.7)),
-                          ),
-                          textAlign: TextAlign.start,
-                          validator: (val) =>
-                              val.isEmpty ? 'Enter an email' : null,
-                          onChanged: (val) {
-                            setState(() => email = val);
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
+                // email card
+                 inputcard(
+                    emailController, emailController2,
+                    false, 'Email', 'Re-enter Email', 
+                    Icon(Icons.email, color: Color.fromRGBO(28, 102, 74, 0.7))),
+
                   SizedBox(
                     height: 5.0,
                   ),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    color: Color.fromRGBO(28, 102, 74, 1),
-                    shadowColor: Colors.grey,
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          controller: passwordController,
-                          obscureText: true,
-                          style: TextStyle(
-                            color: Color.fromRGBO(251, 247, 239, 1),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22,
-                          ),
-                          decoration: InputDecoration(
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color.fromRGBO(244, 234, 146, 1))),
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color.fromRGBO(244, 234, 146, 1))),
-                            prefixIcon: Icon(
-                              Icons.vpn_key,
-                              color: Color.fromRGBO(244, 234, 146, 0.8),
-                            ),
-                            labelText: 'Password',
-                            labelStyle: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                color: Color.fromRGBO(244, 234, 146, 0.7)),
-                          ),
-                          textAlign: TextAlign.start,
-                          validator: (val) =>
-                              val.isEmpty ? 'Enter a Password' : null,
-                          onChanged: (val) {
-                            setState(() => email = val);
-                          },
-                        ),
-                        SizedBox(height: 5.0),
-                        TextFormField(
-                          obscureText: true,
-                          style: TextStyle(
-                            color: Color.fromRGBO(251, 247, 239, 1),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22,
-                          ),
-                          decoration: InputDecoration(
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color.fromRGBO(244, 234, 146, 1))),
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color.fromRGBO(244, 234, 146, 1))),
-                            prefixIcon: Icon(
-                              Icons.vpn_key,
-                              color: Color.fromRGBO(244, 234, 146, 0.8),
-                            ),
-                            labelText: 'Re-enter Password',
-                            labelStyle: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                color: Color.fromRGBO(244, 234, 146, 0.7)),
-                          ),
-                          textAlign: TextAlign.start,
-                          validator: (val) =>
-                              val.isEmpty ? 'Re-enter Your Password' : null,
-                          onChanged: (val) {
-                            setState(() => email = val);
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
+                  //password card
+                  inputcard(
+                    passwordController, passwordController2,
+                    true, 'Password', 'Re-enter Password', 
+                    Icon(Icons.vpn_key, color: Color.fromRGBO(28, 102, 74, 0.7))),
+
                   SizedBox(
                     height: 5.0,
                   ),
+                  //Date picker
                   Card(
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    color: Color.fromRGBO(28, 102, 74, 1),
+                        borderRadius: BorderRadius.circular(20), 
+                        side: BorderSide(
+                          color: Color.fromRGBO(28,102,74,1.0), 
+                          width: 5.0, 
+                          style: BorderStyle.solid)),
+                    color: Color.fromRGBO(255, 255, 255, 1.0),
                     shadowColor: Colors.grey,
                     child: Column(
                       children: [
@@ -303,7 +117,7 @@ class _SignupState extends State<SignupPage> {
                         Text(
                           'Select Your Birthday',
                           style: TextStyle(
-                            color: Color.fromRGBO(244, 234, 146, 0.8),
+                            color: Color.fromRGBO(28,102,74,1.0),
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                           ),
@@ -315,7 +129,7 @@ class _SignupState extends State<SignupPage> {
                           height: 80,
                           child: CupertinoTheme(
                             child: CupertinoDatePicker(
-                              backgroundColor: Color.fromRGBO(28, 102, 74, 0.3),
+                              backgroundColor: Color.fromRGBO(255, 255, 255, 1.0),
                               mode: CupertinoDatePickerMode.date,
                               minimumDate: DateTime(1930),
                               initialDateTime: DateTime.now(),
@@ -328,7 +142,7 @@ class _SignupState extends State<SignupPage> {
                               textTheme: CupertinoTextThemeData(
                                 dateTimePickerTextStyle: TextStyle(
                                   fontSize: 22,
-                                  color: Color.fromRGBO(251, 247, 239, 1.0),
+                                  color: Color.fromRGBO(28,102,74,1.0),
                                 ),
                               ),
                             ),
@@ -337,52 +151,20 @@ class _SignupState extends State<SignupPage> {
                       ],
                     ),
                   ),
+
                   SizedBox(
                     height: 15.0,
                   ),
-                  /*RaisedButton(
-                    shape: ShapeBorder.lerp(),
-                    padding: EdgeInsets.fromLTRB(100.0,20.0,100.0,20.0),
-                    color: Color.fromRGBO(28,102,74,1.0),
-                    child: Text('Signup',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    onPressed: () async {
-                       if (_formKey.currentState.validate()) {
-                        dynamic result = await _auth.signupWithEmailAndPassword(
-                            email, password);
-                        if (result == null) {
-                          setState(() {
-                            error = 'Please supply a valid email';
-                          });
-                         }
-                      }
-                     }),*/
+                  // signup button
                   Material(
                     borderRadius: BorderRadius.circular(20.0),
                     shadowColor: Colors.grey,
                     color: Color.fromRGBO(28, 102, 74, 1),
                     elevation: 100.0,
                     child: GestureDetector(
-                      onTap: () async {
-                        if (bday.year == 0000) {
-                          // PRompt the user to choose a date
-                        } else if (_formKey.currentState.validate()) {
-                          dynamic result =
-                              await _auth.signupWithEmailAndPassword(
-                                  emailController.text,
-                                  passwordController.text,
-                                  fnameController.text,
-                                  lnameController.text,
-                                  bday);
-                          // need to add the other user data to the database here.
-                          if (result == null) {
-                            setState(() {
-                              error = 'Please supply a valid email';
-                            });
-                          }
-                        }
-                      },
+                      onTap:() {
+                        signupClicked();
+                        },
                       child: Center(
                         heightFactor: 2.5,
                         child: Text(
@@ -390,7 +172,7 @@ class _SignupState extends State<SignupPage> {
                           style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
-                              color: Color.fromRGBO(251, 247, 239, 1)),
+                              color: Color.fromRGBO(244, 234, 146, 1)),
                         ),
                       ),
                     ),
@@ -403,5 +185,103 @@ class _SignupState extends State<SignupPage> {
         ),
       ),
     );
+  }
+   // Creating the form input cards
+  inputcard(topController, bottomController, bool passwordCard, String topLabel, String bottomLabel, Icon icon){
+    return Card(
+            shape: RoundedRectangleBorder(
+              side: BorderSide(color: Color.fromRGBO(28,102,74,1.0), 
+                style: BorderStyle.solid,
+                width: 5.0 ),
+              borderRadius: BorderRadius.circular(20)),
+              color: Color.fromRGBO(255, 255, 255, 1),
+              shadowColor: Colors.grey,
+              child: Column(
+                children: [
+                  TextField(
+                    obscureText: passwordCard,
+                    controller: topController,
+                    style: TextStyle(
+                      color: Color.fromRGBO(28,102,74,1.0),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 22,
+                    ),
+                    decoration:InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color.fromRGBO(28, 102, 74, 0.7))),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color.fromRGBO(28, 102, 74, 1.0), width: 3.0)),
+                      prefixIcon: icon,
+                      labelText: topLabel,
+                      labelStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Color.fromRGBO(28, 102, 74, 0.7)),
+                      ),
+                    textAlign: TextAlign.start,
+                  ),
+                  SizedBox(height: 5.0),
+                  TextField(
+                    obscureText: passwordCard,
+                    controller: bottomController,
+                      style: TextStyle(
+                        color: Color.fromRGBO(28,102,74,1.0),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22,
+                      ),
+                      decoration:InputDecoration(
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        prefixIcon: icon,
+                        labelText: bottomLabel,
+                        labelStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Color.fromRGBO(28, 102, 74, 0.7)),
+                        ),
+                        textAlign: TextAlign.start,
+                        ),
+                    ],),
+                  );
+  }
+  signupClicked() async{
+    // no field is empty
+    if(fnameController.text.isEmpty || lnameController.text.isEmpty ||
+      emailController.text.isEmpty || emailController2.text.isEmpty ||
+      passwordController.text.isEmpty || passwordController2.text.isEmpty){
+        setState(() {
+          visibility = true;
+          error = 'Please Fill All Fields';
+        });
+        // emails match
+      }else if(emailController.text != emailController2.text ){
+          setState(() {
+            visibility = true;
+            error = 'Emails Do Not Match';
+          });
+        // passwords match
+       }else if(passwordController.text != passwordController2.text){
+         setState(() {
+            visibility = true;
+            error = 'Passwords Do Not Match';
+          });
+        // age is 15+
+       }else if(!bday.isBefore(DateTime.now().subtract(const Duration(days: 5474)))){
+         setState(() {
+            visibility = true;
+            error = 'Age Must be 15 and Above';
+          });
+      }else{
+        try{
+          dynamic result =
+          await _auth.signupWithEmailAndPassword(
+            emailController.text,
+            passwordController.text,
+            fnameController.text,
+            lnameController.text,
+            bday);
+        }on FirebaseAuthException catch (e){
+        }
+      } 
   }
 }
