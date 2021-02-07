@@ -1,3 +1,4 @@
+import 'package:Ataa/login.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -28,6 +29,7 @@ class _SignupState extends State<SignupPage> {
   var passwordController2 = TextEditingController();
   var fnameController = TextEditingController();
   var lnameController = TextEditingController();
+  bool confirm = false;
   DateTime bday = DateTime.now();
   var visibility = false;
 
@@ -65,36 +67,48 @@ class _SignupState extends State<SignupPage> {
               child: Column(
                 children: <Widget>[
                   Container(
-                          margin: EdgeInsets.only(bottom: 25),
-                          child: Visibility(
-                              visible: visibility,
-                              child: Text(
-                                error,
-                                style: TextStyle(
-                                    fontSize: 20, color: Colors.redAccent),
-                              ))),
+                      margin: EdgeInsets.only(bottom: 25),
+                      child: Visibility(
+                          visible: visibility,
+                          child: Text(
+                            error,
+                            style: TextStyle(
+                                fontSize: 20, color: Colors.redAccent),
+                          ))),
                   SizedBox(height: 5.0),
                   // name card
                   inputcard(
-                    fnameController, lnameController,
-                    false, 'First Name', 'Last Name', 
-                    Icon(Icons.person, color: Color.fromRGBO(28, 102, 74, 0.7))),
+                      fnameController,
+                      lnameController,
+                      false,
+                      'First Name',
+                      'Last Name',
+                      Icon(Icons.person,
+                          color: Color.fromRGBO(28, 102, 74, 0.7))),
 
                   SizedBox(height: 5.0),
-                // email card
-                 inputcard(
-                    emailController, emailController2,
-                    false, 'Email', 'Re-enter Email', 
-                    Icon(Icons.email, color: Color.fromRGBO(28, 102, 74, 0.7))),
+                  // email card
+                  inputcard(
+                      emailController,
+                      emailController2,
+                      false,
+                      'Email',
+                      'Re-enter Email',
+                      Icon(Icons.email,
+                          color: Color.fromRGBO(28, 102, 74, 0.7))),
 
                   SizedBox(
                     height: 5.0,
                   ),
                   //password card
                   inputcard(
-                    passwordController, passwordController2,
-                    true, 'Password', 'Re-enter Password', 
-                    Icon(Icons.vpn_key, color: Color.fromRGBO(28, 102, 74, 0.7))),
+                      passwordController,
+                      passwordController2,
+                      true,
+                      'Password',
+                      'Re-enter Password',
+                      Icon(Icons.vpn_key,
+                          color: Color.fromRGBO(28, 102, 74, 0.7))),
 
                   SizedBox(
                     height: 5.0,
@@ -102,11 +116,11 @@ class _SignupState extends State<SignupPage> {
                   //Date picker
                   Card(
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20), 
+                        borderRadius: BorderRadius.circular(20),
                         side: BorderSide(
-                          color: Color.fromRGBO(28,102,74,1.0), 
-                          width: 5.0, 
-                          style: BorderStyle.solid)),
+                            color: Color.fromRGBO(28, 102, 74, 1.0),
+                            width: 5.0,
+                            style: BorderStyle.solid)),
                     color: Color.fromRGBO(255, 255, 255, 1.0),
                     shadowColor: Colors.grey,
                     child: Column(
@@ -117,7 +131,7 @@ class _SignupState extends State<SignupPage> {
                         Text(
                           'Select Your Birthday',
                           style: TextStyle(
-                            color: Color.fromRGBO(28,102,74,1.0),
+                            color: Color.fromRGBO(28, 102, 74, 1.0),
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                           ),
@@ -129,7 +143,8 @@ class _SignupState extends State<SignupPage> {
                           height: 80,
                           child: CupertinoTheme(
                             child: CupertinoDatePicker(
-                              backgroundColor: Color.fromRGBO(255, 255, 255, 1.0),
+                              backgroundColor:
+                                  Color.fromRGBO(255, 255, 255, 1.0),
                               mode: CupertinoDatePickerMode.date,
                               minimumDate: DateTime(1930),
                               initialDateTime: DateTime.now(),
@@ -142,7 +157,7 @@ class _SignupState extends State<SignupPage> {
                               textTheme: CupertinoTextThemeData(
                                 dateTimePickerTextStyle: TextStyle(
                                   fontSize: 22,
-                                  color: Color.fromRGBO(28,102,74,1.0),
+                                  color: Color.fromRGBO(28, 102, 74, 1.0),
                                 ),
                               ),
                             ),
@@ -162,9 +177,9 @@ class _SignupState extends State<SignupPage> {
                     color: Color.fromRGBO(28, 102, 74, 1),
                     elevation: 100.0,
                     child: GestureDetector(
-                      onTap:() {
+                      onTap: () {
                         signupClicked();
-                        },
+                      },
                       child: Center(
                         heightFactor: 2.5,
                         child: Text(
@@ -186,102 +201,158 @@ class _SignupState extends State<SignupPage> {
       ),
     );
   }
-   // Creating the form input cards
-  inputcard(topController, bottomController, bool passwordCard, String topLabel, String bottomLabel, Icon icon){
+
+  // Creating the form input cards
+  inputcard(topController, bottomController, bool passwordCard, String topLabel,
+      String bottomLabel, Icon icon) {
     return Card(
-            shape: RoundedRectangleBorder(
-              side: BorderSide(color: Color.fromRGBO(28,102,74,1.0), 
-                style: BorderStyle.solid,
-                width: 5.0 ),
-              borderRadius: BorderRadius.circular(20)),
-              color: Color.fromRGBO(255, 255, 255, 1),
-              shadowColor: Colors.grey,
-              child: Column(
-                children: [
-                  TextField(
-                    obscureText: passwordCard,
-                    controller: topController,
-                    style: TextStyle(
-                      color: Color.fromRGBO(28,102,74,1.0),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22,
-                    ),
-                    decoration:InputDecoration(
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Color.fromRGBO(28, 102, 74, 0.7))),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Color.fromRGBO(28, 102, 74, 1.0), width: 3.0)),
-                      prefixIcon: icon,
-                      labelText: topLabel,
-                      labelStyle: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: Color.fromRGBO(28, 102, 74, 0.7)),
-                      ),
-                    textAlign: TextAlign.start,
-                  ),
-                  SizedBox(height: 5.0),
-                  TextField(
-                    obscureText: passwordCard,
-                    controller: bottomController,
-                      style: TextStyle(
-                        color: Color.fromRGBO(28,102,74,1.0),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
-                      ),
-                      decoration:InputDecoration(
-                        enabledBorder: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        prefixIcon: icon,
-                        labelText: bottomLabel,
-                        labelStyle: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Color.fromRGBO(28, 102, 74, 0.7)),
-                        ),
-                        textAlign: TextAlign.start,
-                        ),
-                    ],),
-                  );
+      shape: RoundedRectangleBorder(
+          side: BorderSide(
+              color: Color.fromRGBO(28, 102, 74, 1.0),
+              style: BorderStyle.solid,
+              width: 5.0),
+          borderRadius: BorderRadius.circular(20)),
+      color: Color.fromRGBO(255, 255, 255, 1),
+      shadowColor: Colors.grey,
+      child: Column(
+        children: [
+          TextField(
+            obscureText: passwordCard,
+            controller: topController,
+            style: TextStyle(
+              color: Color.fromRGBO(28, 102, 74, 1.0),
+              fontWeight: FontWeight.bold,
+              fontSize: 22,
+            ),
+            decoration: InputDecoration(
+              enabledBorder: UnderlineInputBorder(
+                  borderSide:
+                      BorderSide(color: Color.fromRGBO(28, 102, 74, 0.7))),
+              focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                      color: Color.fromRGBO(28, 102, 74, 1.0), width: 3.0)),
+              prefixIcon: icon,
+              labelText: topLabel,
+              labelStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Color.fromRGBO(28, 102, 74, 0.7)),
+            ),
+            textAlign: TextAlign.start,
+          ),
+          SizedBox(height: 5.0),
+          TextField(
+            obscureText: passwordCard,
+            controller: bottomController,
+            style: TextStyle(
+              color: Color.fromRGBO(28, 102, 74, 1.0),
+              fontWeight: FontWeight.bold,
+              fontSize: 22,
+            ),
+            decoration: InputDecoration(
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              prefixIcon: icon,
+              labelText: bottomLabel,
+              labelStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Color.fromRGBO(28, 102, 74, 0.7)),
+            ),
+            textAlign: TextAlign.start,
+          ),
+        ],
+      ),
+    );
   }
-  signupClicked() async{
+
+  signupClicked() async {
     // no field is empty
-    if(fnameController.text.isEmpty || lnameController.text.isEmpty ||
-      emailController.text.isEmpty || emailController2.text.isEmpty ||
-      passwordController.text.isEmpty || passwordController2.text.isEmpty){
-        setState(() {
-          visibility = true;
-          error = 'Please Fill All Fields';
-        });
-        // emails match
-      }else if(emailController.text != emailController2.text ){
-          setState(() {
-            visibility = true;
-            error = 'Emails Do Not Match';
-          });
-        // passwords match
-       }else if(passwordController.text != passwordController2.text){
-         setState(() {
-            visibility = true;
-            error = 'Passwords Do Not Match';
-          });
-        // age is 15+
-       }else if(!bday.isBefore(DateTime.now().subtract(const Duration(days: 5474)))){
-         setState(() {
-            visibility = true;
-            error = 'Age Must be 15 and Above';
-          });
-      }else{
-        try{
-          dynamic result =
-          await _auth.signupWithEmailAndPassword(
+    if (fnameController.text.isEmpty ||
+        lnameController.text.isEmpty ||
+        emailController.text.isEmpty ||
+        emailController2.text.isEmpty ||
+        passwordController.text.isEmpty ||
+        passwordController2.text.isEmpty) {
+      setState(() {
+        visibility = true;
+        error = 'Please Fill All Fields';
+      });
+      // emails match
+    } else if (emailController.text != emailController2.text) {
+      setState(() {
+        visibility = true;
+        error = 'Emails Do Not Match';
+      });
+      // passwords match
+    } else if (passwordController.text != passwordController2.text) {
+      setState(() {
+        visibility = true;
+        error = 'Passwords Do Not Match';
+      });
+      // age is 15+
+    } else if (!bday
+        .isBefore(DateTime.now().subtract(const Duration(days: 5474)))) {
+      setState(() {
+        visibility = true;
+        error = 'Age Must be 15 and Above';
+      });
+    } else {
+      try {
+        dynamic result = await _auth.signupWithEmailAndPassword(
             emailController.text,
             passwordController.text,
             fnameController.text,
             lnameController.text,
             bday);
-        }on FirebaseAuthException catch (e){
-        }
-      } 
+        _dialog(context, 'Confirmation', Color.fromRGBO(28, 102, 74, 1.0),
+            'Yay! you signed uo!', 'Got It');
+        print('Hi');
+      } on FirebaseAuthException catch (e) {}
+    }
+  }
+
+  void _dialog(context, String title, Color titleColor, String message,
+      String buttonLabel) {
+    Dialog errorDialog = Dialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0)), //this right here
+      child: Container(
+        height: 250.0,
+        width: 300.0,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Text(
+                title,
+                style: TextStyle(color: titleColor, fontSize: 30.0),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Text(
+                message,
+                style: TextStyle(
+                    color: Color.fromRGBO(28, 102, 74, 1), fontSize: 20),
+              ),
+            ),
+            Padding(padding: EdgeInsets.only(top: 25.0)),
+            FlatButton(
+                onPressed: () {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => LoginPage()));
+                },
+                child: Text(
+                  buttonLabel,
+                  style: TextStyle(
+                      color: Color.fromRGBO(28, 102, 74, 1), fontSize: 20),
+                ))
+          ],
+        ),
+      ),
+    );
+    showDialog(context: context, builder: (BuildContext bc) => errorDialog);
   }
 }
