@@ -299,6 +299,7 @@ class _SignupState extends State<SignupPage> {
       });
     } else {
       try {
+        visibility = false;
         dynamic result = await _auth.signupWithEmailAndPassword(
             emailController.text,
             passwordController.text,
@@ -306,14 +307,22 @@ class _SignupState extends State<SignupPage> {
             lnameController.text,
             bday);
         _dialog(context, 'Confirmation', Color.fromRGBO(28, 102, 74, 1.0),
-            'Yay! you signed uo!', 'Got It');
-        print('Hi');
-      } on FirebaseAuthException catch (e) {}
+            'Yay! you signed up!', 'Got It', true);
+        print('test');
+        Future.delayed(const Duration(seconds: 4), () {
+          Navigator.pop(context);
+          Navigator.pop(context);
+        });
+      } on FirebaseAuthException catch (e) {
+        print('by');
+        _dialog(context, 'Error !', Color.fromRGBO(28, 102, 74, 1.0),
+            'Sorry an error occured\n Error: ' + e.message, 'Try Again', false);
+      }
     }
   }
 
   void _dialog(context, String title, Color titleColor, String message,
-      String buttonLabel) {
+      String buttonLabel, bool isDone) {
     Dialog errorDialog = Dialog(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0)), //this right here
@@ -341,8 +350,12 @@ class _SignupState extends State<SignupPage> {
             Padding(padding: EdgeInsets.only(top: 25.0)),
             FlatButton(
                 onPressed: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => LoginPage()));
+                  if (isDone) {
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => LoginPage()));
+                  } else {
+                    Navigator.pop(context);
+                  }
                 },
                 child: Text(
                   buttonLabel,
