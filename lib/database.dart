@@ -1,10 +1,10 @@
 import 'package:Ataa/appUser.dart';
+import 'package:Ataa/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/semantics.dart';
 
 class Database {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-
   Future addUser(String uid, String fname, String lname, DateTime bday) async {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
 
@@ -22,7 +22,7 @@ class Database {
   }
 
   Future fetchUserData(String uid) async {
-    firestore
+    return await firestore
         .collection('users')
         .where('uid', isEqualTo: uid)
         .get()
@@ -32,6 +32,7 @@ class Database {
           fname: value.docs.first.data()['first_name'],
           lname: value.docs.first.data()['last_name']);
       print('user Data fetched successfully !');
+      print(user);
       return user;
     }).catchError((error) => print("Failed to fetch user data: $error"));
   }

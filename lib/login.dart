@@ -195,13 +195,13 @@ class _LoginPageState extends State<LoginPage> {
         throw ('invalid email');
       }
 
-      await _auth.loginWithEmailAndPassword(email, password);
+      final user = await _auth.loginWithEmailAndPassword(email, password);
 
       print("user is signed in");
       isLoading = false;
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()),
+        MaterialPageRoute(builder: (context) => HomePage(user)),
       );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {

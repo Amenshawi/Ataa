@@ -1,19 +1,25 @@
 // ignore: non_constant_identifier_names
+import 'package:Ataa/auth.dart';
 import 'package:Ataa/database.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'searchSheet.dart';
+import 'package:Ataa/searchSheet.dart';
+import 'package:Ataa/appUser.dart';
 
 final Color backgroundColor = Colors.white;
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 
 class DonorScreen extends StatefulWidget {
+  final AppUser user;
+  DonorScreen(this.user);
   @override
-  _DonorScreenState createState() => _DonorScreenState();
+  _DonorScreenState createState() => _DonorScreenState(user);
 }
 
 class _DonorScreenState extends State<DonorScreen>
     with SingleTickerProviderStateMixin {
+  final AppUser user;
+  _DonorScreenState(this.user);
   bool isCollapsed = true;
   double hieghtSize, widthSize;
   final Duration duration = const Duration(milliseconds: 300);
@@ -21,7 +27,6 @@ class _DonorScreenState extends State<DonorScreen>
   Animation<double> _scaleAnimation;
   Animation<double> _menuScaleAnimation;
   Animation<Offset> _slideAnimation;
-
   @override
   void initState() {
     super.initState();
@@ -96,7 +101,7 @@ class _DonorScreenState extends State<DonorScreen>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Hello Abadi',
+        Text('Hello ' + user.fname,
             style: TextStyle(
                 color: Color.fromRGBO(244, 234, 146, 1), fontSize: 40)),
         SizedBox(height: 10),
@@ -224,14 +229,16 @@ class _DonorScreenState extends State<DonorScreen>
                         // we can put a condition here if the user doesn't have a pic in the database, we will use his/her initails.
                         backgroundColor: ataaGreen,
                         child: Text(
-                          'AA',
+                          user.fname[0] + user.lname[0],
                           style: TextStyle(
                               color: Color.fromRGBO(244, 234, 146, 1)),
                         ), // just the user initials.
                       ),
                       SizedBox(height: hieghtSize * 0.02),
                       Text(
-                        'Abadi Almutairi', // User name (sorry i didn't do it :) )
+                        user.fname +
+                            ' ' +
+                            user.lname, // User name (sorry i didn't do it :) )
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,

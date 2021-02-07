@@ -5,7 +5,6 @@ import 'package:Ataa/database.dart';
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final database = Database();
-
   // create user obj based on firebase user
   AppUser _userFromFirebaseUser(User user) {
     auth_subscribe(user);
@@ -27,8 +26,8 @@ class AuthService {
     try {
       UserCredential result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
-      User user = result.user;
-      await database.fetchUserData(user.uid);
+      final uid = result.user.uid;
+      final user = await database.fetchUserData(uid);
       return user;
     } catch (error) {
       print(error.toString());
