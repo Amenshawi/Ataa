@@ -1,10 +1,12 @@
-import 'package:Ataa/login.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:Ataa/auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:Ataa/HomePage.dart';
+
+import 'login.dart';
 
 class Signup extends StatelessWidget {
   @override
@@ -29,14 +31,13 @@ class _SignupState extends State<SignupPage> {
   var passwordController2 = TextEditingController();
   var fnameController = TextEditingController();
   var lnameController = TextEditingController();
-  bool confirm = false;
   DateTime bday = DateTime.now();
   var visibility = false;
+  // 1= name card, 2= email card , 3= password card, 4= birthday selector
+  int cardSelect = 1; 
 
   // text field state
   String error = '';
-
-  //implementing date picker method
 
   @override
   Widget build(BuildContext context) {
@@ -66,72 +67,55 @@ class _SignupState extends State<SignupPage> {
               key: _formKey,
               child: Column(
                 children: <Widget>[
+                  SizedBox(height: 50.0),
                   Container(
-                      margin: EdgeInsets.only(bottom: 25),
-                      child: Visibility(
-                          visible: visibility,
-                          child: Text(
-                            error,
-                            style: TextStyle(
-                                fontSize: 20, color: Colors.redAccent),
-                          ))),
-                  SizedBox(height: 5.0),
+                          margin: EdgeInsets.only(bottom: 25),
+                          child: Visibility(
+                              visible: visibility,
+                              child: Text(
+                                error,
+                                style: TextStyle(
+                                    fontSize: 20, color: Colors.redAccent),
+                              ))),
+                              SizedBox(height: 20),
+                  // selector to determine which card to show
                   // name card
-                  inputcard(
-                      fnameController,
-                      lnameController,
-                      false,
-                      'First Name',
-                      'Last Name',
-                      Icon(Icons.person,
-                          color: Color.fromRGBO(28, 102, 74, 0.7))),
+                  cardSelect == 1? inputcard(
+                    fnameController, lnameController,
+                    false, 'First Name', 'Last Name', 
+                    Icon(Icons.person, color: Color.fromRGBO(28, 102, 74, 0.7))) : 
+                  
+                  //email card
+                  cardSelect ==2? inputcard(
+                    emailController, emailController2,
+                    false, 'Email', 'Re-enter Email', 
+                    Icon(Icons.email, color: Color.fromRGBO(28, 102, 74, 0.7))) :
 
-                  SizedBox(height: 5.0),
-                  // email card
-                  inputcard(
-                      emailController,
-                      emailController2,
-                      false,
-                      'Email',
-                      'Re-enter Email',
-                      Icon(Icons.email,
-                          color: Color.fromRGBO(28, 102, 74, 0.7))),
-
-                  SizedBox(
-                    height: 5.0,
-                  ),
                   //password card
-                  inputcard(
-                      passwordController,
-                      passwordController2,
-                      true,
-                      'Password',
-                      'Re-enter Password',
-                      Icon(Icons.vpn_key,
-                          color: Color.fromRGBO(28, 102, 74, 0.7))),
+                  cardSelect ==3? inputcard(
+                    passwordController, passwordController2,
+                    true, 'Password', 'Re-enter Password', 
+                    Icon(Icons.vpn_key, color: Color.fromRGBO(28, 102, 74, 0.7))) :
 
-                  SizedBox(
-                    height: 5.0,
-                  ),
-                  //Date picker
-                  Card(
+                  //birthday card
+                  cardSelect == 4? Card(
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(20), 
                         side: BorderSide(
-                            color: Color.fromRGBO(28, 102, 74, 1.0),
-                            width: 5.0,
-                            style: BorderStyle.solid)),
+                          color: Color.fromRGBO(28,102,74,1.0), 
+                          width: 5.0, 
+                          style: BorderStyle.solid)),
                     color: Color.fromRGBO(255, 255, 255, 1.0),
                     shadowColor: Colors.grey,
                     child: Column(
                       children: [
                         SizedBox(
-                          height: 5.0,
+                          height: 20.0,
                         ),
                         Text(
                           'Select Your Birthday',
                           style: TextStyle(
-                            color: Color.fromRGBO(28, 102, 74, 1.0),
+                            color: Color.fromRGBO(28,102,74,1.0),
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                           ),
@@ -140,24 +124,23 @@ class _SignupState extends State<SignupPage> {
                           height: 15.0,
                         ),
                         SizedBox(
-                          height: 80,
+                          height: 120,
                           child: CupertinoTheme(
                             child: CupertinoDatePicker(
-                              backgroundColor:
-                                  Color.fromRGBO(255, 255, 255, 1.0),
+                              backgroundColor: Color.fromRGBO(255, 255, 255, 1.0),
                               mode: CupertinoDatePickerMode.date,
                               minimumDate: DateTime(1930),
                               initialDateTime: DateTime.now(),
                               maximumDate: DateTime.now(),
                               onDateTimeChanged: (DateTime newDateTime) {
-                                bday = newDateTime;
+                                 bday = newDateTime;                                 
                               },
                             ),
                             data: CupertinoThemeData(
                               textTheme: CupertinoTextThemeData(
                                 dateTimePickerTextStyle: TextStyle(
                                   fontSize: 22,
-                                  color: Color.fromRGBO(28, 102, 74, 1.0),
+                                  color: Color.fromRGBO(28,102,74,1.0),
                                 ),
                               ),
                             ),
@@ -165,7 +148,9 @@ class _SignupState extends State<SignupPage> {
                         ),
                       ],
                     ),
-                  ),
+                  )
+                  // closing the selection statement, cant be null so i used empty SizedBox
+                  : SizedBox(),
 
                   SizedBox(
                     height: 15.0,
@@ -177,13 +162,13 @@ class _SignupState extends State<SignupPage> {
                     color: Color.fromRGBO(28, 102, 74, 1),
                     elevation: 100.0,
                     child: GestureDetector(
-                      onTap: () {
-                        signupClicked();
+                      onTap:() {
+                        checkCard(cardSelect);
                       },
                       child: Center(
                         heightFactor: 2.5,
                         child: Text(
-                          "Sign up",
+                          cardSelect == 4?"Sign up":"Next",
                           style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
@@ -192,7 +177,34 @@ class _SignupState extends State<SignupPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 12.0),
+                  SizedBox(height: 15.0),
+                  Material(
+                    borderRadius: BorderRadius.circular(20.0),
+                    shadowColor: Colors.grey,
+                    color: Color.fromRGBO(28, 102, 74, 1),
+                    elevation: 100.0,
+                    child: GestureDetector(
+                      onTap:() {
+                        setState(() {
+                          visibility = false;
+                          error = '';
+                          if(cardSelect == 1)
+                            Navigator.pop(context);
+                          else
+                            cardSelect--;                          
+                        });
+                      },
+                      child: Center(
+                        heightFactor: 2.5,
+                        child: Text('Back',
+                          style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromRGBO(244, 234, 146, 1)),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -201,104 +213,66 @@ class _SignupState extends State<SignupPage> {
       ),
     );
   }
-
-  // Creating the form input cards
-  inputcard(topController, bottomController, bool passwordCard, String topLabel,
-      String bottomLabel, Icon icon) {
+   // Creating the form input cards
+  inputcard(topController, bottomController, bool passwordCard, String topLabel, String bottomLabel, Icon icon){
     return Card(
-      shape: RoundedRectangleBorder(
-          side: BorderSide(
-              color: Color.fromRGBO(28, 102, 74, 1.0),
-              style: BorderStyle.solid,
-              width: 5.0),
-          borderRadius: BorderRadius.circular(20)),
-      color: Color.fromRGBO(255, 255, 255, 1),
-      shadowColor: Colors.grey,
-      child: Column(
-        children: [
-          TextField(
-            obscureText: passwordCard,
-            controller: topController,
-            style: TextStyle(
-              color: Color.fromRGBO(28, 102, 74, 1.0),
-              fontWeight: FontWeight.bold,
-              fontSize: 22,
-            ),
-            decoration: InputDecoration(
-              enabledBorder: UnderlineInputBorder(
-                  borderSide:
-                      BorderSide(color: Color.fromRGBO(28, 102, 74, 0.7))),
-              focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                      color: Color.fromRGBO(28, 102, 74, 1.0), width: 3.0)),
-              prefixIcon: icon,
-              labelText: topLabel,
-              labelStyle: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: Color.fromRGBO(28, 102, 74, 0.7)),
-            ),
-            textAlign: TextAlign.start,
-          ),
-          SizedBox(height: 5.0),
-          TextField(
-            obscureText: passwordCard,
-            controller: bottomController,
-            style: TextStyle(
-              color: Color.fromRGBO(28, 102, 74, 1.0),
-              fontWeight: FontWeight.bold,
-              fontSize: 22,
-            ),
-            decoration: InputDecoration(
-              enabledBorder: InputBorder.none,
-              focusedBorder: InputBorder.none,
-              prefixIcon: icon,
-              labelText: bottomLabel,
-              labelStyle: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: Color.fromRGBO(28, 102, 74, 0.7)),
-            ),
-            textAlign: TextAlign.start,
-          ),
-        ],
-      ),
-    );
+            shape: RoundedRectangleBorder(
+              side: BorderSide(color: Color.fromRGBO(28,102,74,1.0), 
+                style: BorderStyle.solid,
+                width: 5.0 ),
+              borderRadius: BorderRadius.circular(20)),
+              color: Color.fromRGBO(255, 255, 255, 1),
+              shadowColor: Colors.grey,
+              child: Column(
+                children: [
+                  TextField(
+                    obscureText: passwordCard,
+                    controller: topController,
+                    style: TextStyle(
+                      color: Color.fromRGBO(28,102,74,1.0),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 22,
+                    ),
+                    decoration:InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color.fromRGBO(28, 102, 74, 0.7))),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color.fromRGBO(28, 102, 74, 1.0), width: 3.0)),
+                      prefixIcon: icon,
+                      labelText: topLabel,
+                      labelStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Color.fromRGBO(28, 102, 74, 0.7)),
+                      ),
+                    textAlign: TextAlign.start,
+                  ),
+                  SizedBox(height: 5.0),
+                  TextField(
+                    obscureText: passwordCard,
+                    controller: bottomController,
+                      style: TextStyle(
+                        color: Color.fromRGBO(28,102,74,1.0),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22,
+                      ),
+                      decoration:InputDecoration(
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        prefixIcon: icon,
+                        labelText: bottomLabel,
+                        labelStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Color.fromRGBO(28, 102, 74, 0.7)),
+                        ),
+                        textAlign: TextAlign.start,
+                        ),
+                    ],),
+                  );
   }
-
-  signupClicked() async {
-    // no field is empty
-    if (fnameController.text.isEmpty ||
-        lnameController.text.isEmpty ||
-        emailController.text.isEmpty ||
-        emailController2.text.isEmpty ||
-        passwordController.text.isEmpty ||
-        passwordController2.text.isEmpty) {
-      setState(() {
-        visibility = true;
-        error = 'Please Fill All Fields';
-      });
-      // emails match
-    } else if (emailController.text != emailController2.text) {
-      setState(() {
-        visibility = true;
-        error = 'Emails Do Not Match';
-      });
-      // passwords match
-    } else if (passwordController.text != passwordController2.text) {
-      setState(() {
-        visibility = true;
-        error = 'Passwords Do Not Match';
-      });
-      // age is 15+
-    } else if (!bday
-        .isBefore(DateTime.now().subtract(const Duration(days: 5474)))) {
-      setState(() {
-        visibility = true;
-        error = 'Age Must be 15 and Above';
-      });
-    } else {
-      try {
+  signupClicked() async{
+         try {
         visibility = false;
         dynamic result = await _auth.signupWithEmailAndPassword(
             emailController.text,
@@ -307,7 +281,7 @@ class _SignupState extends State<SignupPage> {
             lnameController.text,
             bday);
         _dialog(context, 'Confirmation', Color.fromRGBO(28, 102, 74, 1.0),
-            'Yay! you signed up!', 'Got It', true);
+            'You Have Been Successfully Registered, Welcome to Ataa', 'Continue', true);
         print('test');
         Future.delayed(const Duration(seconds: 4), () {
           Navigator.pop(context);
@@ -318,9 +292,80 @@ class _SignupState extends State<SignupPage> {
         _dialog(context, 'Error !', Color.fromRGBO(28, 102, 74, 1.0),
             'Sorry an error occured\n Error: ' + e.message, 'Try Again', false);
       }
-    }
-  }
+      
 
+  }
+  checkCard(int selector){
+    switch(selector){
+      //checking name card input
+      case 1:
+      setState(() {
+        if(fnameController.text.isEmpty || lnameController.text.isEmpty){
+          visibility = true;
+          error = 'Please Fill All Fields';
+        }else {
+          cardSelect++;
+          visibility = false;
+          error = '';
+          }
+        });
+      break;
+
+      // checking email card input
+      case 2:
+      setState(() {
+      if(emailController.text.isEmpty || emailController2.text.isEmpty){
+        visibility = true;
+        error = 'Please Fill All Fields';
+      }else if(!RegExp(
+          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+          .hasMatch(emailController.text)){
+            visibility = true;
+            error = 'Please Enter a Valid Email';
+      }else if(emailController.text != emailController2.text){
+        visibility = true;
+        error = 'Emails Do Not Match';
+      }else {
+          cardSelect++;
+          visibility = false;
+          error = '';
+          }
+      });
+      break;
+
+      // checking password card input
+      case 3:
+       setState(() {
+        if(passwordController.text.isEmpty || passwordController2.text.isEmpty){
+          visibility = true;
+          error = 'Please Fill All Fields';
+        }else if(passwordController.text != passwordController2.text){
+            visibility = true;
+            error = 'Passwords Do Not Match';
+        }else {
+          cardSelect++;
+          visibility = false;
+          error = '';
+          }
+          });
+      break;
+      
+      // checking birthday card input
+      case 4:
+      setState(() {
+        if(calculateAge(bday) < 15){
+          print('is underage');
+          visibility = true;
+          error = 'Age Must be 15 and Above';
+        }else {
+          signupClicked();
+        }
+      });
+      break;
+    }
+
+  }
+  
   void _dialog(context, String title, Color titleColor, String message,
       String buttonLabel, bool isDone) {
     Dialog errorDialog = Dialog(
@@ -368,4 +413,22 @@ class _SignupState extends State<SignupPage> {
     );
     showDialog(context: context, builder: (BuildContext bc) => errorDialog);
   }
+
+  calculateAge(DateTime birthDate) {
+    print("in the caclulate age method");
+  DateTime currentDate = DateTime.now();
+  int age = currentDate.year - birthDate.year;
+  int month1 = currentDate.month;
+  int month2 = birthDate.month;
+  if (month2 > month1) {
+    age--;
+  } else if (month1 == month2) {
+    int day1 = currentDate.day;
+    int day2 = birthDate.day;
+    if (day2 > day1) {
+      age--;
+    }
+  }
+  return age;
+}
 }
