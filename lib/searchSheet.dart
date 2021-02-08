@@ -7,7 +7,7 @@ class SearchSheet extends StatefulWidget {
 }
 
 class _SearchSheetState extends State<SearchSheet> {
-  var emailController = TextEditingController();
+  // var emailController = TextEditingController();
   final database = Database();
   var charities;
   @override
@@ -45,7 +45,7 @@ class _SearchSheetState extends State<SearchSheet> {
               padding: EdgeInsets.all(10),
             ),
             TextField(
-              controller: emailController,
+              // controller: emailController,
               decoration: InputDecoration(
                   hintText: 'Search for a charity...',
                   hintStyle: TextStyle(

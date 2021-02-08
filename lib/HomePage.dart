@@ -1,9 +1,12 @@
+import 'package:Ataa/donorPage_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:Ataa/charityStandsScreen.dart';
 import 'package:Ataa/recieverScreen.dart';
 import 'package:Ataa/donorScreen.dart';
 import 'package:Ataa/appUser.dart';
+
+import 'customPage_2.dart';
 
 class HomePage extends StatefulWidget {
   final AppUser user;
@@ -31,9 +34,9 @@ class _HomePageState extends State<HomePage> {
         items: [
           for (final tabItem in TabNavigationItem.items(user))
             BottomNavigationBarItem(
-              icon: tabItem.icon,
-              label: tabItem.title,
-            )
+                icon: tabItem.icon,
+                label: tabItem.title,
+                backgroundColor: Colors.green)
         ],
       ),
     );
@@ -52,7 +55,12 @@ class TabNavigationItem {
 
   static List<TabNavigationItem> items(user) => [
         TabNavigationItem(
-          page: DonorScreen(user),
+          page: CustomPage(
+            user: user,
+            pageName: 'Donate',
+            contentOfThePage: DonorPage_2(),
+            scale: 0.2,
+          ),
           icon: Icon(
             Icons.clean_hands,
             size: 40,
@@ -60,7 +68,11 @@ class TabNavigationItem {
           title: "Donate",
         ),
         TabNavigationItem(
-          page: RecieverPage(),
+          page: CustomPage(
+            pageName: 'Recieve',
+            contentOfThePage: RecieverPage(),
+            scale: 0.2,
+          ),
           icon: Icon(
             Icons.clean_hands_outlined,
             size: 40,
@@ -68,7 +80,11 @@ class TabNavigationItem {
           title: "Recieve",
         ),
         TabNavigationItem(
-          page: CharityStandsPage(),
+          page: CustomPage(
+            pageName: 'Charity Stands',
+            contentOfThePage: CharityStandsPage(),
+            scale: 0.1,
+          ),
           icon: Icon(
             Icons.store_mall_directory_rounded,
             size: 40,
