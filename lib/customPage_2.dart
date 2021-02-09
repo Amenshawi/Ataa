@@ -1,5 +1,7 @@
 import 'package:Ataa/appUser.dart';
 import 'package:flutter/material.dart';
+import 'package:bottom_navy_bar/bottom_navy_bar.dart';
+import 'HomePage.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGreenField = Color.fromRGBO(28, 102, 74, .5);
@@ -8,23 +10,27 @@ final Color ataaWhite = Color.fromRGBO(255, 255, 255, 0.75);
 
 // ignore: must_be_immutable
 class CustomPage extends StatefulWidget {
-  AppUser user;
+  final AppUser user;
   String pageName;
   Widget contentOfThePage;
   double scale;
 
   CustomPage(
-      {Key key, this.user, this.pageName, this.contentOfThePage, this.scale})
+      {Key key,
+      @required this.user,
+      this.pageName,
+      this.contentOfThePage,
+      this.scale})
       : super(key: key);
 
   @override
-  _CustomPageState createState() => _CustomPageState();
+  _CustomPageState createState() => _CustomPageState(user);
 }
 
 class _CustomPageState extends State<CustomPage>
     with SingleTickerProviderStateMixin {
   double hieghtSize, widthSize;
-  //  final AppUser user;
+  final AppUser user;
   // _DonorScreenState(this.user);
   bool isCollapsed = true;
   // double hieghtSize, widthSize;
@@ -33,6 +39,12 @@ class _CustomPageState extends State<CustomPage>
   Animation<double> _scaleAnimation;
   Animation<double> _menuScaleAnimation;
   Animation<Offset> _slideAnimation;
+  int _currentIndex = 0;
+
+  // ignore: invalid_required_positional_param
+  _CustomPageState(@required this.user);
+
+  // _CustomPageState(this.user);
 
   @override
   void initState() {
@@ -58,6 +70,16 @@ class _CustomPageState extends State<CustomPage>
     widthSize = size.width;
 
     return Scaffold(
+      // bottomNavigationBar: BottomNavigationBar(
+      //     currentIndex: _currentIndex,
+      //     onTap: (int index) => setState(() => _currentIndex = index),
+      //     items: [
+      //       for (final tabItem in TabNavigationItem.items(user))
+      //         BottomNavigationBarItem(
+      //             icon: tabItem.icon,
+      //             label: tabItem.title,
+      //             backgroundColor: Colors.green)
+      //     ]),
       backgroundColor: ataaGreen,
       body: Stack(children: [
         menu(context),
@@ -114,7 +136,57 @@ class _CustomPageState extends State<CustomPage>
                     message('Hi Abadi', 30),
                     message('Welcome Back', 22),
                     SizedBox(height: hieghtSize * 0.02),
-                    widget.contentOfThePage
+                    widget.contentOfThePage,
+                    // Container(
+                    //   child: Center(
+                    //     child: Text('Hi'),
+                    //   ),
+                    // ),
+
+                    Container(
+                      // height: hieghtSize * 0.15,
+                      // width: widthSize * 0.9,
+                      padding: EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(80)),
+                      child: BottomNavigationBar(
+                          currentIndex: _currentIndex,
+                          onTap: (int index) =>
+                              setState(() => _currentIndex = index),
+                          items: [
+                            for (final tabItem in TabNavigationItem.items(user))
+                              BottomNavigationBarItem(
+                                  icon: tabItem.icon,
+                                  label: tabItem.title,
+                                  backgroundColor: Colors.green)
+                          ]),
+                    )
+
+                    // BottomNavyBar(
+                    //   curve: Curves.easeIn,
+                    //   containerHeight: 40,
+                    //   selectedIndex: _currentIndex,
+                    //   onItemSelected: (int index) {
+                    //     setState(() {
+                    //       _currentIndex = index;
+                    //     });
+                    //   },
+                    //   items: [
+                    //     BottomNavyBarItem(
+                    //         icon: Icon(Icons.clean_hands),
+                    //         title: Text('Donate'),
+                    //         activeColor: ataaGreen,
+                    //         inactiveColor: ataaGreenField),
+                    //     BottomNavyBarItem(
+                    //         icon: Icon(Icons.clean_hands),
+                    //         title: Text('Donate'),
+                    //         activeColor: ataaGreen,
+                    //         inactiveColor: ataaGreenField)
+                    //   ],
+                    // ),
+
+                    // ),
+                    // ),
                   ],
                 ),
               ),
@@ -223,4 +295,48 @@ class _CustomPageState extends State<CustomPage>
       },
     );
   }
+
+  // Widget customNavBar() {
+  //   return Padding(
+  //     padding: EdgeInsets.only(top: hieghtSize * 0.03),
+  //     child: Card(
+  //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+  //       elevation: 8,
+  //       // child: Expanded(
+  //       // child: Padding(
+  //       //   padding:
+  //       //       EdgeInsets.only(left: widthSize * 0.04, top: hieghtSize * 0.02),
+  //       child: Padding(
+  //         padding: EdgeInsets.only(top: hieghtSize * 0.01),
+  //         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+  //           SizedBox(width: 1),
+  //           customTabBar(Icons.clean_hands, 'Donate'),
+  //           SizedBox(width: 50),
+  //           customTabBar(Icons.clean_hands_outlined, 'Recieve'),
+  //           SizedBox(width: 25),
+  //           customTabBar(Icons.store_mall_directory_rounded, 'Charity Stands')
+  //         ]),
+  //       ),
+  //       // ),
+  //       // ),
+  //     ),
+  //   );
+  // }
+
+  // Widget customTabBar(IconData icon, String name) {
+  //   return Column(
+  //     children: [
+  //       IconButton(
+  //         icon: Icon(icon, size: 35, color: ataaGreen),
+  //         onPressed: () {},
+  //       ),
+  //       Text(
+  //         name,
+  //         style: TextStyle(
+  //             color: ataaGreen, fontSize: 15, fontWeight: FontWeight.bold),
+  //       )
+  //     ],
+  //   );
+  // }
+
 }

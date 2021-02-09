@@ -1,3 +1,5 @@
+import 'package:Ataa/customPage_2.dart';
+import 'package:Ataa/donorPage_2.dart';
 import 'package:flutter/material.dart';
 import 'package:Ataa/HomePage.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -201,7 +203,13 @@ class _LoginPageState extends State<LoginPage> {
       isLoading = false;
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomePage(user)),
+        MaterialPageRoute(
+            builder: (context) => CustomPage(
+                  user: user,
+                  pageName: 'Donate',
+                  contentOfThePage: DonorPage_2(),
+                  scale: 0.2,
+                )),
       );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
