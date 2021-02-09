@@ -143,8 +143,8 @@ class _ProfileState extends State<Profile> {
                           Padding(
                               padding: EdgeInsets.only(
                                   top: hieghtSize * 0.009,
-                                  right: widthSize * 0.15),
-                              child: Text('Anonymity Option',
+                                  right: widthSize * 0.33),
+                              child: Text('Private Profile',
                                   style: TextStyle(
                                       fontSize: 20,
                                       color: ataaGreen,
