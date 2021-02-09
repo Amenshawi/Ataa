@@ -1,10 +1,13 @@
 // ignore: non_constant_identifier_names
 import 'package:Ataa/auth.dart';
 import 'package:Ataa/database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:Ataa/searchSheet.dart';
 import 'package:Ataa/appUser.dart';
+import 'package:Ataa/profilePage.dart';
+import 'package:Ataa/login.dart';
 
 final Color backgroundColor = Colors.white;
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
@@ -19,6 +22,7 @@ class DonorScreen extends StatefulWidget {
 class _DonorScreenState extends State<DonorScreen>
     with SingleTickerProviderStateMixin {
   final AppUser user;
+  final _auth = AuthService();
   _DonorScreenState(this.user);
   bool isCollapsed = true;
   double hieghtSize, widthSize;
@@ -53,7 +57,7 @@ class _DonorScreenState extends State<DonorScreen>
     return Scaffold(
       backgroundColor: backgroundColor,
       body: Stack(
-        children: [menu(context), donorPage(context)],
+        children: [menu(context, user), donorPage(context)],
       ),
     );
   }
@@ -204,7 +208,7 @@ class _DonorScreenState extends State<DonorScreen>
     );
   }
 
-  Widget menu(context) {
+  Widget menu(context, user) {
     return SlideTransition(
       position: _slideAnimation,
       child: ScaleTransition(
@@ -232,13 +236,11 @@ class _DonorScreenState extends State<DonorScreen>
                           user.fname[0] + user.lname[0],
                           style: TextStyle(
                               color: Color.fromRGBO(244, 234, 146, 1)),
-                        ), // just the user initials.
+                        ),
                       ),
                       SizedBox(height: hieghtSize * 0.02),
                       Text(
-                        user.fname +
-                            ' ' +
-                            user.lname, // User name (sorry i didn't do it :) )
+                        user.fname + ' ' + user.lname,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
@@ -248,7 +250,10 @@ class _DonorScreenState extends State<DonorScreen>
                   ),
                 ),
                 category('Profile', Icons.person, () {
-                  // navigate to the profile page
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext bctx) => Profile(user)));
                 }),
                 SizedBox(height: hieghtSize * 0.02),
                 category('History', Icons.history, () {
@@ -264,7 +269,11 @@ class _DonorScreenState extends State<DonorScreen>
                 // }),
                 SizedBox(height: hieghtSize * 0.3),
                 category('Log Out', Icons.logout, () {
-                  // navigate to the profile page
+                  try {
+                    final result = _auth.signOut();
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => LoginPage()));
+                  } catch (error) {}
                 }),
               ],
             ),
