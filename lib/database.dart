@@ -65,7 +65,7 @@ class Database {
       await firestore
           .collection('users')
           .doc(value.docs[0].id)
-          .update({'private': changTo});
+          .set({'private': changTo});
       return true;
     }).catchError((error) => {
               //do something when an error happens
@@ -73,6 +73,7 @@ class Database {
   }
 
   Future<bool> getPrivacy(AppUser user) async {
+    print('getting privacy');
     final doc = await firestore
         .collection('users')
         .where('uid', isEqualTo: user.uid)
@@ -80,6 +81,13 @@ class Database {
         .then((value) {
       return value.docs[0].data();
     });
-    return doc['private'];
+    print(doc['private']);
+    if (doc['private'] == true) {
+      print('returning true');
+      return true;
+    } else {
+      print('returning false');
+      return false;
+    }
   }
 }

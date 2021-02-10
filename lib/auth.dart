@@ -1,6 +1,9 @@
+import 'package:Ataa/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:Ataa/appUser.dart';
 import 'package:Ataa/database.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -16,6 +19,8 @@ class AuthService {
     FirebaseAuth.instance.authStateChanges().listen((user) {
       if (user == null) {
         print('User is currently signed out!');
+        // should replace the current page with the login page here
+
       } else {
         print('User is signed in!');
       }
@@ -70,5 +75,27 @@ class AuthService {
       print(error.toString);
       throw error;
     }
+  }
+
+  confirmPassword(oldPassword) async {
+    final credential =
+        EmailAuthProvider.credential(email: fUser.email, password: oldPassword);
+    try {
+      await fUser.reauthenticateWithCredential(credential);
+      return true;
+    } catch (error) {
+      print(error.toString());
+    }
+    return false;
+  }
+
+  changePassword(newPassword) async {
+    try {
+      await fUser.updatePassword(newPassword);
+      return true;
+    } catch (error) {
+      print(error.toString());
+    }
+    return false;
   }
 }

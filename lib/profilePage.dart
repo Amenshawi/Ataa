@@ -22,6 +22,9 @@ class _ProfileState extends State<Profile> {
   Future<bool> private;
   List<bool> readWriteToggole = [true, true, true, true];
   List<bool> blurBackground = [false, false, false, false];
+  var oldPasswordController = TextEditingController();
+  var newPassword1Controller = TextEditingController();
+  var newPassword2Controller = TextEditingController();
   List<TextEditingController> controllers = [
     TextEditingController(),
     TextEditingController(),
@@ -155,7 +158,6 @@ class _ProfileState extends State<Profile> {
                             onChanged: (value) {
                               setState(() {
                                 isSwitched = value;
-                                print(isSwitched); // sorry guys lol!
                                 database.changePrivacy(user, value);
                               });
                             },
@@ -254,6 +256,7 @@ class _ProfileState extends State<Profile> {
                     ),
               onPressed: () {
                 if (password) {
+                  visiblePassword = false;
                   changePassword(context);
                 } else if (!blurBackground[index] ||
                     controllers[index].text == '') {
@@ -327,7 +330,8 @@ class _ProfileState extends State<Profile> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             TextField(
-                              // controller: emailController,
+                              controller: newPassword1Controller,
+                              obscureText: true,
                               decoration: InputDecoration(
                                   enabledBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(color: ataaGreen)),
@@ -340,7 +344,8 @@ class _ProfileState extends State<Profile> {
                                       color: ataaGreen)),
                             ),
                             TextField(
-                              // controller: emailController,
+                              controller: newPassword2Controller,
+                              obscureText: true,
                               decoration: InputDecoration(
                                   enabledBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(color: ataaGreen)),
@@ -355,7 +360,8 @@ class _ProfileState extends State<Profile> {
                           ],
                         )
                       : TextField(
-                          // controller: emailController,
+                          controller: oldPasswordController,
+                          obscureText: true,
                           decoration: InputDecoration(
                               enabledBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(color: ataaGreen)),
@@ -382,15 +388,35 @@ class _ProfileState extends State<Profile> {
                     ),
                     onPressed: () async {
                       if (visiblePassword) {
-                        Navigator.pop(context);
-                        await new Future.delayed(
-                            const Duration(milliseconds: 200));
+                        var newPassword = newPassword1Controller.text;
+                        var newPassword2 = newPassword2Controller.text;
+                        if (newPassword == newPassword2) {
+                          if (await _auth.changePassword(newPassword)) {
+                            print('password changed !');
+                            Navigator.pop(context);
+                          } else {
+                            print(
+                                'password too weak or error with the connection');
+                            //error message
+                          }
+                        } else {
+                          print('passwords don\'t match');
+                          //error message
+                        }
+                      } else {
+                        var correctPassword = await _auth
+                            .confirmPassword(oldPasswordController.text);
+                        print(
+                            'correct password: ' + correctPassword.toString());
+                        if (correctPassword) {
+                          print('before setState');
+                          setState(() {
+                            visiblePassword = !visiblePassword;
+                          });
+                        } else {
+                          print('wrong pawword');
+                        }
                       }
-                      setState(() {
-                        visiblePassword = !visiblePassword;
-                        print('After call: ');
-                        print(visiblePassword);
-                      });
                     },
                   )),
             ],
