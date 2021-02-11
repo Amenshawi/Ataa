@@ -263,18 +263,6 @@ textField(TextEditingController c, bool password, String labelText,
         fontSize: 22,
         fontWeight: FontWeight.bold),
     controller: c,
-    onSubmitted: (txt) {
-      FocusScopeNode currentFocus = FocusScope.of(context);
-      if (!currentFocus.hasPrimaryFocus) {
-        currentFocus.unfocus();
-      }
-    },
-    onTap: () {
-      FocusScopeNode currentFocus = FocusScope.of(context);
-      if (!currentFocus.hasPrimaryFocus) {
-        currentFocus.unfocus();
-      }
-    },
     obscureText: password,
     decoration: InputDecoration(
       enabledBorder: UnderlineInputBorder(
