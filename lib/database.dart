@@ -65,7 +65,7 @@ class Database {
       await firestore
           .collection('users')
           .doc(value.docs[0].id)
-          .set({'private': changTo});
+          .update({'private': changTo});
       return true;
     }).catchError((error) => {
               //do something when an error happens
