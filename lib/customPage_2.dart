@@ -93,107 +93,144 @@ class _CustomPageState extends State<CustomPage>
             scale: _scaleAnimation,
             child: Material(
               borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(40),
-                  bottomLeft: Radius.circular(40)),
+                  topLeft: isCollapsed? Radius.zero: Radius.circular(40),
+                  bottomLeft:  isCollapsed? Radius.zero: Radius.circular(40)),
               elevation: 8,
               child: Padding(
                 padding: EdgeInsets.only(top: hieghtSize * 0.05),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(widthSize * 0.05),
-                      child: Row(
-                        children: [
-                          IconButton(
-                            icon: Icon(
-                              Icons.menu,
-                              color: ataaGreen,
-                              size: 30,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(widthSize * 0.05),
+                        child: Row(
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                Icons.menu,
+                                color: ataaGreen,
+                                size: 30,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  if (isCollapsed)
+                                    _controller.forward();
+                                  else
+                                    _controller.reverse();
+                                  isCollapsed = !isCollapsed;
+                                });
+                              },
                             ),
-                            onPressed: () {
-                              setState(() {
-                                if (isCollapsed)
-                                  _controller.forward();
-                                else
-                                  _controller.reverse();
-                                isCollapsed = !isCollapsed;
-                              });
-                            },
-                          ),
-                          Padding(
-                              padding: EdgeInsets.only(
-                                  left: widthSize * widget.scale),
-                              child: Text(widget.pageName,
-                                  style: TextStyle(
-                                      color: ataaGreen,
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.bold))),
-                        ],
+                            Padding(
+                                padding: EdgeInsets.only(
+                                    left: widthSize * widget.scale),
+                                child: Text(widget.pageName,
+                                    style: TextStyle(
+                                        color: ataaGreen,
+                                        fontSize: 25,
+                                        fontWeight: FontWeight.bold))),
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(height: hieghtSize * 0.004),
-                    message('Hi Abadi', 30),
-                    message('Welcome Back', 22),
-                    SizedBox(height: hieghtSize * 0.02),
-                    widget.contentOfThePage,
-                    // Container(
-                    //   child: Center(
-                    //     child: Text('Hi'),
-                    //   ),
-                    // ),
+                      SizedBox(height: hieghtSize * 0.004),
+                      message('Hi Abadi', 30),
+                      message('Welcome Back', 22),
+                      SizedBox(height: hieghtSize * 0.02),
+                      widget.contentOfThePage,
+                      // Container(
+                      //   child: Center(
+                      //     child: Text('Hi'),
+                      //   ),
+                      // ),
 
-                    Container(
-                      // height: hieghtSize * 0.15,
-                      // width: widthSize * 0.9,
-                      padding: EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(80)),
-                      child: BottomNavigationBar(
-                          currentIndex: _currentIndex,
-                          onTap: (int index) =>
-                              setState(() => _currentIndex = index),
-                          items: [
-                            for (final tabItem in TabNavigationItem.items(user))
-                              BottomNavigationBarItem(
-                                  icon: tabItem.icon,
-                                  label: tabItem.title,
-                                  backgroundColor: Colors.green)
-                          ]),
-                    )
+                      Container(
+                        // height: hieghtSize * 0.15,
+                        // width: widthSize * 0.9,
+                        padding: EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(80)),
+                        child: BottomNavigationBar(
+                          backgroundColor: ataaWhite,
+                            currentIndex: _currentIndex,
+                            onTap: (int index) =>
+                                setState(() => _currentIndex = index),
+                            items: [
+                              for (final tabItem in TabNavigationItem.items(user))
+                                BottomNavigationBarItem(
+                                    icon: tabItem.icon,
+                                    label: tabItem.title,
+                                    backgroundColor: Colors.green)
+                            ]),
+                      )
+                      /*BottomNavyBar(
+                         curve: Curves.easeIn,
+                         containerHeight: 50,
+                         selectedIndex: _currentIndex,
+                         onItemSelected: (int index) {
+                           setState(() {
+                             _currentIndex = index;
+                           });
+                         },
+                         items: [
+                           BottomNavyBarItem(
+                               icon: Icon(Icons.clean_hands),
+                              title: Text('Donate'),
+                               activeColor: ataaGreen,
+                               inactiveColor: ataaGreenField),
+                          BottomNavyBarItem(
+                               icon: Icon(Icons.clean_hands),
+                              title: Text('Donate'),
+                             activeColor: ataaGreen,
+                               inactiveColor: ataaGreenField),
+                          BottomNavyBarItem(
+                              icon: Icon(Icons.local_post_office),
+                              title: Text('Charity Stands'),
+                              activeColor: ataaGreen,
+                              inactiveColor: ataaGreenField,
+                          ),
+                        ],
+                        ),*/
+                       
 
-                    // BottomNavyBar(
-                    //   curve: Curves.easeIn,
-                    //   containerHeight: 40,
-                    //   selectedIndex: _currentIndex,
-                    //   onItemSelected: (int index) {
-                    //     setState(() {
-                    //       _currentIndex = index;
-                    //     });
-                    //   },
-                    //   items: [
-                    //     BottomNavyBarItem(
-                    //         icon: Icon(Icons.clean_hands),
-                    //         title: Text('Donate'),
-                    //         activeColor: ataaGreen,
-                    //         inactiveColor: ataaGreenField),
-                    //     BottomNavyBarItem(
-                    //         icon: Icon(Icons.clean_hands),
-                    //         title: Text('Donate'),
-                    //         activeColor: ataaGreen,
-                    //         inactiveColor: ataaGreenField)
-                    //   ],
-                    // ),
-
-                    // ),
-                    // ),
-                  ],
+                      //),
+                     // ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
         ),
       ]),
+     /* bottomNavigationBar: BottomNavyBar(
+                         curve: Curves.easeIn,
+                         containerHeight: 65,
+                         selectedIndex: _currentIndex,
+                         onItemSelected: (int index) {
+                           setState(() {
+                             _currentIndex = index;
+                           });
+                         },
+                         items: [
+                           BottomNavyBarItem(
+                               icon: Icon(Icons.clean_hands),
+                              title: Text('Donate'),
+                               activeColor: ataaGreen,
+                               inactiveColor: ataaGreenField),
+                          BottomNavyBarItem(
+                               icon: Icon(Icons.clean_hands),
+                              title: Text('Donate'),
+                             activeColor: ataaGreen,
+                               inactiveColor: ataaGreenField),
+                          BottomNavyBarItem(
+                              icon: Icon(Icons.local_post_office),
+                              title: Text('Charity Stands'),
+                              activeColor: ataaGreen,
+                              inactiveColor: ataaGreenField,
+                          ),
+                        ],
+                        ),*/
     );
   }
 

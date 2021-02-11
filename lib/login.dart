@@ -225,6 +225,11 @@ class _LoginPageState extends State<LoginPage> {
           isLoading = false;
           visible = true;
         });
+      }else{
+        setState(() {
+          isLoading = false;
+          visible = true;
+        });
       }
     } catch (e) {
       setState(() {
