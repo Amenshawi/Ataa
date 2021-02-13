@@ -257,7 +257,7 @@ class _CustomPageState extends State<CustomPage>
                       //           backgroundColor: Colors.green)
                       //   ],
                       // ),
-                      SizedBox(height: hieghtSize * 0.03),
+                      SizedBox(height: hieghtSize * 0.06),
                       Flexible(
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(40),
