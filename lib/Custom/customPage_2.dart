@@ -1,3 +1,6 @@
+import 'package:Ataa/Charity/charityStandsScreen.dart';
+import 'package:Ataa/Donor/donorPage_2.dart';
+import 'package:Ataa/Receiver/recieverScreen.dart';
 import 'package:Ataa/appUser.dart';
 import 'package:flutter/material.dart';
 import '../NavigationPage.dart';
@@ -6,6 +9,7 @@ final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGreenField = Color.fromRGBO(28, 102, 74, .5);
 final Color ataaGold = Color.fromRGBO(244, 234, 146, .8);
 final Color ataaWhite = Color.fromRGBO(255, 255, 255, 0.75);
+var _currentIndex = 0;
 
 // ignore: must_be_immutable
 class CustomPage extends StatefulWidget {
@@ -13,13 +17,15 @@ class CustomPage extends StatefulWidget {
   String pageName;
   Widget contentOfThePage;
   double scale;
+  bool isCharityStand;
 
   CustomPage(
       {Key key,
       @required this.user,
       this.pageName,
       this.contentOfThePage,
-      this.scale})
+      this.scale,
+      this.isCharityStand})
       : super(key: key);
 
   @override
@@ -38,7 +44,7 @@ class _CustomPageState extends State<CustomPage>
   Animation<double> _scaleAnimation;
   Animation<double> _menuScaleAnimation;
   Animation<Offset> _slideAnimation;
-  int _currentIndex = 0;
+  // int _currentIndex = 0;
 
   // ignore: invalid_required_positional_param
   _CustomPageState(@required this.user);
@@ -112,7 +118,7 @@ class _CustomPageState extends State<CustomPage>
     );
   }
 
-  SafeArea customBody(BuildContext context) {
+  Widget customBody(BuildContext context) {
     return SafeArea(
       bottom: false,
       top: false,
@@ -141,6 +147,7 @@ class _CustomPageState extends State<CustomPage>
                       Padding(
                         padding: EdgeInsets.all(widthSize * 0.05),
                         child: Row(
+                          // mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Flexible(
                               child: IconButton(
@@ -160,16 +167,19 @@ class _CustomPageState extends State<CustomPage>
                                 },
                               ),
                             ),
-                            Flexible(
-                              child: Padding(
-                                  padding: EdgeInsets.only(
-                                      left: widthSize * widget.scale),
-                                  child: Text(widget.pageName,
-                                      style: TextStyle(
-                                          color: ataaGreen,
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.bold))),
-                            ),
+                            widget.isCharityStand
+                                ? SizedBox(width: widthSize * 0.1)
+                                : SizedBox(width: widthSize * 0.2),
+                            // Padding(
+                            //     padding:
+                            //         EdgeInsets.only(right: widthSize * 0.32),
+                            // child:
+                            Text(widget.pageName,
+                                style: TextStyle(
+                                    color: ataaGreen,
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.bold))
+                            // ),
                           ],
                         ),
                       ),
@@ -254,8 +264,50 @@ class _CustomPageState extends State<CustomPage>
                           child: BottomNavigationBar(
                               backgroundColor: ataaWhite,
                               currentIndex: _currentIndex,
-                              onTap: (int index) => setState(
-                                  () => {_currentIndex = index, print(index)}),
+                              onTap: (int index) {
+                                _currentIndex = index;
+                                print(_currentIndex);
+                                setState(() {
+                                  if (_currentIndex == 1) {
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => CustomPage(
+                                                  pageName: 'Recieve',
+                                                  contentOfThePage:
+                                                      RecieverPage(),
+                                                  scale: 0.2,
+                                                  user: user,
+                                                  isCharityStand: false,
+                                                )));
+                                  } else if (_currentIndex == 2) {
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => CustomPage(
+                                            pageName: 'Charity Stands',
+                                            contentOfThePage:
+                                                CharityStandsPage(),
+                                            scale: 0.1,
+                                            user: user,
+                                            isCharityStand: true,
+                                          ),
+                                        ));
+                                  } else {
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => CustomPage(
+                                                  user: user,
+                                                  pageName: 'Donate',
+                                                  contentOfThePage:
+                                                      DonorPage_2(),
+                                                  scale: 0.2,
+                                                  isCharityStand: false,
+                                                )));
+                                  }
+                                });
+                              },
                               items: [
                                 for (final tabItem
                                     in TabNavigationItem.items(user))

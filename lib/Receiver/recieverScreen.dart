@@ -6,8 +6,14 @@ class RecieverPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white70,
-      child: Center(
-        child: Text("Hi there!"),
+      child: Column(
+        children: [
+          SizedBox(height: 250),
+          Center(
+            child: Text("Hi there!"),
+          ),
+          SizedBox(height: 200),
+        ],
       ),
     );
   }

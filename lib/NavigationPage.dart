@@ -7,40 +7,40 @@ import 'package:Ataa/appUser.dart';
 import 'custom/customPage_2.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 
-class HomePage extends StatefulWidget {
-  final AppUser user;
-  HomePage(this.user);
-  @override
-  _HomePageState createState() => _HomePageState(user);
-}
+// class HomePage extends StatefulWidget {
+//   final AppUser user;
+//   HomePage(this.user);
+//   @override
+//   _HomePageState createState() => _HomePageState(user);
+// }
 
-class _HomePageState extends State<HomePage> {
-  int _currentIndex = 0;
-  final AppUser user;
-  _HomePageState(this.user);
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: [
-          for (final tabItem in TabNavigationItem.items(user)) tabItem.page,
-        ],
-      ),
-// bottomNavigationBar: BottomNavigationBar(
-//   currentIndex: _currentIndex,
-//   onTap: (int index) => setState(() => _currentIndex = index),
-//   items: [
-//     for (final tabItem in TabNavigationItem.items(user))
-//       BottomNavigationBarItem(
-//           icon: tabItem.icon,
-//           label: tabItem.title,
-//           backgroundColor: Colors.green)
-//   ],
-// ),
-    );
-  }
-}
+// class _HomePageState extends State<HomePage> {
+//   int _currentIndex = 0;
+//   final AppUser user;
+//   _HomePageState(this.user);
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: IndexedStack(
+//         index: _currentIndex,
+//         children: [
+//           for (final tabItem in TabNavigationItem.items(user)) tabItem.page,
+//         ],
+//       ),
+//       // bottomNavigationBar: BottomNavigationBar(
+//       //   currentIndex: _currentIndex,
+//       //   onTap: (int index) => setState(() => _currentIndex = index),
+//       //   items: [
+//       //     for (final tabItem in TabNavigationItem.items(user))
+//       //       BottomNavigationBarItem(
+//       //           icon: tabItem.icon,
+//       //           label: tabItem.title,
+//       //           backgroundColor: Colors.green)
+//       //   ],
+//       // ),
+//     );
+//   }
+// }
 
 class TabNavigationItem {
   final Widget page;

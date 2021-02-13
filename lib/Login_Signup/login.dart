@@ -204,14 +204,15 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (context) =>
-                // CustomPage(
-                //       user: user,
-                //       pageName: 'Donate',
-                //       contentOfThePage: DonorPage_2(),
-                //       scale: 0.2,
-                //     )
-                HomePage(user)),
+            builder: (context) => CustomPage(
+                  user: user,
+                  pageName: 'Donate',
+                  contentOfThePage: DonorPage_2(),
+                  scale: 0.2,
+                  isCharityStand: false,
+                )
+            // HomePage(user)
+            ),
       );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
