@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:Ataa/auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:Ataa/HomePage.dart';
+import 'package:Ataa/NavigationPage.dart';
 
 import 'login.dart';
 

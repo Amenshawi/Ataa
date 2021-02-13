@@ -1,12 +1,12 @@
-import 'package:Ataa/customPage_2.dart';
-import 'package:Ataa/donorPage_2.dart';
+import 'package:Ataa/Custom/customPage_2.dart';
+import 'package:Ataa/Donor/donorPage_2.dart';
 import 'package:flutter/material.dart';
-import 'package:Ataa/HomePage.dart';
+import 'package:Ataa/NavigationPage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:Ataa/signup.dart';
+import 'signup.dart';
 import 'package:Ataa/auth.dart';
-import 'package:Ataa/ForgetPassword.dart';
+import 'ForgetPassword.dart';
 
 var visible = false;
 var signedIn = false;
@@ -204,12 +204,14 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (context) => CustomPage(
-                  user: user,
-                  pageName: 'Donate',
-                  contentOfThePage: DonorPage_2(),
-                  scale: 0.2,
-                )),
+            builder: (context) =>
+                // CustomPage(
+                //       user: user,
+                //       pageName: 'Donate',
+                //       contentOfThePage: DonorPage_2(),
+                //       scale: 0.2,
+                //     )
+                HomePage(user)),
       );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -225,7 +227,7 @@ class _LoginPageState extends State<LoginPage> {
           isLoading = false;
           visible = true;
         });
-      }else{
+      } else {
         setState(() {
           isLoading = false;
           visible = true;

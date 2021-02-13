@@ -1,4 +1,4 @@
-import 'package:Ataa/HomePage.dart';
+import 'package:Ataa/NavigationPage.dart';
 import 'package:flutter/material.dart';
 
 class CharityStandsPage extends StatelessWidget {
