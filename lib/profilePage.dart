@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:Ataa/appUser.dart';
 import 'package:Ataa/auth.dart';
+import 'package:Ataa/login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:Ataa/database.dart';
@@ -20,8 +21,7 @@ class _ProfileState extends State<Profile> {
   String shirtSize;
   String pantsSize;
   int shoeSize;
-  List<int> shoesSizes = [];
-
+  TextEditingController shoeSizeController = TextEditingController();
   double hieghtSize, widthSize;
   bool visiblePassword = false;
   bool isSwitched;
@@ -50,8 +50,6 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    for(int i = 1 ; i < 50 ; i++)
-      shoesSizes.add(i);
     Size size = MediaQuery.of(context).size;
     hieghtSize = size.height;
     widthSize = size.width;
@@ -266,7 +264,10 @@ class _ProfileState extends State<Profile> {
                 if (password) {
                   visiblePassword = false;
                   changePassword(context);
-                } else if (!blurBackground[index] ||
+                } else if(index == 3){
+                  print('in index 3');
+                  clothingCard(context);
+                }else if (!blurBackground[index] ||
                     controllers[index].text == '') {
                       print('second if');
                   controllers[index].clear();
@@ -287,9 +288,6 @@ class _ProfileState extends State<Profile> {
                     print(error.toString);
                     //show error message
                   }
-                }else if(index == 3){
-                  print('in index 3');
-                  clothingCard(context);
                 }
               },
             ),
@@ -470,6 +468,7 @@ class _ProfileState extends State<Profile> {
         });
   }
  Widget clothingSheet(){
+   bool error = false;
     print('in clothing sheet');
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
@@ -486,93 +485,154 @@ class _ProfileState extends State<Profile> {
               Container(
                 child: Column(
                   children: [
+                    Visibility(
+                      visible: error,
+                      child: 
+                      Text('Please Enter a Valid Shoe Size',
+                      style: TextStyle(fontSize: 26, color: Colors.red),),),
                     Row(
                       children: [
-                        Text('Shirts/Tshirts'),
-                        DropdownButton(
-                          value: shirtSize,
-                          icon: Icon(Icons.arrow_downward),
-                          iconSize: 22,
-                          style: TextStyle(
-                            color: ataaGold,
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold
+                        Column(
+                          children: [
+                            Text('Shirts/Tshirts',
+                            style: TextStyle(
+                              color: ataaGreen,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold),),
+                              SizedBox(height: 50,),
+                              Text('Pants',
+                            style: TextStyle(
+                              color: ataaGreen,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold),),
+                              SizedBox(height: 50,),
+                              Text('Shoe Size',
+                            style: TextStyle(
+                              color: ataaGreen,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold),),
+                          ],),
+                          SizedBox(width: 50,),
+                          Column(
+                            children: [
+                                 DropdownButton(
+                              value: shirtSize,
+                              icon: Icon(Icons.arrow_downward),
+                              iconSize: 22,
+                              style: TextStyle(
+                                color: ataaGold,
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold
+                                ),
+                                underline: Container(height: 2, color: ataaGreen),
+                                onChanged: (String newValue){
+                                  setState((){
+                                    shirtSize = newValue;
+                                  });
+                                },
+                                items: <String>['xS','S','M','L','XL','XXL','XXXL']
+                                        .map<DropdownMenuItem<String>>((String value){
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value, 
+                                            style: TextStyle(
+                                              color: ataaGreen,
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.bold
+                                            ), textAlign: TextAlign.center,
+                                            ),
+                                          );
+                                        }).toList(), 
                             ),
-                            underline: Container(height: 2, color: ataaGreen),
-                            onChanged: (String newValue){
-                              setState((){
-                                shirtSize = newValue;
-                              });
-                            },
-                            items: <String>['xS','S','M','L','XL','XXL','XXXL']
-                                    .map<DropdownMenuItem<String>>((String value){
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(), 
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 15,),
-                    Row(
-                      children: [
-                        Text('Pants Size'),
-                        DropdownButton(
-                          value: pantsSize,
-                          icon: Icon(Icons.arrow_downward),
-                          iconSize: 22,
-                          style: TextStyle(
-                            color: ataaGold,
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold
+                            SizedBox(height: 30,),
+                             DropdownButton(
+                              value: pantsSize,
+                              icon: Icon(Icons.arrow_downward),
+                              iconSize: 22,
+                              style: TextStyle(
+                                color: ataaGold,
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold
+                                ),
+                                underline: Container(height: 2, color: ataaGreen),
+                                onChanged: (String newValue){
+                                  setState((){
+                                    pantsSize = newValue;
+                                  });
+                                },
+                                items: <String>['xS','S','M','L','XL','XXL','XXXL']
+                                        .map<DropdownMenuItem<String>>((String value){
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value, 
+                                            style: TextStyle(
+                                              color: ataaGreen,
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.bold
+                                            ), textAlign: TextAlign.center,
+                                            ),
+                                          );
+                                        }).toList(), 
                             ),
-                            underline: Container(height: 2, color: ataaGreen),
-                            onChanged: (String newValue){
-                              setState((){
-                                shirtSize = newValue;
-                              });
+                            SizedBox(height: 30,),
+                               SizedBox(
+                                 width: 100,
+                                 height: 50,
+                                 child: TextField(
+                                    decoration:InputDecoration(
+                                      enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(color: Color.fromRGBO(28, 102, 74, 0.7))),
+                                      focusedBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(color: Color.fromRGBO(28, 102, 74, 1.0), width: 3.0)),),
+                                   controller: shoeSizeController,
+                                   style: TextStyle(
+                                     fontSize: 22, 
+                                     color: ataaGreen, 
+                                     fontWeight: FontWeight.bold),
+                                     keyboardType: TextInputType.number,
+                                     textAlign: TextAlign.center,
+                                     onChanged: (String value){
+                                      setState((){
+                                        int temp = int.tryParse(value);
+                                        if(temp == null)
+                                          error = true;
+                                        else if(temp <5 || temp > 55)
+                                         error = true;
+                                         else
+                                         shoeSize = temp;
+                                        });
+                                     },
+                                 ),
+                               )
+                            ],)
+                      ],),
+                      SizedBox(height: 30,),
+                           Container(
+                            padding: EdgeInsets.all(5),
+                            child: FlatButton(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                              color: ataaGreen,
+                              height: 50,
+                              minWidth: 120,
+                              child: Text('Save',
+                                style: TextStyle(color: ataaGold, fontSize:20,),
+                              ),
+                              onPressed: () async {
+                                if(shirtSize.isNotEmpty && pantsSize.isNotEmpty && shoeSize.toString().isNotEmpty){
+                                  /*await database.updateClothesSizes(
+                                    shirtSize : shirtSize,
+                                    pantSize : pantsSize,
+                                    shoeSize : shoeSize,
+                                    user : user 
+                                  );*/
+                                }
+
+
                             },
-                            items: <String>['xS','S','M','L','XL','XXL','XXXL']
-                                    .map<DropdownMenuItem<String>>((String value){
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(), 
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 15,),
-                    Row(
-                      children: [
-                        Text('Shoe Size'),
-                        DropdownButton(
-                          value: shoeSize,
-                          icon: Icon(Icons.arrow_downward),
-                          iconSize: 22,
-                          style: TextStyle(
-                            color: ataaGold,
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold
-                            ),
-                            underline: Container(height: 2, color: ataaGreen),
-                            onChanged: (int newValue){
-                              setState((){
-                                shoeSize = newValue;
-                              });
-                            },
-                            items: shoesSizes.map<DropdownMenuItem<int>>((int value){
-                                      return DropdownMenuItem<int>(
-                                        value: value,
-                                        child: Text(value.toString()),
-                                      );
-                                    }).toList(),
-                            ) 
-                      ],
-                    ),
+                      )),
                   ],
-                ),
+                )
               )],
           ));
     });

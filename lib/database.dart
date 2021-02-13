@@ -90,4 +90,18 @@ class Database {
       return false;
     }
   }
+  Future updateClothesSizes(String shirtSize, String pantSize, int shoeSize, AppUser user) async{
+    final doc = await firestore
+        .collection('users')
+        .where('uid', isEqualTo: user.uid)
+        .get().then((value) async {
+      await firestore
+          .collection('users')
+          .doc(value.docs[0].id)
+          .update({'shirtSize': shirtSize , 'pantSize': pantSize, 'shoeSize': shoeSize});
+      return true;
+    }).catchError((error) => {
+              //do something when an error happens
+            });
+  }
 }
