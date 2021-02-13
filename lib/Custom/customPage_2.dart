@@ -14,19 +14,10 @@ var _currentIndex = 0;
 // ignore: must_be_immutable
 class CustomPage extends StatefulWidget {
   final AppUser user;
-  String pageName;
-  Widget contentOfThePage;
-  double scale;
-  bool isCharityStand;
+  bool isCharityStand = false;
 
-  CustomPage(
-      {Key key,
-      @required this.user,
-      this.pageName,
-      this.contentOfThePage,
-      this.scale,
-      this.isCharityStand})
-      : super(key: key);
+  @override
+  CustomPage(@required this.user);
 
   @override
   _CustomPageState createState() => _CustomPageState(user);
@@ -34,6 +25,12 @@ class CustomPage extends StatefulWidget {
 
 class _CustomPageState extends State<CustomPage>
     with SingleTickerProviderStateMixin {
+  void _update(int index) {
+    print('from: ' + _currentIndex.toString());
+    print('to: ' + index.toString());
+    setState(() => _currentIndex = index);
+  }
+
   double hieghtSize, widthSize;
   final AppUser user;
   // _DonorScreenState(this.user);
@@ -174,7 +171,7 @@ class _CustomPageState extends State<CustomPage>
                             //     padding:
                             //         EdgeInsets.only(right: widthSize * 0.32),
                             // child:
-                            Text(widget.pageName,
+                            Text('test',
                                 style: TextStyle(
                                     color: ataaGreen,
                                     fontSize: 25,
@@ -187,7 +184,7 @@ class _CustomPageState extends State<CustomPage>
                       message('Hi Abadi', 30),
                       message('Welcome Back', 22),
                       SizedBox(height: hieghtSize * 0.02),
-                      widget.contentOfThePage,
+
                       // Container(
                       //   child: Center(
                       //     child: Text('Hi'),
@@ -257,65 +254,16 @@ class _CustomPageState extends State<CustomPage>
                       //           backgroundColor: Colors.green)
                       //   ],
                       // ),
+                      IndexedStack(index: _currentIndex, children: [
+                        for (final tabItem in TabNavigationItem.items(user))
+                          tabItem.page,
+                      ]),
                       SizedBox(height: hieghtSize * 0.06),
                       Flexible(
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(40),
-                          child: BottomNavigationBar(
-                              backgroundColor: ataaWhite,
-                              currentIndex: _currentIndex,
-                              onTap: (int index) {
-                                _currentIndex = index;
-                                print(_currentIndex);
-                                setState(() {
-                                  if (_currentIndex == 1) {
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => CustomPage(
-                                                  pageName: 'Recieve',
-                                                  contentOfThePage:
-                                                      RecieverPage(),
-                                                  scale: 0.2,
-                                                  user: user,
-                                                  isCharityStand: false,
-                                                )));
-                                  } else if (_currentIndex == 2) {
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => CustomPage(
-                                            pageName: 'Charity Stands',
-                                            contentOfThePage:
-                                                CharityStandsPage(),
-                                            scale: 0.1,
-                                            user: user,
-                                            isCharityStand: true,
-                                          ),
-                                        ));
-                                  } else {
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => CustomPage(
-                                                  user: user,
-                                                  pageName: 'Donate',
-                                                  contentOfThePage:
-                                                      DonorPage_2(),
-                                                  scale: 0.2,
-                                                  isCharityStand: false,
-                                                )));
-                                  }
-                                });
-                              },
-                              items: [
-                                for (final tabItem
-                                    in TabNavigationItem.items(user))
-                                  BottomNavigationBarItem(
-                                      icon: tabItem.icon,
-                                      label: tabItem.title,
-                                      backgroundColor: Colors.green)
-                              ]),
+                          child: TabNavigationItem.getNavBar(
+                              _currentIndex, user, this._update),
                         ),
                       ),
                     ],

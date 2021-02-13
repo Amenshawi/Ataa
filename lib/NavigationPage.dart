@@ -41,11 +41,11 @@ import 'package:flutter_icons/flutter_icons.dart';
 //     );
 //   }
 // }
-
 class TabNavigationItem {
   final Widget page;
   final String title;
   final Icon icon;
+
   TabNavigationItem({
     @required this.page,
     @required this.title,
@@ -54,22 +54,12 @@ class TabNavigationItem {
 
   static List<TabNavigationItem> items(user) => [
         TabNavigationItem(
-          page: CustomPage(
-            user: user,
-            pageName: 'Donate',
-            contentOfThePage: DonorPage_2(),
-            scale: 0.2,
-          ),
+          page: DonorPage_2(),
           icon: Icon(FontAwesome5.handshake),
           title: "Donate",
         ),
         TabNavigationItem(
-          page: CustomPage(
-            pageName: 'Recieve',
-            contentOfThePage: RecieverPage(),
-            scale: 0.2,
-            user: user,
-          ),
+          page: RecieverPage(),
           icon: Icon(
             Icons.shopping_bag_outlined,
             size: 40,
@@ -77,17 +67,26 @@ class TabNavigationItem {
           title: "Recieve",
         ),
         TabNavigationItem(
-          page: CustomPage(
-            pageName: 'Charity Stands',
-            contentOfThePage: CharityStandsPage(),
-            scale: 0.1,
-            user: user,
-          ),
+          page: CharityStandsPage(),
           icon: Icon(
             Icons.store_mall_directory_rounded,
             size: 40,
           ),
           title: "Charity Stands",
-        ),
+        )
       ];
+
+  static getNavBar(_currentIndex, user, update) {
+    return BottomNavigationBar(
+      currentIndex: _currentIndex,
+      onTap: (int index) => update(index),
+      items: [
+        for (final tabItem in TabNavigationItem.items(user))
+          BottomNavigationBarItem(
+            icon: tabItem.icon,
+            label: tabItem.title,
+          )
+      ],
+    );
+  }
 }

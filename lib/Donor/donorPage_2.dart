@@ -1,7 +1,9 @@
 import 'package:Ataa/Custom/Sheet.dart';
 import 'package:Ataa/Custom/createButtons_2.dart';
 import 'package:Ataa/Donor/Donation/CustomForm.dart';
+import 'package:Ataa/appUser.dart';
 import 'package:flutter/material.dart';
+import 'package:Ataa/NavigationPage.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGreenField = Color.fromRGBO(28, 102, 74, .5);
@@ -20,8 +22,15 @@ class _DonorPage_2State extends State<DonorPage_2> {
   bool visible = false;
   bool _subButtons = false;
   bool cardOpen = false;
+  int _currentIndex = 0;
+  // void _update(int index) {
+  //   print('from: ' + _currentIndex.toString());
+  //   print('to: ' + index.toString());
+  //   setState(() => _currentIndex = index);
+  // }
   @override
   Widget build(BuildContext context) {
+    AppUser user;
     Size size = MediaQuery.of(context).size;
     hieghtSize = size.height;
     widthSize = size.width;
@@ -30,6 +39,7 @@ class _DonorPage_2State extends State<DonorPage_2> {
         searchBar(),
         SizedBox(height: hieghtSize * 0.02),
         donorButtons(),
+        // TabNavigationItem.getNavBar(_currentIndex, user, _update),
       ],
     );
   }
