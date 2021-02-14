@@ -632,11 +632,9 @@ class _ProfileState extends State<Profile> {
                                 onChanged: (String value) {
                                   setState(() {
                                     int temp = int.tryParse(value);
-                                    if(value.isNotEmpty)
-                                       if (temp == null){
+                                       if (temp == null)
                                           error = true;
-                                          shoeSizeController.text = user.shoeSize.toString();
-                                       }
+                                       
                                   });
                                 },
                               ),
@@ -664,19 +662,31 @@ class _ProfileState extends State<Profile> {
                             ),
                           ),
                           onPressed: () async {
-                            if(shoeSizeController.text.isNotEmpty &&
-                              int.tryParse(shoeSizeController.text) >= 5 &&
-                              int.tryParse(shoeSizeController.text) != null)
-                              {
-                              Navigator.pop(context);
-                              await database.updateClothesSizes(
+                            int temp = int.tryParse(shoeSizeController.text);
+                            if(shoeSizeController.text.isNotEmpty){
+                              if (temp == null || 
+                                  int.tryParse(shoeSizeController.text) <= 5 || 
+                                  int.tryParse(shoeSizeController.text) >= 55){
+                                error = true;
+                              }else{
+                                user.shoeSize = temp;
+                                error = false;
+                              }
+                              }else{
+                                user.shoeSize = null;
+                                error = false;
+                              }
+                              print(user.shoeSize);
+                              if(!error){
+                                Navigator.pop(context);
+                                await database.updateClothesSizes(
                                   user.shirtSize, user.pantSize, user.shoeSize, user);
-                            }else
-                            setState((){
-                              shoeSizeController.text = user.shoeSize.toString();
-                              error = true;
-                            });
-                          },
+                              }else
+                                setState((){
+                                  error = true;
+                                });
+
+                            },
                         )),
                   ],
                 ))
