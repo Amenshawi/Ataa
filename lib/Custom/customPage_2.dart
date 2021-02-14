@@ -9,12 +9,11 @@ final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGreenField = Color.fromRGBO(28, 102, 74, .5);
 final Color ataaGold = Color.fromRGBO(244, 234, 146, .8);
 final Color ataaWhite = Color.fromRGBO(255, 255, 255, 0.75);
-var _currentIndex = 0;
+// var _currentIndex = 0;
 
 // ignore: must_be_immutable
 class CustomPage extends StatefulWidget {
   final AppUser user;
-  bool isCharityStand = false;
 
   @override
   CustomPage(@required this.user);
@@ -28,7 +27,20 @@ class _CustomPageState extends State<CustomPage>
   void _update(int index) {
     print('from: ' + _currentIndex.toString());
     print('to: ' + index.toString());
-    setState(() => _currentIndex = index);
+    // setState(() => _currentIndex = index);
+    setState(() {
+      _currentIndex = index;
+      if (index == 0) {
+        pageName = 'Donate';
+        isCharityStand = false;
+      } else if (index == 1) {
+        pageName = 'Receive';
+        isCharityStand = false;
+      } else {
+        pageName = 'Charity Stand';
+        isCharityStand = true;
+      }
+    });
   }
 
   double hieghtSize, widthSize;
@@ -41,7 +53,9 @@ class _CustomPageState extends State<CustomPage>
   Animation<double> _scaleAnimation;
   Animation<double> _menuScaleAnimation;
   Animation<Offset> _slideAnimation;
-  // int _currentIndex = 0;
+  int _currentIndex = 0;
+  String pageName;
+  bool isCharityStand = false;
 
   // ignore: invalid_required_positional_param
   _CustomPageState(@required this.user);
@@ -164,14 +178,14 @@ class _CustomPageState extends State<CustomPage>
                                 },
                               ),
                             ),
-                            widget.isCharityStand
+                            isCharityStand
                                 ? SizedBox(width: widthSize * 0.1)
                                 : SizedBox(width: widthSize * 0.2),
                             // Padding(
                             //     padding:
                             //         EdgeInsets.only(right: widthSize * 0.32),
                             // child:
-                            Text('test',
+                            Text(pageName,
                                 style: TextStyle(
                                     color: ataaGreen,
                                     fontSize: 25,
@@ -258,7 +272,7 @@ class _CustomPageState extends State<CustomPage>
                         for (final tabItem in TabNavigationItem.items(user))
                           tabItem.page,
                       ]),
-                      SizedBox(height: hieghtSize * 0.06),
+                      SizedBox(height: hieghtSize * 0.05),
                       Flexible(
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(40),
