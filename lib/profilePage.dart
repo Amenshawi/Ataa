@@ -18,10 +18,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  String shirtSize;
-  String pantsSize;
-  int shoeSize;
-  TextEditingController shoeSizeController = TextEditingController();
+  TextEditingController shoeSizeController;
   double hieghtSize, widthSize;
   bool visiblePassword = false;
   bool isSwitched;
@@ -46,6 +43,10 @@ class _ProfileState extends State<Profile> {
     // TODO: implement initState
     super.initState();
     private = database.getPrivacy(user);
+    if(user.shoeSize == null)
+      shoeSizeController = TextEditingController();
+    else
+      shoeSizeController = TextEditingController(text:user.shoeSize.toString());
   }
 
   @override
@@ -265,18 +266,15 @@ class _ProfileState extends State<Profile> {
                   visiblePassword = false;
                   changePassword(context);
                 } else if (index == 3) {
-                  print('in index 3');
                   clothingCard(context);
                 } else if (!blurBackground[index] ||
                     controllers[index].text == '') {
-                  print('second if');
                   controllers[index].clear();
                   setState(() {
                     readWriteToggole[index] = !readWriteToggole[index];
                     blurBackground[index] = !blurBackground[index];
                   });
                 } else if (index == 0) {
-                  print('third if');
                   try {
                     print(controllers[0].text);
                     user = _auth.changeEmail(controllers[0].text, user);
@@ -452,7 +450,6 @@ class _ProfileState extends State<Profile> {
   }
 
   clothingCard(context) {
-    print('in clothing card');
     showModalBottomSheet(
         context: context,
         shape: RoundedRectangleBorder(
@@ -470,217 +467,215 @@ class _ProfileState extends State<Profile> {
 
   Widget clothingSheet() {
     bool error = false;
-    print('in clothing sheet');
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
       return Container(
           height: MediaQuery.of(context).size.height * .4,
           margin: EdgeInsets.all(30),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: EdgeInsets.all(10),
-              ),
-              Container(
-                  child: Column(
-                children: [
-                  Visibility(
-                    visible: error,
-                    child: Text(
-                      'Please Enter a Valid Shoe Size',
-                      style: TextStyle(fontSize: 26, color: Colors.red),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(10),
+                ),
+                Container(
+                    child: Column(
+                  children: [
+                    Visibility(
+                      visible: error,
+                      child: Text(
+                        'Please Enter a Valid Shoe Size',
+                        style: TextStyle(fontSize: 26, color: Colors.red),
+                      ),
                     ),
-                  ),
-                  Row(
-                    children: [
-                      Column(
-                        children: [
-                          Text(
-                            'Shirts/Tshirts',
-                            style: TextStyle(
-                                color: ataaGreen,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(
-                            height: 50,
-                          ),
-                          Text(
-                            'Pants',
-                            style: TextStyle(
-                                color: ataaGreen,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(
-                            height: 50,
-                          ),
-                          Text(
-                            'Shoe Size',
-                            style: TextStyle(
-                                color: ataaGreen,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        width: 50,
-                      ),
-                      Column(
-                        children: [
-                          DropdownButton(
-                            value: shirtSize,
-                            icon: Icon(Icons.arrow_downward),
-                            iconSize: 22,
-                            style: TextStyle(
-                                color: ataaGold,
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold),
-                            underline: Container(height: 2, color: ataaGreen),
-                            onChanged: (String newValue) {
-                              setState(() {
-                                shirtSize = newValue;
-                              });
-                            },
-                            items: <String>[
-                              'xS',
-                              'S',
-                              'M',
-                              'L',
-                              'XL',
-                              'XXL',
-                              'XXXL'
-                            ].map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(
-                                  value,
-                                  style: TextStyle(
-                                      color: ataaGreen,
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.center,
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          DropdownButton(
-                            value: pantsSize,
-                            icon: Icon(Icons.arrow_downward),
-                            iconSize: 22,
-                            style: TextStyle(
-                                color: ataaGold,
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold),
-                            underline: Container(height: 2, color: ataaGreen),
-                            onChanged: (String newValue) {
-                              setState(() {
-                                pantsSize = newValue;
-                              });
-                            },
-                            items: <String>[
-                              'xS',
-                              'S',
-                              'M',
-                              'L',
-                              'XL',
-                              'XXL',
-                              'XXXL'
-                            ].map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(
-                                  value,
-                                  style: TextStyle(
-                                      color: ataaGreen,
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.center,
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          SizedBox(
-                            width: 100,
-                            height: 50,
-                            child: TextField(
-                              decoration: InputDecoration(
-                                enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color:
-                                            Color.fromRGBO(28, 102, 74, 0.7))),
-                                focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Color.fromRGBO(28, 102, 74, 1.0),
-                                        width: 3.0)),
-                              ),
-                              controller: shoeSizeController,
+                    Row(
+                      children: [
+                        Column(
+                          children: [
+                            Text(
+                              'Shirts/Tshirts',
                               style: TextStyle(
-                                  fontSize: 22,
                                   color: ataaGreen,
+                                  fontSize: 24,
                                   fontWeight: FontWeight.bold),
-                              keyboardType: TextInputType.number,
-                              textAlign: TextAlign.center,
-                              onChanged: (String value) {
+                            ),
+                            SizedBox(
+                              height: 40,
+                            ),
+                            Text(
+                              'Pants',
+                              style: TextStyle(
+                                  color: ataaGreen,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              height: 40,
+                            ),
+                            Text(
+                              'Shoe Size',
+                              style: TextStyle(
+                                  color: ataaGreen,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          width: 50,
+                        ),
+                        Column(
+                          children: [
+                            DropdownButton(
+                              value: user.shirtSize,
+                              icon: Icon(Icons.arrow_downward),
+                              iconSize: 22,
+                              style: TextStyle(
+                                  color: ataaGold,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold),
+                              underline: Container(height: 2, color: ataaGreen),
+                              onChanged: (String newValue) {
                                 setState(() {
-                                  int temp = int.tryParse(value);
-                                  if (temp == null)
-                                    error = true;
-                                  else if (temp < 5 || temp > 55)
-                                    error = true;
-                                  else {
-                                    shoeSize = temp;
-                                    error = false;
-                                  }
+                                  user.shirtSize = newValue;
                                 });
                               },
+                              items: <String>[
+                                'xS',
+                                'S',
+                                'M',
+                                'L',
+                                'XL',
+                                'XXL',
+                                'XXXL'
+                              ].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(
+                                    value,
+                                    style: TextStyle(
+                                        color: ataaGreen,
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                );
+                              }).toList(),
                             ),
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Container(
-                      padding: EdgeInsets.all(5),
-                      child: FlatButton(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
-                        color: ataaGreen,
-                        height: 50,
-                        minWidth: 120,
-                        child: Text(
-                          'Save',
-                          style: TextStyle(
-                            color: ataaGold,
-                            fontSize: 20,
+                            SizedBox(
+                              height: 30,
+                            ),
+                            DropdownButton(
+                              value: user.pantSize,
+                              icon: Icon(Icons.arrow_downward),
+                              iconSize: 22,
+                              style: TextStyle(
+                                  color: ataaGold,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold),
+                              underline: Container(height: 2, color: ataaGreen),
+                              onChanged: (String newValue) {
+                                setState(() {
+                                  user.pantSize = newValue;
+                                });
+                              },
+                              items: <String>[
+                                'xS',
+                                'S',
+                                'M',
+                                'L',
+                                'XL',
+                                'XXL',
+                                'XXXL'
+                              ].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(
+                                    value,
+                                    style: TextStyle(
+                                        color: ataaGreen,
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            SizedBox(
+                              width: 100,
+                              height: 50,
+                              child: TextField(
+                                maxLength: 2,
+                                maxLengthEnforced: true,
+                                decoration: InputDecoration(
+                                  enabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color:
+                                              Color.fromRGBO(28, 102, 74, 0.7))),
+                                  focusedBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Color.fromRGBO(28, 102, 74, 1.0),
+                                          width: 3.0)),
+                                ),
+                                controller: shoeSizeController,
+                                style: TextStyle(
+                                    fontSize: 22,
+                                    color: ataaGreen,
+                                    fontWeight: FontWeight.bold),
+                                keyboardType: TextInputType.number,
+                                textAlign: TextAlign.center,
+                                onChanged: (String value) {
+                                  setState(() {
+                                    int temp = int.tryParse(value);
+                                    if (temp == null)
+                                      error = true;
+                                    else if (temp < 5 || temp > 55)
+                                      error = true;
+                                    else {
+                                      user.shoeSize = temp;
+                                      error = false;
+                                    }
+                                  });
+                                },
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Container(
+                        padding: EdgeInsets.all(5),
+                        child: FlatButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          color: ataaGreen,
+                          height: 50,
+                          minWidth: 120,
+                          child: Text(
+                            'Save',
+                            style: TextStyle(
+                              color: ataaGold,
+                              fontSize: 20,
+                            ),
                           ),
-                        ),
-                        onPressed: () async {
-                          if (shirtSize.isNotEmpty &&
-                              pantsSize.isNotEmpty &&
-                              shoeSize.toString().isNotEmpty) {
-                            print('hi');
-                            Navigator.pop(context);
-                            await database.updateClothesSizes(
-                                shirtSize, pantsSize, shoeSize, user);
-                          }
-                        },
-                      )),
-                ],
-              ))
-            ],
+                          onPressed: () async {
+                              Navigator.pop(context);
+                              await database.updateClothesSizes(
+                                  user.shirtSize, user.pantSize, user.shoeSize, user);
+                          },
+                        )),
+                  ],
+                ))
+              ],
+            ),
           ));
     });
   }

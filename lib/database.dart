@@ -32,7 +32,10 @@ class Database {
           uid: fUser.uid,
           email: fUser.email,
           fname: value.docs.first.data()['first_name'],
-          lname: value.docs.first.data()['last_name']);
+          lname: value.docs.first.data()['last_name'],
+          shirtSize: value.docs.first.data()['shirtSize'],
+          pantSize: value.docs.first.data()['pantsSize'],
+          shoeSize: value.docs.first.data()['shoeSize']);
       print('user Data fetched successfully !');
       print(user);
       return user;

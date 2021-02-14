@@ -5,6 +5,8 @@ class AppUser {
   String email;
   final String fname;
   final String lname;
-
-  AppUser({@required this.uid, @required this.email, this.fname, this.lname});
+  String shirtSize;
+  String pantSize;
+  int shoeSize;
+  AppUser({@required this.uid, @required this.email, this.fname, this.lname, this.shirtSize, this.pantSize, this.shoeSize});
 }
