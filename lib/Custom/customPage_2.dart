@@ -54,7 +54,7 @@ class _CustomPageState extends State<CustomPage>
   Animation<double> _menuScaleAnimation;
   Animation<Offset> _slideAnimation;
   int _currentIndex = 0;
-  String pageName;
+  String pageName = 'Donate';
   bool isCharityStand = false;
 
   // ignore: invalid_required_positional_param
