@@ -1,6 +1,7 @@
 import 'package:Ataa/Charity/charityStandsScreen.dart';
 import 'package:Ataa/Donor/donorPage_2.dart';
 import 'package:Ataa/Receiver/recieverScreen.dart';
+import 'package:Ataa/profilePage.dart';
 import 'package:Ataa/appUser.dart';
 import 'package:flutter/material.dart';
 import '../NavigationPage.dart';
@@ -348,6 +349,10 @@ class _CustomPageState extends State<CustomPage>
                 ),
                 category('Profile', Icons.person, () {
                   // navigate to the profile page
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext bctx) => Profile(user)));
                 }),
                 SizedBox(height: hieghtSize * 0.02),
                 category('History', Icons.history, () {
@@ -364,6 +369,7 @@ class _CustomPageState extends State<CustomPage>
                 SizedBox(height: hieghtSize * 0.3),
                 category('Log Out', Icons.logout, () {
                   // navigate to the profile page
+                  
                 }),
               ],
             ),
