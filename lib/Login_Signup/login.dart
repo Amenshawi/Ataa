@@ -1,10 +1,12 @@
+import 'package:Ataa/Custom/customPage_2.dart';
+import 'package:Ataa/Donor/donorPage_2.dart';
 import 'package:flutter/material.dart';
-import 'package:Ataa/HomePage.dart';
+import 'package:Ataa/NavigationPage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:Ataa/signup.dart';
+import 'signup.dart';
 import 'package:Ataa/auth.dart';
-import 'package:Ataa/ForgetPassword.dart';
+import 'ForgetPassword.dart';
 
 var visible = false;
 var signedIn = false;
@@ -213,7 +215,9 @@ class _LoginPageState extends State<LoginPage> {
       isLoading = false;
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomePage(user)),
+        MaterialPageRoute(builder: (context) => CustomPage(user)
+            // HomePage(user)
+            ),
       );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -225,6 +229,11 @@ class _LoginPageState extends State<LoginPage> {
         });
       } else if (e.code == 'wrong-password') {
         print("Wrong password or email");
+        setState(() {
+          isLoading = false;
+          visible = true;
+        });
+      } else {
         setState(() {
           isLoading = false;
           visible = true;

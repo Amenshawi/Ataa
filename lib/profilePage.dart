@@ -1,12 +1,9 @@
 import 'dart:ui';
 import 'package:Ataa/appUser.dart';
 import 'package:Ataa/auth.dart';
-import 'package:Ataa/donorScreen.dart';
-import 'package:Ataa/login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:Ataa/database.dart';
-import 'package:page_transition/page_transition.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGold = Color.fromRGBO(244, 234, 146, 1);
@@ -544,7 +541,7 @@ class _ProfileState extends State<Profile> {
                                 });
                               },
                               items: <String>[
-                                'xS',
+                                'XS',
                                 'S',
                                 'M',
                                 'L',
@@ -583,7 +580,7 @@ class _ProfileState extends State<Profile> {
                                 });
                               },
                               items: <String>[
-                                'xS',
+                                'XS',
                                 'S',
                                 'M',
                                 'L',
