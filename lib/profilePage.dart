@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:Ataa/appUser.dart';
 import 'package:Ataa/auth.dart';
+import 'package:Ataa/donorScreen.dart';
 import 'package:Ataa/login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -126,7 +127,7 @@ class _ProfileState extends State<Profile> {
                     false,
                     'Location'), // based on the data from the db we can change the icon from add or change (if there is a location then the display icon would be edit and the oppsite).
                 cardBlur(3, Icons.accessibility, 'Clothing Size', Icons.edit,
-                    Icons.check, false, "Clothes"), // same as card 3
+                    Icons.check, false, ""), // same as card 3
                 Card(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
@@ -265,16 +266,16 @@ class _ProfileState extends State<Profile> {
                 if (password) {
                   visiblePassword = false;
                   changePassword(context);
-                } else if (index == 3) {
-                  clothingCard(context);
-                } else if (!blurBackground[index] ||
-                    controllers[index].text == '') {
+                } else if ((!blurBackground[index] && index != 3) ||(
+                    controllers[index].text == '' && index != 3)) {
                   controllers[index].clear();
                   setState(() {
                     readWriteToggole[index] = !readWriteToggole[index];
                     blurBackground[index] = !blurBackground[index];
                   });
-                } else if (index == 0) {
+                } else if (index == 3) {
+                  clothingCard(context);
+                }else if (index == 0) {
                   try {
                     print(controllers[0].text);
                     user = _auth.changeEmail(controllers[0].text, user);
