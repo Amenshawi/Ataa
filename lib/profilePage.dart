@@ -137,7 +137,6 @@ class _ProfileState extends State<Profile> {
                         top: hieghtSize * 0.01, left: widthSize * 0.02),
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
@@ -153,7 +152,7 @@ class _ProfileState extends State<Profile> {
                           Padding(
                               padding: EdgeInsets.only(
                                   top: hieghtSize * 0.009,
-                                  right: widthSize * 0.33),
+                                  right: widthSize * 0.25),
                               child: Text('Private Profile',
                                   style: TextStyle(
                                       fontSize: 20,

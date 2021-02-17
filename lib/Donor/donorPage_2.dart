@@ -311,6 +311,7 @@ class _DonorPage_2State extends State<DonorPage_2> {
       return new ListView();
     }
     return ListView.builder(
+      padding: EdgeInsets.all(2),
       itemCount: charities.length,
       itemBuilder: (BuildContext context, int index) {
         return Container(
