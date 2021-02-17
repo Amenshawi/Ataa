@@ -7,7 +7,6 @@ class SearchSheet extends StatefulWidget {
 }
 
 class _SearchSheetState extends State<SearchSheet> {
-  // var emailController = TextEditingController();
   final database = Database();
   var charities;
   @override

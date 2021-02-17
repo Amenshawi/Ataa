@@ -26,8 +26,6 @@ class CustomPage extends StatefulWidget {
 class _CustomPageState extends State<CustomPage>
     with SingleTickerProviderStateMixin {
   void _update(int index) {
-    print('from: ' + _currentIndex.toString());
-    print('to: ' + index.toString());
     // setState(() => _currentIndex = index);
     setState(() {
       _currentIndex = index;
@@ -196,7 +194,7 @@ class _CustomPageState extends State<CustomPage>
                         ),
                       ),
                       SizedBox(height: hieghtSize * 0.004),
-                      message('Hi Abadi', 30),
+                      message('Hi ' + user.fname, 30),
                       message('Welcome Back', 22),
                       SizedBox(height: hieghtSize * 0.02),
 
@@ -350,9 +348,9 @@ class _CustomPageState extends State<CustomPage>
                 category('Profile', Icons.person, () {
                   // navigate to the profile page
                   Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (BuildContext bctx) => Profile(user)));
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext bctx) => Profile(user)));
                 }),
                 SizedBox(height: hieghtSize * 0.02),
                 category('History', Icons.history, () {
@@ -369,7 +367,6 @@ class _CustomPageState extends State<CustomPage>
                 SizedBox(height: hieghtSize * 0.3),
                 category('Log Out', Icons.logout, () {
                   // navigate to the profile page
-                  
                 }),
               ],
             ),

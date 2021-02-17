@@ -41,10 +41,11 @@ class _ProfileState extends State<Profile> {
     // TODO: implement initState
     super.initState();
     private = database.getPrivacy(user);
-    if(user.shoeSize == null)
+    if (user.shoeSize == null)
       shoeSizeController = TextEditingController();
     else
-      shoeSizeController = TextEditingController(text:user.shoeSize.toString());
+      shoeSizeController =
+          TextEditingController(text: user.shoeSize.toString());
   }
 
   @override
@@ -263,8 +264,8 @@ class _ProfileState extends State<Profile> {
                 if (password) {
                   visiblePassword = false;
                   changePassword(context);
-                } else if ((!blurBackground[index] && index != 3) ||(
-                    controllers[index].text == '' && index != 3)) {
+                } else if ((!blurBackground[index] && index != 3) ||
+                    (controllers[index].text == '' && index != 3)) {
                   controllers[index].clear();
                   setState(() {
                     readWriteToggole[index] = !readWriteToggole[index];
@@ -272,17 +273,24 @@ class _ProfileState extends State<Profile> {
                   });
                 } else if (index == 3) {
                   clothingCard(context);
-                }else if (index == 0) {
-                  try {
-                    print(controllers[0].text);
-                    user = _auth.changeEmail(controllers[0].text, user);
+                } else if (index == 0) {
+                  if (blurBackground[index] || controllers[index].text == '') {
                     setState(() {
                       readWriteToggole[index] = !readWriteToggole[index];
                       blurBackground[index] = !blurBackground[index];
                     });
-                  } catch (error) {
-                    print(error.toString);
-                    //show error message
+                  } else {
+                    try {
+                      print(controllers[0].text);
+                      user = _auth.changeEmail(controllers[0].text, user);
+                      setState(() {
+                        readWriteToggole[index] = !readWriteToggole[index];
+                        blurBackground[index] = !blurBackground[index];
+                      });
+                    } catch (error) {
+                      print(error.toString);
+                      //show error message
+                    }
                   }
                 }
               },
@@ -613,11 +621,12 @@ class _ProfileState extends State<Profile> {
                                 decoration: InputDecoration(
                                   enabledBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
-                                          color:
-                                              Color.fromRGBO(28, 102, 74, 0.7))),
+                                          color: Color.fromRGBO(
+                                              28, 102, 74, 0.7))),
                                   focusedBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
-                                          color: Color.fromRGBO(28, 102, 74, 1.0),
+                                          color:
+                                              Color.fromRGBO(28, 102, 74, 1.0),
                                           width: 3.0)),
                                 ),
                                 controller: shoeSizeController,
@@ -630,9 +639,7 @@ class _ProfileState extends State<Profile> {
                                 onChanged: (String value) {
                                   setState(() {
                                     int temp = int.tryParse(value);
-                                       if (temp == null)
-                                          error = true;
-                                       
+                                    if (temp == null) error = true;
                                   });
                                 },
                               ),
@@ -661,30 +668,29 @@ class _ProfileState extends State<Profile> {
                           ),
                           onPressed: () async {
                             int temp = int.tryParse(shoeSizeController.text);
-                            if(shoeSizeController.text.isNotEmpty){
-                              if (temp == null || 
-                                  int.tryParse(shoeSizeController.text) <= 5 || 
-                                  int.tryParse(shoeSizeController.text) >= 55){
+                            if (shoeSizeController.text.isNotEmpty) {
+                              if (temp == null ||
+                                  int.tryParse(shoeSizeController.text) <= 5 ||
+                                  int.tryParse(shoeSizeController.text) >= 55) {
                                 error = true;
-                              }else{
+                              } else {
                                 user.shoeSize = temp;
                                 error = false;
                               }
-                              }else{
-                                user.shoeSize = null;
-                                error = false;
-                              }
-                              print(user.shoeSize);
-                              if(!error){
-                                Navigator.pop(context);
-                                await database.updateClothesSizes(
-                                  user.shirtSize, user.pantSize, user.shoeSize, user);
-                              }else
-                                setState((){
-                                  error = true;
-                                });
-
-                            },
+                            } else {
+                              user.shoeSize = null;
+                              error = false;
+                            }
+                            print(user.shoeSize);
+                            if (!error) {
+                              Navigator.pop(context);
+                              await database.updateClothesSizes(user.shirtSize,
+                                  user.pantSize, user.shoeSize, user);
+                            } else
+                              setState(() {
+                                error = true;
+                              });
+                          },
                         )),
                   ],
                 ))

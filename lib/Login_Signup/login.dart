@@ -249,6 +249,43 @@ class _LoginPageState extends State<LoginPage> {
     }
     return true;
   }
+
+  textField(TextEditingController c, bool password, String labelText,
+      IconData iconName, String changeValue, context) {
+    if (!password) {
+      c.text = emailInput;
+    }
+    return TextField(
+      style: TextStyle(
+          color: Color.fromRGBO(244, 234, 146, 1.0),
+          fontSize: 22,
+          fontWeight: FontWeight.bold),
+      controller: c,
+      obscureText: password,
+      decoration: InputDecoration(
+        enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Color.fromRGBO(244, 234, 146, 1))),
+        focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Color.fromRGBO(244, 234, 146, 1))),
+        prefixIcon: Icon(
+          iconName,
+          color: Color.fromRGBO(244, 234, 146, 1),
+        ),
+        labelText: labelText,
+        labelStyle: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: Color.fromRGBO(244, 234, 146, 0.7)),
+      ),
+      textAlign: TextAlign.start,
+      onChanged: (val) {
+        changeValue = c.text;
+        if (!password) {
+          emailInput = val;
+        }
+      },
+    );
+  }
 }
 
 void _forgetPassword(context) {
@@ -262,35 +299,4 @@ void _forgetPassword(context) {
       builder: (BuildContext bc) {
         return ForgetPassword();
       });
-}
-
-textField(TextEditingController c, bool password, String labelText,
-    IconData iconName, String changeValue, context) {
-  return TextField(
-    style: TextStyle(
-        color: Color.fromRGBO(244, 234, 146, 1.0),
-        fontSize: 22,
-        fontWeight: FontWeight.bold),
-    controller: c,
-    obscureText: password,
-    decoration: InputDecoration(
-      enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Color.fromRGBO(244, 234, 146, 1))),
-      focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Color.fromRGBO(244, 234, 146, 1))),
-      prefixIcon: Icon(
-        iconName,
-        color: Color.fromRGBO(244, 234, 146, 1),
-      ),
-      labelText: labelText,
-      labelStyle: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 20,
-          color: Color.fromRGBO(244, 234, 146, 0.7)),
-    ),
-    textAlign: TextAlign.start,
-    onEditingComplete: () {
-      changeValue = c.text;
-    },
-  );
 }
