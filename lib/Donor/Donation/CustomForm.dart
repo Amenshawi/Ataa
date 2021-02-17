@@ -7,15 +7,18 @@ final Color ataaGold = Color.fromRGBO(244, 234, 146, .8);
 final Color ataaWhite = Color.fromRGBO(255, 255, 255, 0.75);
 
 class CustomForm extends StatefulWidget {
+  final String type;
+  CustomForm(this.type);
   @override
-  _CustomFormState createState() => _CustomFormState();
+  _CustomFormState createState() => _CustomFormState(type);
 }
 
 class _CustomFormState extends State<CustomForm> {
   // File _image;
   double heightSize, widthSize;
   bool isSwitched = false;
-
+  String type;
+  _CustomFormState(this.type);
   // Future getImage() async {
   //   PickedFile pickedFile = await ImagePicker.getImage(
   //       source: ImageSource.camera, imageQuality: 50);
@@ -207,6 +210,7 @@ class _CustomFormState extends State<CustomForm> {
                   child: Icon(Icons.done, color: ataaGreen, size: 30),
                   onPressed: () {
                     print('Hi there!');
+                    // call db.addDonation here
                   },
                 ),
               )
