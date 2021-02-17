@@ -224,7 +224,7 @@ class _DonorPage_2State extends State<DonorPage_2> {
         ),
       ),
       onTap: () {
-        showSheet(context, name, CustomForm());
+        showSheet(context, name, CustomForm(name));
         setState(() {
           // _subButtons = !_subButtons;
           cardOpen = !cardOpen;
