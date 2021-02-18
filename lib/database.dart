@@ -114,16 +114,16 @@ class Database {
             });
   }
 
-  Future addDonation(
-      User user, String type, photo, String desc, bool anonymous, location) {
-    final ref = firestore
+  Future addDonation(AppUser user, String type, photo, String desc,
+      bool anonymous, location) async {
+    final ref = await firestore
         .collection('users')
         .where('uid', isEqualTo: user.uid)
         .get()
         .then((value) {
       return value.docs[0].reference;
     });
-    firestore.collection('donations').add({
+    await firestore.collection('donations').add({
       'type': type,
       'user': ref,
       'photo': photo,

@@ -54,7 +54,7 @@ class TabNavigationItem {
 
   static List<TabNavigationItem> items(user) => [
         TabNavigationItem(
-          page: DonorPage_2(),
+          page: DonorPage_2(user),
           icon: Icon(FontAwesome5.handshake),
           title: "Donate",
         ),

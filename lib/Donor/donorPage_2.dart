@@ -13,8 +13,10 @@ final Color ataaWhite = Color.fromRGBO(255, 255, 255, 0.75);
 
 // ignore: camel_case_types
 class DonorPage_2 extends StatefulWidget {
+  final AppUser user;
+  DonorPage_2(this.user);
   @override
-  _DonorPage_2State createState() => _DonorPage_2State();
+  _DonorPage_2State createState() => _DonorPage_2State(user);
 }
 
 // ignore: camel_case_types
@@ -25,6 +27,9 @@ class _DonorPage_2State extends State<DonorPage_2> {
   bool cardOpen = false;
   int _currentIndex = 0;
   final database = Database();
+  final AppUser user;
+
+  _DonorPage_2State(this.user);
   var charities;
   // void _update(int index) {
   //   print('from: ' + _currentIndex.toString());
@@ -224,7 +229,7 @@ class _DonorPage_2State extends State<DonorPage_2> {
         ),
       ),
       onTap: () {
-        showSheet(context, name, CustomForm(name));
+        showSheet(context, name, CustomForm(name, user));
         setState(() {
           // _subButtons = !_subButtons;
           cardOpen = !cardOpen;

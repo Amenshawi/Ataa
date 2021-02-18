@@ -1,5 +1,10 @@
 // import 'dart:io';
+import 'package:Ataa/appUser.dart';
+import 'package:Ataa/database.dart';
 import 'package:flutter/material.dart';
+import 'dart:io';
+
+import 'package:image_picker/image_picker.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGreenField = Color.fromRGBO(28, 102, 74, .5);
@@ -8,17 +13,23 @@ final Color ataaWhite = Color.fromRGBO(255, 255, 255, 0.75);
 
 class CustomForm extends StatefulWidget {
   final String type;
-  CustomForm(this.type);
+  final AppUser user;
+  CustomForm(this.type, this.user);
   @override
-  _CustomFormState createState() => _CustomFormState(type);
+  _CustomFormState createState() => _CustomFormState(type, user);
 }
 
 class _CustomFormState extends State<CustomForm> {
-  // File _image;
+  final database = Database();
+  PickedFile _image;
   double heightSize, widthSize;
   bool isSwitched = false;
-  String type;
-  _CustomFormState(this.type);
+  TextEditingController descController = TextEditingController();
+  bool anonymous;
+  bool imagePicked = false;
+  final String type;
+  final AppUser user;
+  _CustomFormState(this.type, this.user);
   // Future getImage() async {
   //   PickedFile pickedFile = await ImagePicker.getImage(
   //       source: ImageSource.camera, imageQuality: 50);
@@ -57,7 +68,7 @@ class _CustomFormState extends State<CustomForm> {
               //       Column(children: [
               GestureDetector(
                 onTap: () {
-                  print('Hi there!');
+                  _showPicker(context);
                 },
                 child: Container(
                   height: heightSize * 0.07,
@@ -70,7 +81,9 @@ class _CustomFormState extends State<CustomForm> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          mainAxisAlignment: !imagePicked
+                              ? MainAxisAlignment.spaceAround
+                              : MainAxisAlignment.center,
                           children: [
                             Icon(
                               Icons.camera_alt_rounded,
@@ -78,10 +91,13 @@ class _CustomFormState extends State<CustomForm> {
                               // color: Colors.grey,
                               color: ataaGreen,
                             ),
-                            Text(
-                              'Upload a Photo',
-                              style: TextStyle(color: ataaGreen, fontSize: 20),
-                            ),
+                            !imagePicked
+                                ? Text(
+                                    'Upload a Photo',
+                                    style: TextStyle(
+                                        color: ataaGreen, fontSize: 20),
+                                  )
+                                : Text(''),
                           ],
                         ),
                       ],
@@ -111,14 +127,18 @@ class _CustomFormState extends State<CustomForm> {
                         // mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Descrption ',
-                              style: TextStyle(color: ataaGreen, fontSize: 20)),
+                          // Text('Descrption ',
+                          //     style: TextStyle(color: ataaGreen, fontSize: 20)),
                           Expanded(
                             child: TextField(
+                              controller: descController,
                               cursorColor: ataaGreen,
                               keyboardType: TextInputType.multiline,
                               maxLines: 3,
                               decoration: InputDecoration(
+                                  hintText: 'Descrption',
+                                  hintStyle:
+                                      TextStyle(color: ataaGreen, fontSize: 22),
                                   focusedBorder: UnderlineInputBorder(
                                       borderSide:
                                           BorderSide(color: ataaGreen))),
@@ -150,7 +170,7 @@ class _CustomFormState extends State<CustomForm> {
                         onChanged: (value) {
                           setState(() {
                             isSwitched = value;
-                            // database.changePrivacy(user, value);
+                            anonymous = value;
                           });
                         },
                         activeTrackColor: ataaGreen,
@@ -210,6 +230,9 @@ class _CustomFormState extends State<CustomForm> {
                   child: Icon(Icons.done, color: ataaGreen, size: 30),
                   onPressed: () {
                     print('Hi there!');
+                    database.addDonation(user, type, 'pic', descController.text,
+                        anonymous, 'location');
+                    Navigator.pop(context);
                     // call db.addDonation here
                   },
                 ),
@@ -219,5 +242,55 @@ class _CustomFormState extends State<CustomForm> {
         ),
       ),
     );
+  }
+
+  void _showPicker(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return SafeArea(
+            child: Container(
+              child: new Wrap(
+                children: <Widget>[
+                  new ListTile(
+                      leading: new Icon(Icons.photo_library),
+                      title: new Text('Photo Library'),
+                      onTap: () {
+                        _imgFromGallery();
+                        Navigator.of(context).pop();
+                      }),
+                  new ListTile(
+                    leading: new Icon(Icons.photo_camera),
+                    title: new Text('Camera'),
+                    onTap: () {
+                      _imgFromCamera();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  _imgFromCamera() async {
+    PickedFile image = await ImagePicker()
+        .getImage(source: ImageSource.camera, imageQuality: 50);
+
+    setState(() {
+      _image = image;
+      imagePicked = true;
+    });
+  }
+
+  _imgFromGallery() async {
+    PickedFile image = await ImagePicker()
+        .getImage(source: ImageSource.gallery, imageQuality: 50);
+
+    setState(() {
+      _image = image;
+      imagePicked = true;
+    });
   }
 }
