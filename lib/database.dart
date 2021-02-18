@@ -8,7 +8,7 @@ class Database {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   Future addUser(String uid, String fname, String lname, DateTime bday) async {
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    CollectionReference users = firestore.collection('users');
 
     users.add({
       'uid': uid,
@@ -112,5 +112,30 @@ class Database {
               print(error.toString)
               //do something when an error happens
             });
+  }
+
+  Future addDonation(
+      User user, String type, photo, String desc, bool anonymous, location) {
+    final ref = firestore
+        .collection('users')
+        .where('uid', isEqualTo: user.uid)
+        .get()
+        .then((value) {
+      return value.docs[0].reference;
+    });
+    firestore.collection('donations').add({
+      'type': type,
+      'user': ref,
+      'photo': photo,
+      'desc': desc,
+      'anonymous': anonymous,
+      'location': location
+    }).then((value) {
+      print('donation added');
+      return;
+    }).catchError((error) {
+      print('couldn\'t add donation.\nError: ' + error.toString());
+      return error;
+    });
   }
 }

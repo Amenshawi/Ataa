@@ -4,6 +4,7 @@ import 'package:Ataa/Donor/Donation/CustomForm.dart';
 import 'package:Ataa/appUser.dart';
 import 'package:flutter/material.dart';
 import 'package:Ataa/NavigationPage.dart';
+import 'package:Ataa/database.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGreenField = Color.fromRGBO(28, 102, 74, .5);
@@ -23,6 +24,8 @@ class _DonorPage_2State extends State<DonorPage_2> {
   bool _subButtons = false;
   bool cardOpen = false;
   int _currentIndex = 0;
+  final database = Database();
+  var charities;
   // void _update(int index) {
   //   print('from: ' + _currentIndex.toString());
   //   print('to: ' + index.toString());
@@ -161,44 +164,7 @@ class _DonorPage_2State extends State<DonorPage_2> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
                   elevation: 8,
-                  child: ListView.builder(
-                    itemCount: 10,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        // margin: EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: ataaGreen,
-                        ),
-                        margin: EdgeInsets.all(8),
-                        child: ListTile(
-                          leading: Icon(Icons.home, size: 27, color: ataaGold),
-                          title: Text(
-                            'Abadi Is here',
-                            style: TextStyle(
-                                color: ataaGold,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Text('Hi',
-                              style: TextStyle(color: ataaGold, fontSize: 20)),
-                          trailing: Icon(
-                            Icons.navigate_next_outlined,
-                            color: ataaGold,
-                            size: 27,
-                          ),
-                          selected: true,
-                          onTap: () {
-                            print('Hello world!');
-                          },
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)),
-                          // tileColor: Colors.white,
-                          // focusColor: Colors.white,
-                        ),
-                      );
-                    },
-                  ),
+                  child: listItems(),
                 ),
               ),
             ],
@@ -258,7 +224,7 @@ class _DonorPage_2State extends State<DonorPage_2> {
         ),
       ),
       onTap: () {
-        showSheet(context, name, CustomForm());
+        showSheet(context, name, CustomForm(name));
         setState(() {
           // _subButtons = !_subButtons;
           cardOpen = !cardOpen;
@@ -312,7 +278,20 @@ class _DonorPage_2State extends State<DonorPage_2> {
                         borderRadius: BorderRadius.circular(40),
                         borderSide: BorderSide.none),
                   ),
-                  onChanged: (val) {},
+                  onChanged: (val) {
+                    if (val != '') {
+                      setState(() async {
+                        charities = await database.searchForCharity(val);
+                        setState(
+                            () {}); //IDK why is has to be here but it's the only way I could find to make it work
+                        print(charities.first.data());
+                      });
+                    } else {
+                      setState(() {
+                        charities = null;
+                      });
+                    }
+                  },
                   onTap: () {
                     setState(() {
                       visible = true;
@@ -324,6 +303,53 @@ class _DonorPage_2State extends State<DonorPage_2> {
           ),
         ),
       ),
+    );
+  }
+
+  listItems() {
+    if (charities == null) {
+      return new ListView();
+    }
+    return ListView.builder(
+      padding: EdgeInsets.all(2),
+      itemCount: charities.length,
+      itemBuilder: (BuildContext context, int index) {
+        return Container(
+          // margin: EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: ataaGreen,
+          ),
+          margin: EdgeInsets.all(8),
+          child: ListTile(
+            leading: Icon(Icons.home, size: 27, color: ataaGold),
+            title: Text(
+              charities[index].data()['name'],
+              style: TextStyle(
+                  color: ataaGold, fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            subtitle: Text(
+                charities[index].data()['specialty'] == null
+                    ? ' '
+                    : charities[index].data()['specialty'],
+                style: TextStyle(color: ataaGold, fontSize: 20)),
+            trailing: Icon(
+              Icons.navigate_next_outlined,
+              color: ataaGold,
+              size: 27,
+            ),
+            selected: true,
+            onTap: () {
+              print('Hello world!');
+              // go to charity page here.
+            },
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            // tileColor: Colors.white,
+            // focusColor: Colors.white,
+          ),
+        );
+      },
     );
   }
 }
