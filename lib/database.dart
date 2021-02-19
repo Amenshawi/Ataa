@@ -1,13 +1,19 @@
+import 'dart:io';
+import 'dart:math';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:Ataa/appUser.dart';
 import 'package:Ataa/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Database {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
+
   Future addUser(String uid, String fname, String lname, DateTime bday) async {
     CollectionReference users = firestore.collection('users');
 
@@ -117,8 +123,10 @@ class Database {
             });
   }
 
-  Future addDonation(AppUser user, String type, photo, String desc,
+  Future addDonation(AppUser user, String type, image, String desc,
       bool anonymous, location) async {
+    image = File(image.path);
+    final url = await uploadImage(image);
     final ref = await firestore
         .collection('users')
         .where('uid', isEqualTo: user.uid)
@@ -129,7 +137,7 @@ class Database {
     await firestore.collection('donations').add({
       'type': type,
       'user': ref,
-      'photo': photo,
+      'image': url,
       'desc': desc,
       'anonymous': anonymous,
       'location': location
@@ -140,6 +148,25 @@ class Database {
       print('couldn\'t add donation.\nError: ' + error.toString());
       return error;
     });
+  }
+
+  Future<String> uploadImage(File _image) async {
+    final rn = new Random().nextInt(99999);
+
+    String url;
+    Reference ref = firebaseStorage
+        .ref()
+        .child('donations/D' + DateTime.now().toString() + rn.toString());
+    UploadTask uploadTask = ref.putFile(_image);
+    await uploadTask.whenComplete(() async {
+      url = await ref.getDownloadURL();
+      print('File Uploaded');
+    }).catchError((error) {
+      print('couldn\'t upload image');
+      print(error.toString());
+    });
+
+    return url;
   }
   Future<void> addLocation(String addressLine , LatLng location, AppUser user) async{
     GeoPoint geopoint = GeoPoint(location.latitude, location.longitude);

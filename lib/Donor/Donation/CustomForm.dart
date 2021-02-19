@@ -230,8 +230,8 @@ class _CustomFormState extends State<CustomForm> {
                   child: Icon(Icons.done, color: ataaGreen, size: 30),
                   onPressed: () {
                     print('Hi there!');
-                    database.addDonation(user, type, 'pic', descController.text,
-                        anonymous, 'location');
+                    database.addDonation(user, type, _image,
+                        descController.text, anonymous, 'location');
                     Navigator.pop(context);
                     // call db.addDonation here
                   },

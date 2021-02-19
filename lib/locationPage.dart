@@ -27,7 +27,7 @@ class _LocationPageState extends State<LocationPage> {
   LatLng currentPosition = LatLng(37.4219983 , -122.084);
   bool foundLocation = false;
   GoogleMapController mapController;
-  Set<Marker> marker =  {};
+  Set<Marker> marker = {};
 
   bool once = false;
 
@@ -75,38 +75,34 @@ class _LocationPageState extends State<LocationPage> {
             top: 0,
             left: MediaQuery.of(context).size.width * 00,
             height: MediaQuery.of(context).size.height * .15,
-            width: MediaQuery.of(context).size.width ,
+            width: MediaQuery.of(context).size.width,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                 Card(
+                Card(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      side: BorderSide(color: ataaGreen,
-                      width: 3)
-                      ),
+                        borderRadius: BorderRadius.circular(20),
+                        side: BorderSide(color: ataaGreen, width: 3)),
                     elevation: 30,
                     color: Colors.white,
                     child: TextField(
                       maxLines: 2,
                       controller: addressController,
                       style: TextStyle(
-                        color: ataaGreen,
-                        fontSize: 16,
-                        fontWeight:  FontWeight.bold
-                        ),
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.location_pin),
+                          color: ataaGreen,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.location_pin),
                         enabledBorder: InputBorder.none,
                         focusedBorder: InputBorder.none,
-                        ),
-                    )
-                    )
+                      ),
+                    ))
               ],
             ),
           ),
           Positioned(
-            bottom: 50 ,
+            bottom: 50,
             left: MediaQuery.of(context).size.width * 0.3,
             height: 50,
             width: MediaQuery.of(context).size.width * 0.4,
@@ -131,10 +127,11 @@ class _LocationPageState extends State<LocationPage> {
                       ),
                     ),
                   ),
-          )
-        ])
-        );
+                ),
+        ]),
+      );
   }
+
   Future _getUserLocation() async {
     bool serviceEnabled;
   LocationPermission permission;
@@ -170,20 +167,24 @@ class _LocationPageState extends State<LocationPage> {
 
     /*bool status = await location.serviceEnabled();
     PermissionStatus _permissionGranted;
-
-    if(!status){
+    if (!status) {
       status = await location.requestService();
-      if(!status)
-      return;
+      if (!status) return;
     }
     _permissionGranted = await location.hasPermission();
+    print(_permissionGranted);
     if (_permissionGranted == PermissionStatus.denied) {
+      print(_permissionGranted);
       _permissionGranted = await location.requestPermission();
+      print(_permissionGranted);
       if (_permissionGranted != PermissionStatus.granted) {
         return;
       }
     }
+    print('before get location');
     var temp = await location.getLocation();
+    print('after get location');
+    print(temp);
     setState(() {
       _locationData = temp;
       foundLocation = true;
@@ -204,7 +205,8 @@ class _LocationPageState extends State<LocationPage> {
               print(" current marker position "+ currentPosition.toString());
         });
   }
-  void _onCameraMove(CameraPosition camera){
+
+  void _onCameraMove(CameraPosition camera) {
     setState(() {
       currentPosition = LatLng(
         camera.target.latitude,

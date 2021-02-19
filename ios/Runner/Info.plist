@@ -11,6 +11,9 @@
 
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>The App Needs Location Permission to Locate Your Address</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>The App Needs Location Permission to Locate Your Address</string>
+	
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
