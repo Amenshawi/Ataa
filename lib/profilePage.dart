@@ -282,7 +282,7 @@ class _ProfileState extends State<Profile> {
                     blurBackground[index] = !blurBackground[index];
                   });
                 }else if (index == 2){
-                  Navigator.push(context , MaterialPageRoute(builder: (context) => LocationPage()));
+                  Navigator.push(context , MaterialPageRoute(builder: (context) => LocationPage(user)));
                 }else if (index == 3) {
                   clothingCard(context);
                 } else if (index == 0) {

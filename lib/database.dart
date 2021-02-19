@@ -3,6 +3,7 @@ import 'package:Ataa/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/semantics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Database {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -35,7 +36,9 @@ class Database {
           lname: value.docs.first.data()['last_name'],
           shirtSize: value.docs.first.data()['shirtSize'],
           pantSize: value.docs.first.data()['pantsSize'],
-          shoeSize: value.docs.first.data()['shoeSize']);
+          shoeSize: value.docs.first.data()['shoeSize'],
+          addressLine: value.docs.first.data()['adreeLine'],
+          location: value.docs.first.data()['geoPoint']);
       print('user Data fetched successfully !');
       print(user);
       return user;
@@ -137,5 +140,19 @@ class Database {
       print('couldn\'t add donation.\nError: ' + error.toString());
       return error;
     });
+  }
+  Future<void> addLocation(String addressLine , LatLng location, AppUser user) async{
+    GeoPoint geopoint = GeoPoint(location.latitude, location.longitude);
+    return await firestore.collection('users').where('uid', isEqualTo: user.uid).get().
+    then((value)async{
+      await firestore.collection('users').doc(value.docs[0].id).update({
+        'geoPoint': geopoint,
+        'addressLine': addressLine
+      });
+      return true;
+    }).catchError((error) => {
+              print(error.toString)
+              //do something when an error happens
+            });
   }
 }

@@ -3,19 +3,27 @@ import 'package:Ataa/appUser.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:Ataa/database.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_controller/google_maps_controller.dart';
-import 'package:location/location.dart';
+import 'package:geolocator/geolocator.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGold = Color.fromRGBO(244, 234, 146, 1);
 
 class LocationPage extends StatefulWidget {
+  final AppUser user;
+  LocationPage(@required this.user);
   @override
-  _LocationPageState createState() => _LocationPageState();
+  _LocationPageState createState() => _LocationPageState(user);
 }
 
 class _LocationPageState extends State<LocationPage> {
+
+  AppUser user;
+  final database = Database();
+
+  String addressLine = '';
   LatLng currentPosition = LatLng(37.4219983 , -122.084);
   bool foundLocation = false;
   GoogleMapController mapController;
@@ -23,19 +31,21 @@ class _LocationPageState extends State<LocationPage> {
 
   bool once = false;
 
-  Location location = new Location();
-  LocationData _locationData;
+  Position location = Position();
+  /*Location location = new Location();
+  LocationData _locationData;*/
 
   TextEditingController addressController = TextEditingController();
 
+  _LocationPageState(this.user);
   @override
   Widget build(BuildContext context) {
-    if(!once)
-    _getUserLocation();
+      if(!once)
+      _getUserLocation();
     return Scaffold(
       appBar: AppBar(backgroundColor: ataaGreen,
       title: Text('Your Location', 
-      style: TextStyle(color: ataaGold, fontSize:24, fontWeight: FontWeight.bold)
+      style: TextStyle(color: Colors.white, fontSize:24, fontWeight: FontWeight.bold)
       ),
       ),
       body:Stack(
@@ -44,9 +54,10 @@ class _LocationPageState extends State<LocationPage> {
           markers: marker,
           onMapCreated: _onMapCreated,
           onCameraMove: _onCameraMove,
+          onCameraIdle: _onCameraIdle,
           mapType: MapType.normal,
           initialCameraPosition: CameraPosition(
-            target: LatLng(_locationData.latitude , _locationData.longitude), 
+            target: LatLng(currentPosition.latitude , currentPosition.longitude), 
             zoom: 16),
         )
         :Center(
@@ -77,7 +88,7 @@ class _LocationPageState extends State<LocationPage> {
                     elevation: 30,
                     color: Colors.white,
                     child: TextField(
-                      maxLines: 3,
+                      maxLines: 2,
                       controller: addressController,
                       style: TextStyle(
                         color: ataaGreen,
@@ -105,11 +116,12 @@ class _LocationPageState extends State<LocationPage> {
                     color: Color.fromRGBO(28, 102, 74, 1),
                     child: GestureDetector(
                       onTap:() {
-                        setState(() {                          
+                        database.addLocation(addressLine, currentPosition , user).whenComplete((){
+                          Navigator.pop(context);
                         });
                       },
                       child: Center(
-                        heightFactor: 2.5,
+                        heightFactor: 3,
                         child: Text('Confirm',
                           style: TextStyle(
                               fontSize: 22,
@@ -124,7 +136,39 @@ class _LocationPageState extends State<LocationPage> {
         );
   }
   Future _getUserLocation() async {
-    bool status = await location.serviceEnabled();
+    bool serviceEnabled;
+  LocationPermission permission;
+
+  serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+    return Future.error('Location services are disabled.');
+  }
+
+  permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.deniedForever) {
+    return Future.error(
+        'Location permissions are permantly denied, we cannot request permissions.');
+  }
+
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission != LocationPermission.whileInUse &&
+        permission != LocationPermission.always) {
+      return Future.error(
+          'Location permissions are denied (actual value: $permission).');
+    }
+  }
+  var temp = await Geolocator.getCurrentPosition();
+  setState(() {
+    location = temp;
+      once = true;
+      currentPosition = LatLng(
+        temp.latitude, 
+        temp.longitude);
+        foundLocation = true;
+    });
+
+    /*bool status = await location.serviceEnabled();
     PermissionStatus _permissionGranted;
 
     if(!status){
@@ -147,11 +191,11 @@ class _LocationPageState extends State<LocationPage> {
       currentPosition = LatLng(
         _locationData.latitude, 
         _locationData.longitude);
-    });
-    print("provided location : latitude " + _locationData.latitude.toString() +" longitude " + _locationData.longitude.toString());
+    });*/
   }
-   void _onMapCreated(GoogleMapController controller) {
+   void _onMapCreated(GoogleMapController controller) async {
     mapController = controller;
+
     setState(() {
           marker.add(
             Marker(
@@ -159,7 +203,6 @@ class _LocationPageState extends State<LocationPage> {
               position: currentPosition ));
               print(" current marker position "+ currentPosition.toString());
         });
-        print(" Markers "+marker.toString());
   }
   void _onCameraMove(CameraPosition camera){
     setState(() {
@@ -173,6 +216,20 @@ class _LocationPageState extends State<LocationPage> {
             position: currentPosition
             ));
         });
-    print('new position' + currentPosition.toString());
+  }
+  void _onCameraIdle()async{
+    Coordinates coordinates = new Coordinates(
+      currentPosition.latitude,
+      currentPosition.longitude
+    );
+    var addresses = await Geocoder.local.findAddressesFromCoordinates(
+          coordinates);
+    var first = addresses.first;
+    String temp = first.addressLine;
+
+    setState(() {
+          addressController.text = temp;
+          addressLine = temp;
+        });
   }
 }
