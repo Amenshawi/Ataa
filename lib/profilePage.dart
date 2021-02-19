@@ -274,14 +274,16 @@ class _ProfileState extends State<Profile> {
                 if (password) {
                   visiblePassword = false;
                   changePassword(context);
-                } else if ((!blurBackground[index] && index != 3) ||
-                    (controllers[index].text == '' && index != 3)) {
+                } else if ((index != 3 && index != 2)&&(!blurBackground[index] ||
+                    controllers[index].text == '')) {
                   controllers[index].clear();
                   setState(() {
                     readWriteToggole[index] = !readWriteToggole[index];
                     blurBackground[index] = !blurBackground[index];
                   });
-                } else if (index == 3) {
+                }else if (index == 2){
+                  Navigator.push(context , MaterialPageRoute(builder: (context) => LocationPage()));
+                }else if (index == 3) {
                   clothingCard(context);
                 } else if (index == 0) {
                   if (blurBackground[index] || controllers[index].text == '') {

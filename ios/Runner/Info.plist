@@ -9,6 +9,8 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Allow access to microphone</string>
 
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>The App Needs Location Permission to Locate Your Address</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
