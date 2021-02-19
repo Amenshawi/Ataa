@@ -19,6 +19,7 @@ class _LocationPageState extends State<LocationPage> {
   LatLng currentPosition = LatLng(37.4219983 , -122.084);
   bool foundLocation = false;
   GoogleMapController mapController;
+  Set<Marker> marker =  {};
 
   bool once = false;
 
@@ -40,7 +41,9 @@ class _LocationPageState extends State<LocationPage> {
       body:Stack(
         children:[ foundLocation ?
         GoogleMap(
+          markers: marker,
           onMapCreated: _onMapCreated,
+          onCameraMove: _onCameraMove,
           mapType: MapType.normal,
           initialCameraPosition: CameraPosition(
             target: LatLng(_locationData.latitude , _locationData.longitude), 
@@ -59,9 +62,9 @@ class _LocationPageState extends State<LocationPage> {
             ),
           Positioned(
             top: 0,
-            left: MediaQuery.of(context).size.width * 0.1,
+            left: MediaQuery.of(context).size.width * 00,
             height: MediaQuery.of(context).size.height * .15,
-            width: MediaQuery.of(context).size.width * .8,
+            width: MediaQuery.of(context).size.width ,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -71,7 +74,7 @@ class _LocationPageState extends State<LocationPage> {
                       side: BorderSide(color: ataaGreen,
                       width: 3)
                       ),
-                    elevation: 20,
+                    elevation: 30,
                     color: Colors.white,
                     child: TextField(
                       maxLines: 3,
@@ -141,10 +144,35 @@ class _LocationPageState extends State<LocationPage> {
       _locationData = temp;
       foundLocation = true;
       once = true;
+      currentPosition = LatLng(
+        _locationData.latitude, 
+        _locationData.longitude);
     });
     print("provided location : latitude " + _locationData.latitude.toString() +" longitude " + _locationData.longitude.toString());
   }
    void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
+    setState(() {
+          marker.add(
+            Marker(
+              markerId:MarkerId('address'),
+              position: currentPosition ));
+              print(" current marker position "+ currentPosition.toString());
+        });
+        print(" Markers "+marker.toString());
+  }
+  void _onCameraMove(CameraPosition camera){
+    setState(() {
+      currentPosition = LatLng(
+        camera.target.latitude,
+        camera.target.longitude
+      );
+          marker.remove(Marker);
+          marker.add(Marker(
+            markerId: MarkerId('address'),
+            position: currentPosition
+            ));
+        });
+    print('new position' + currentPosition.toString());
   }
 }
