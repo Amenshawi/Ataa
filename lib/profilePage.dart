@@ -10,7 +10,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:google_maps_controller/google_maps_controller.dart';
 import 'package:Ataa/locationPage.dart';
 
-
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGold = Color.fromRGBO(244, 234, 146, 1);
 
@@ -274,16 +273,19 @@ class _ProfileState extends State<Profile> {
                 if (password) {
                   visiblePassword = false;
                   changePassword(context);
-                } else if ((index != 3 && index != 2)&&(!blurBackground[index] ||
-                    controllers[index].text == '')) {
+                } else if ((index != 3 && index != 2) &&
+                    (!blurBackground[index] || controllers[index].text == '')) {
                   controllers[index].clear();
                   setState(() {
                     readWriteToggole[index] = !readWriteToggole[index];
                     blurBackground[index] = !blurBackground[index];
                   });
-                }else if (index == 2){
-                  Navigator.push(context , MaterialPageRoute(builder: (context) => LocationPage(user)));
-                }else if (index == 3) {
+                } else if (index == 2) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => LocationPage(user, null)));
+                } else if (index == 3) {
                   clothingCard(context);
                 } else if (index == 0) {
                   if (blurBackground[index] || controllers[index].text == '') {
