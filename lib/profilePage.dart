@@ -61,6 +61,10 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+    if(user.location == null)
+      readWriteToggole[2] = false;
+    if(user.pantSize == null && user.shirtSize == null && user.shoeSize == null)
+      readWriteToggole[3] = false;
     Size size = MediaQuery.of(context).size;
     hieghtSize = size.height;
     widthSize = size.width;
@@ -131,12 +135,12 @@ class _ProfileState extends State<Profile> {
                     2,
                     Icons.location_on,
                     'Add Location',
+                    Icons.edit,
                     Icons.add,
-                    Icons.check,
                     false,
                     'Location'), // based on the data from the db we can change the icon from add or change (if there is a location then the display icon would be edit and the oppsite).
                 cardBlur(3, Icons.accessibility, 'Clothing Size', Icons.edit,
-                    Icons.check, false, ""), // same as card 3
+                    Icons.add, false, ""), // same as card 3
                 Card(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
