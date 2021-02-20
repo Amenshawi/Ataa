@@ -168,6 +168,7 @@ class _CustomPageState extends State<CustomPage>
                                 ),
                                 onPressed: () {
                                   setState(() {
+                                    FocusScope.of(context).unfocus();
                                     if (isCollapsed)
                                       _controller.forward();
                                     else
