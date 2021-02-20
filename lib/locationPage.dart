@@ -54,6 +54,8 @@ class _LocationPageState extends State<LocationPage> {
       body: Stack(children: [
         foundLocation
             ? GoogleMap(
+              myLocationEnabled: true,
+              zoomControlsEnabled: false,
                 markers: marker,
                 onMapCreated: _onMapCreated,
                 onCameraMove: _onCameraMove,
@@ -138,6 +140,25 @@ class _LocationPageState extends State<LocationPage> {
                 ),
               ),
             ),
+          ),
+        ),
+        Positioned(
+          bottom: MediaQuery.of(context).size.height * 0.1,
+          right: 25,
+          height: 50,
+          width: 50,
+          child: RawMaterialButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            fillColor: Colors.white,
+            child: Icon(
+              Icons.add_circle, 
+              color: ataaGreen,
+              size: 50,),
+            onPressed: (){
+              _currentLocation();
+            },
           ),
         ),
       ]),
@@ -236,5 +257,26 @@ class _LocationPageState extends State<LocationPage> {
       addressController.text = temp;
       addressLine = temp;
     });
+  }
+  void _currentLocation() async {
+    LocationPermission permission;
+
+   if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission != LocationPermission.whileInUse &&
+          permission != LocationPermission.always) {
+        return Future.error(
+            'Location permissions are denied (actual value: $permission).');
+      }
+    }
+    var temp = await Geolocator.getCurrentPosition();
+
+    mapController.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        bearing: 0,
+        target: LatLng(temp.latitude, temp.longitude),
+        zoom: 16.0,
+      ),
+    ));
   }
 }

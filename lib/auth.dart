@@ -1,9 +1,6 @@
-import 'package:Ataa/Login_Signup/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:Ataa/appUser.dart';
 import 'package:Ataa/database.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;

@@ -17,7 +17,7 @@ class CustomPage extends StatefulWidget {
   final AppUser user;
 
   @override
-  CustomPage(@required this.user);
+  CustomPage(this.user);
 
   @override
   _CustomPageState createState() => _CustomPageState(user);

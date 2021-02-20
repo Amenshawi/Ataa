@@ -4,7 +4,6 @@ import 'package:Ataa/database.dart';
 import 'package:Ataa/locationPage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_controller/google_maps_controller.dart';
-import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
 
