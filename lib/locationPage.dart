@@ -99,7 +99,13 @@ class _LocationPageState extends State<LocationPage> {
                         fontSize: 16,
                         fontWeight: FontWeight.bold),
                     decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.location_pin),
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.search, color: ataaGreen),
+                        onPressed: (){
+                          _findLocationFromAddress();
+                        },
+                      ),
+                      prefixIcon: Icon(Icons.location_pin, color: ataaGreen),
                       enabledBorder: InputBorder.none,
                       focusedBorder: InputBorder.none,
                     ),
@@ -148,6 +154,8 @@ class _LocationPageState extends State<LocationPage> {
           height: 50,
           width: 50,
           child: RawMaterialButton(
+            highlightColor: ataaGold,
+            elevation: 100,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
             ),
@@ -275,6 +283,20 @@ class _LocationPageState extends State<LocationPage> {
       CameraPosition(
         bearing: 0,
         target: LatLng(temp.latitude, temp.longitude),
+        zoom: 16.0,
+      ),
+    ));
+  }
+  void _findLocationFromAddress() async{
+    var result = await Geocoder.local.findAddressesFromQuery(addressController.text);
+    var first = result.first;
+     mapController.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        bearing: 0,
+        target: LatLng(
+          first.coordinates.latitude, 
+          first.coordinates.longitude
+          ),
         zoom: 16.0,
       ),
     ));
