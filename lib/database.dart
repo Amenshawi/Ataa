@@ -126,6 +126,10 @@ class Database {
   Future addDonation(AppUser user, String type, image, String desc,
       bool anonymous, location) async {
     image = File(image.path);
+    if (anonymous != true) {
+      anonymous = false;
+    }
+    GeoPoint geopoint = GeoPoint(location.latitude, location.longitude);
     final url = await uploadImage(image);
     final ref = await firestore
         .collection('users')
@@ -140,7 +144,7 @@ class Database {
       'image': url,
       'desc': desc,
       'anonymous': anonymous,
-      'location': location
+      'location': geopoint
     }).then((value) {
       print('donation added');
       return;
@@ -168,14 +172,19 @@ class Database {
 
     return url;
   }
-  Future<void> addLocation(String addressLine , LatLng location, AppUser user) async{
+
+  Future<void> addLocation(
+      String addressLine, LatLng location, AppUser user) async {
     GeoPoint geopoint = GeoPoint(location.latitude, location.longitude);
-    return await firestore.collection('users').where('uid', isEqualTo: user.uid).get().
-    then((value)async{
-      await firestore.collection('users').doc(value.docs[0].id).update({
-        'geoPoint': geopoint,
-        'addressLine': addressLine
-      });
+    return await firestore
+        .collection('users')
+        .where('uid', isEqualTo: user.uid)
+        .get()
+        .then((value) async {
+      await firestore
+          .collection('users')
+          .doc(value.docs[0].id)
+          .update({'geoPoint': geopoint, 'addressLine': addressLine});
       return true;
     }).catchError((error) => {
               print(error.toString)

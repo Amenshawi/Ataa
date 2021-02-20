@@ -1,7 +1,9 @@
 // import 'dart:io';
 import 'package:Ataa/appUser.dart';
 import 'package:Ataa/database.dart';
+import 'package:Ataa/locationPage.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_controller/google_maps_controller.dart';
 import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
@@ -27,6 +29,7 @@ class _CustomFormState extends State<CustomForm> {
   TextEditingController descController = TextEditingController();
   bool anonymous;
   bool imagePicked = false;
+  LatLng location;
   final String type;
   final AppUser user;
   _CustomFormState(this.type, this.user);
@@ -192,6 +195,14 @@ class _CustomFormState extends State<CustomForm> {
                     children: [
                       Expanded(
                         child: TextField(
+                          onTap: (() {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        LocationPage(user, changeLocation)));
+                          }),
+                          readOnly: true,
                           cursorColor: ataaGreen,
                           decoration: InputDecoration(
                               focusedBorder: UnderlineInputBorder(
@@ -208,7 +219,15 @@ class _CustomFormState extends State<CustomForm> {
                       ),
                       Align(
                           alignment: Alignment.center,
-                          child: Text('Map goes here!'))
+                          child: Container(
+                              height: heightSize * 0.14,
+                              child: location != null
+                                  ? GoogleMap(
+                                      initialCameraPosition: CameraPosition(
+                                      target: location,
+                                      zoom: 16.0,
+                                    ))
+                                  : Text('no Location selcted')))
                     ],
                   ),
                 ),
@@ -231,7 +250,7 @@ class _CustomFormState extends State<CustomForm> {
                   onPressed: () {
                     print('Hi there!');
                     database.addDonation(user, type, _image,
-                        descController.text, anonymous, 'location');
+                        descController.text, anonymous, location);
                     Navigator.pop(context);
                     // call db.addDonation here
                   },
@@ -272,6 +291,13 @@ class _CustomFormState extends State<CustomForm> {
             ),
           );
         });
+  }
+
+  changeLocation(LatLng _location) {
+    setState(() {
+      print('hi');
+      this.location = _location;
+    });
   }
 
   _imgFromCamera() async {
