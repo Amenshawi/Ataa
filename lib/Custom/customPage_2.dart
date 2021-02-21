@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:Ataa/Charity/charityStandsScreen.dart';
 import 'package:Ataa/Donor/donorPage_2.dart';
 import 'package:Ataa/Receiver/recieverScreen.dart';
@@ -167,14 +169,16 @@ class _CustomPageState extends State<CustomPage>
                                   size: 30,
                                 ),
                                 onPressed: () {
-                                  setState(() {
-                                    FocusScope.of(context).unfocus();
-                                    if (isCollapsed)
-                                      _controller.forward();
-                                    else
-                                      _controller.reverse();
-                                    isCollapsed = !isCollapsed;
+                                  FocusScope.of(context).unfocus();
+                                   Timer(Duration(milliseconds: 300),(){
+                                    setState(() {
+                                      if (isCollapsed)
+                                        _controller.forward();
+                                      else
+                                        _controller.reverse();
+                                      isCollapsed = !isCollapsed;
                                   });
+                                    });
                                 },
                               ),
                             ),
