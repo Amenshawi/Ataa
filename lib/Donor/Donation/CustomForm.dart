@@ -32,13 +32,6 @@ class _CustomFormState extends State<CustomForm> {
   final String type;
   final AppUser user;
   _CustomFormState(this.type, this.user);
-  // Future getImage() async {
-  //   PickedFile pickedFile = await ImagePicker.getImage(
-  //       source: ImageSource.camera, imageQuality: 50);
-  //   setState(() {
-  //     _image = File(pickedFile.path);
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -47,13 +40,14 @@ class _CustomFormState extends State<CustomForm> {
     widthSize = size.width;
 
     return Container(
-      width: widthSize * 0.9,
+      width: widthSize,
       child: Card(
         elevation: 8,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        color: ataaGreen,
+        color: ataaWhite,
         child: Padding(
-          padding: EdgeInsets.all(heightSize * 0.04),
+          padding: EdgeInsets.only(
+              top: heightSize * 0.04, bottom: heightSize * 0.04),
           child: Column(
             children: [
               // DottedBorder(
@@ -74,8 +68,9 @@ class _CustomFormState extends State<CustomForm> {
                 },
                 child: Container(
                   height: heightSize * 0.07,
-                  width: widthSize * 0.6,
+                  width: widthSize * 0.75,
                   child: Card(
+                    color: ataaGreen,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
                     elevation: 8,
@@ -91,13 +86,13 @@ class _CustomFormState extends State<CustomForm> {
                               Icons.camera_alt_rounded,
                               size: 30,
                               // color: Colors.grey,
-                              color: ataaGreen,
+                              color: ataaGold,
                             ),
                             !imagePicked
                                 ? Text(
                                     'Upload a Photo',
                                     style: TextStyle(
-                                        color: ataaGreen, fontSize: 20),
+                                        color: ataaGold, fontSize: 20),
                                   )
                                 : Text(''),
                           ],
@@ -118,8 +113,9 @@ class _CustomFormState extends State<CustomForm> {
               // ),
               Container(
                 height: heightSize * 0.12,
-                width: widthSize * 0.6,
+                width: widthSize * 0.75,
                 child: Card(
+                  color: ataaGreen,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
                   elevation: 8,
@@ -134,16 +130,22 @@ class _CustomFormState extends State<CustomForm> {
                           Expanded(
                             child: TextField(
                               controller: descController,
-                              cursorColor: ataaGreen,
+                              cursorColor: ataaGold,
                               keyboardType: TextInputType.multiline,
                               maxLines: 3,
                               decoration: InputDecoration(
-                                  hintText: 'Descrption',
-                                  hintStyle:
-                                      TextStyle(color: ataaGreen, fontSize: 22),
-                                  focusedBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: ataaGreen))),
+                                hintText: 'Descrption',
+                                hintStyle:
+                                    TextStyle(color: ataaGold, fontSize: 20),
+                                focusedBorder: InputBorder.none,
+                                border: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                errorBorder: InputBorder.none,
+                                disabledBorder: InputBorder.none,
+                                // UnderlineInputBorder(
+                                //     borderSide:
+                                //         BorderSide(color: ataaGreen)
+                              ),
                             ),
                           ),
                         ]),
@@ -153,20 +155,24 @@ class _CustomFormState extends State<CustomForm> {
               SizedBox(height: heightSize * 0.01),
               Container(
                 height: heightSize * 0.07,
-                width: widthSize * 0.6,
+                width: widthSize * 0.75,
                 child: Card(
+                  color: ataaGreen,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
                   elevation: 8,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       !isSwitched
-                          ? Icon(Icons.visibility, color: ataaGreen, size: 25)
+                          ? Icon(Icons.visibility, color: ataaGold, size: 25)
                           : Icon(Icons.visibility_off,
-                              color: ataaGreen, size: 25),
-                      Text('Anonymous',
-                          style: TextStyle(color: ataaGreen, fontSize: 20)),
+                              color: ataaGold, size: 25),
+                      Padding(
+                        padding: EdgeInsets.only(right: 16.0),
+                        child: Text('Anonymous',
+                            style: TextStyle(color: ataaGold, fontSize: 20)),
+                      ),
                       Switch(
                         value: isSwitched,
                         onChanged: (value) {
@@ -175,8 +181,9 @@ class _CustomFormState extends State<CustomForm> {
                             anonymous = value;
                           });
                         },
-                        activeTrackColor: ataaGreen,
+                        activeTrackColor: ataaWhite,
                         activeColor: ataaGold,
+                        inactiveThumbColor: ataaWhite,
                       ),
                     ],
                   ),
@@ -185,8 +192,9 @@ class _CustomFormState extends State<CustomForm> {
               SizedBox(height: heightSize * 0.01),
               Container(
                 height: heightSize * 0.2,
-                width: widthSize * 0.6,
+                width: widthSize * 0.75,
                 child: Card(
+                  color: ataaGreen,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
                   elevation: 8,
@@ -205,28 +213,36 @@ class _CustomFormState extends State<CustomForm> {
                           cursorColor: ataaGreen,
                           decoration: InputDecoration(
                               focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: ataaGreen)),
+                                  borderSide: BorderSide(color: ataaGold)),
                               prefixIcon: Icon(
                                 Icons.location_on,
                                 size: 25,
-                                color: ataaGreen,
+                                color: ataaGold,
                               ),
                               hintText: 'Location..',
                               hintStyle:
-                                  TextStyle(color: ataaGreen, fontSize: 20)),
+                                  TextStyle(color: ataaGold, fontSize: 20)),
                         ),
                       ),
-                      Align(
-                          alignment: Alignment.center,
-                          child: Container(
-                              height: heightSize * 0.14,
-                              child: location != null
-                                  ? GoogleMap(
-                                      initialCameraPosition: CameraPosition(
-                                      target: location,
-                                      zoom: 16.0,
-                                    ))
-                                  : Text('no Location selcted')))
+                      // Align(
+                      //     // alignment: Alignment.center,
+                      //     child:
+                      Container(
+                          height: heightSize * 0.14,
+                          child: location != null
+                              ? GoogleMap(
+                                  initialCameraPosition: CameraPosition(
+                                  target: location,
+                                  zoom: 16.0,
+                                ))
+                              : Center(
+                                  child: Text(
+                                    'no Location selcted',
+                                    style: TextStyle(
+                                        fontSize: 18, color: ataaGold),
+                                  ),
+                                ))
+                      // )
                     ],
                   ),
                 ),
@@ -244,8 +260,8 @@ class _CustomFormState extends State<CustomForm> {
                   elevation: 8,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
-                  backgroundColor: Colors.white,
-                  child: Icon(Icons.done, color: ataaGreen, size: 30),
+                  backgroundColor: ataaGreen,
+                  child: Icon(Icons.done, color: ataaGold, size: 30),
                   onPressed: () {
                     print('Hi there!');
                     database.addDonation(user, type, _image,
