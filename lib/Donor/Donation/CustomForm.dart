@@ -2,6 +2,7 @@
 import 'package:Ataa/appUser.dart';
 import 'package:Ataa/database.dart';
 import 'package:Ataa/locationPage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_controller/google_maps_controller.dart';
 
@@ -15,7 +16,8 @@ final Color ataaWhite = Color.fromRGBO(255, 255, 255, 0.75);
 class CustomForm extends StatefulWidget {
   final String type;
   final AppUser user;
-  CustomForm(this.type, this.user);
+  final bool isFood;
+  CustomForm(this.type, this.user, this.isFood);
   @override
   _CustomFormState createState() => _CustomFormState(type, user);
 }
@@ -28,6 +30,7 @@ class _CustomFormState extends State<CustomForm> {
   TextEditingController descController = TextEditingController();
   bool anonymous;
   bool imagePicked = false;
+  bool _check = false;
   LatLng location;
   final String type;
   final AppUser user;
@@ -129,6 +132,10 @@ class _CustomFormState extends State<CustomForm> {
                           //     style: TextStyle(color: ataaGreen, fontSize: 20)),
                           Expanded(
                             child: TextField(
+                              style: TextStyle(
+                                  color: ataaGold,
+                                  fontSize: 19,
+                                  fontWeight: FontWeight.bold),
                               controller: descController,
                               cursorColor: ataaGold,
                               keyboardType: TextInputType.multiline,
@@ -194,7 +201,7 @@ class _CustomFormState extends State<CustomForm> {
                 height: heightSize * 0.2,
                 width: widthSize * 0.75,
                 child: Card(
-                  color: ataaGreen,
+                  // color: ataaGreen,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
                   elevation: 8,
@@ -212,16 +219,17 @@ class _CustomFormState extends State<CustomForm> {
                           readOnly: true,
                           cursorColor: ataaGreen,
                           decoration: InputDecoration(
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: ataaGold)),
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: ataaGreen)),
                               prefixIcon: Icon(
                                 Icons.location_on,
                                 size: 25,
-                                color: ataaGold,
+                                color: ataaGreen,
                               ),
+                              // fillColor: ataaGreen,
                               hintText: 'Location..',
                               hintStyle:
-                                  TextStyle(color: ataaGold, fontSize: 20)),
+                                  TextStyle(color: ataaGreen, fontSize: 20)),
                         ),
                       ),
                       // Align(
@@ -239,7 +247,7 @@ class _CustomFormState extends State<CustomForm> {
                                   child: Text(
                                     'no Location selcted',
                                     style: TextStyle(
-                                        fontSize: 18, color: ataaGold),
+                                        fontSize: 18, color: ataaGreen),
                                   ),
                                 ))
                       // )
@@ -250,9 +258,33 @@ class _CustomFormState extends State<CustomForm> {
               // ]),
               // ),
               // ),
-              SizedBox(
-                height: heightSize * 0.03,
-              ),
+              SizedBox(height: heightSize * 0.01),
+              widget.isFood
+                  ? GestureDetector(
+                      onTap: () {
+                        _showTimePicker(context);
+                      },
+                      child: Container(
+                        height: heightSize * 0.07,
+                        width: widthSize * 0.75,
+                        child: Card(
+                          color: ataaGreen,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          elevation: 8,
+                          child: Center(
+                            child: Text(
+                              'Pick time before notifying charities',
+                              style: TextStyle(fontSize: 18, color: ataaGold),
+                              softWrap: true,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  : Container(),
+              SizedBox(height: heightSize * 0.03),
               Container(
                 height: heightSize * 0.05,
                 width: widthSize * 0.2,
@@ -281,6 +313,9 @@ class _CustomFormState extends State<CustomForm> {
   void _showPicker(context) {
     showModalBottomSheet(
         context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+        ),
         builder: (BuildContext bc) {
           return SafeArea(
             child: Container(
@@ -333,5 +368,58 @@ class _CustomFormState extends State<CustomForm> {
       _image = image;
       imagePicked = true;
     });
+  }
+
+  void _showTimePicker(context) {
+    DateTime _dateTime = DateTime.now();
+    showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+        ),
+        builder: (BuildContext bc) {
+          return SafeArea(
+              child: Column(
+            children: [
+              Container(
+                child: SizedBox(
+                  height: heightSize * 0.4,
+                  child: CupertinoDatePicker(
+                    mode: CupertinoDatePickerMode.time,
+                    initialDateTime: _dateTime,
+                    // minimumDate: _dateTime,
+                    // maximumDate: _dateTime,
+                    // minuteInterval: 2,
+                    onDateTimeChanged: (DateTime value) {},
+                  ),
+                ),
+              ),
+              Container(
+                height: heightSize * 0.05,
+                width: widthSize * 0.4,
+                child: FloatingActionButton(
+                  elevation: 8,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  backgroundColor: ataaGreen,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.done, color: ataaGold, size: 30),
+                      Text(
+                        'Confirm',
+                        style: TextStyle(color: ataaGold, fontSize: 18),
+                      )
+                    ],
+                  ),
+                  onPressed: () {
+                    print('noting happend');
+                    Navigator.pop(context);
+                  },
+                ),
+              )
+            ],
+          ));
+        });
   }
 }

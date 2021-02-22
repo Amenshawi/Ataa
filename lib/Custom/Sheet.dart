@@ -7,8 +7,9 @@ final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 class Sheet extends StatefulWidget {
   String sheetName;
   Widget content;
+  bool food = false;
 
-  Sheet({Key key, this.sheetName, this.content}) : super(key: key);
+  Sheet({Key key, this.sheetName, this.content, this.food}) : super(key: key);
 
   @override
   _SheetState createState() => _SheetState();
@@ -22,14 +23,16 @@ class _SheetState extends State<Sheet> {
   Widget build(BuildContext context) {
     return Container(
         height: MediaQuery.of(context).size.height * 0.85,
-        margin: EdgeInsets.all(30),
+        margin: EdgeInsets.only(top: 30, bottom: 30, left: 15, right: 15),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: [
             Padding(
               padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * 0.05),
+                  top: widget.food
+                      ? MediaQuery.of(context).size.height * 0.02
+                      : MediaQuery.of(context).size.height * 0.05),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

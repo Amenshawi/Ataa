@@ -193,10 +193,10 @@ class _DonorPage_2State extends State<DonorPage_2> {
             //   icon: Icon(Icons.cancel),
             //   onPressed: () {},
             // ),
-            donationButton('Food', Icons.food_bank),
-            donationButton('Clothes', Icons.accessibility_rounded),
-            donationButton('Electronics', Icons.power),
-            donationButton('Furniture', Icons.house_rounded)
+            donationButton('Food', Icons.food_bank, true),
+            donationButton('Clothes', Icons.accessibility_rounded, false),
+            donationButton('Electronics', Icons.power, false),
+            donationButton('Furniture', Icons.house_rounded, false)
           ],
         ),
       ),
@@ -204,7 +204,7 @@ class _DonorPage_2State extends State<DonorPage_2> {
     );
   }
 
-  Widget donationButton(String name, IconData icon) {
+  Widget donationButton(String name, IconData icon, bool food) {
     return GestureDetector(
       child: Container(
         height: hieghtSize * 0.075,
@@ -229,7 +229,7 @@ class _DonorPage_2State extends State<DonorPage_2> {
         ),
       ),
       onTap: () {
-        showSheet(context, name, CustomForm(name, user));
+        showSheet(context, name, CustomForm(name, user, food), food);
         setState(() {
           // _subButtons = !_subButtons;
           cardOpen = !cardOpen;
@@ -359,7 +359,7 @@ class _DonorPage_2State extends State<DonorPage_2> {
   }
 }
 
-showSheet(context, sheetName, content) {
+showSheet(context, sheetName, content, food) {
   showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
@@ -371,6 +371,7 @@ showSheet(context, sheetName, content) {
         return Sheet(
           sheetName: sheetName,
           content: content,
+          food: food,
         );
       });
 }
