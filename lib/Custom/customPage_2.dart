@@ -170,15 +170,15 @@ class _CustomPageState extends State<CustomPage>
                                 ),
                                 onPressed: () {
                                   FocusScope.of(context).unfocus();
-                                   Timer(Duration(milliseconds: 300),(){
+                                  Timer(Duration(milliseconds: 300), () {
                                     setState(() {
                                       if (isCollapsed)
                                         _controller.forward();
                                       else
                                         _controller.reverse();
                                       isCollapsed = !isCollapsed;
-                                  });
                                     });
+                                  });
                                 },
                               ),
                             ),
@@ -338,7 +338,7 @@ class _CustomPageState extends State<CustomPage>
                       ),
                       SizedBox(height: hieghtSize * 0.02),
                       Text(
-                        'Hi',
+                        user.fname + " " + user.lname,
                         // user.fname +
                         // ' ' +
                         // user.lname, // User name (sorry i didn't do it :) )

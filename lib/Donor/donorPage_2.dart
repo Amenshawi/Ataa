@@ -1,10 +1,12 @@
 import 'package:Ataa/Custom/Sheet.dart';
 import 'package:Ataa/Custom/createButtons_2.dart';
 import 'package:Ataa/Donor/Donation/CustomForm.dart';
+import 'package:Ataa/Donor/Donation/scheduleSheet.dart';
 import 'package:Ataa/appUser.dart';
 import 'package:flutter/material.dart';
 import 'package:Ataa/NavigationPage.dart';
 import 'package:Ataa/database.dart';
+import 'package:flip_card/flip_card.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGreenField = Color.fromRGBO(28, 102, 74, .5);
@@ -28,6 +30,7 @@ class _DonorPage_2State extends State<DonorPage_2> {
   int _currentIndex = 0;
   final database = Database();
   final AppUser user;
+  GlobalKey<FlipCardState> cardKey = GlobalKey<FlipCardState>();
 
   _DonorPage_2State(this.user);
   var charities;
@@ -108,23 +111,29 @@ class _DonorPage_2State extends State<DonorPage_2> {
                     CreateButtons(
                       height: hieghtSize * 0.15,
                       width: widthSize * 0.4,
-                      icon: Icons.schedule,
-                      cardName: 'Schedul A Donation',
+                      icon: Icons.menu_book_rounded,
+                      cardName: 'Donation History',
                       space: false,
                       spike: false,
                       // context: context,
                       // sheetName: 'Schedul',
                     ),
-                    CreateButtons(
-                      height: hieghtSize * 0.3,
-                      width: widthSize * 0.4,
-                      icon: Icons.menu_book_rounded,
-                      cardName: 'Donations History',
-                      space: true,
-                      spike: false,
-                      // context: context,
-                      // sheetName: 'History',
-                    )
+                    FlipCard(
+                      key: cardKey,
+                      front: CreateButtons(
+                        height: hieghtSize * 0.3,
+                        width: widthSize * 0.4,
+                        icon: Icons.schedule,
+                        cardName: 'Schedul A Donation',
+                        space: true,
+                        spike: false,
+                        // context: context,
+                        // sheetName: 'History',
+                      ),
+                      back: Column(
+                        children: [subButtonsForSchedule()],
+                      ),
+                    ),
                   ],
                 )
               ],
@@ -177,26 +186,28 @@ class _DonorPage_2State extends State<DonorPage_2> {
           );
   }
 
-  Widget subButtons() {
+  Widget subButtonsForSchedule() {
     return Container(
       height: hieghtSize * 0.3,
       width: widthSize * 0.4,
-      // child:
-      //  Card(
-      // color: ataaGreen,
-      // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Container(
         height: hieghtSize * 0.07,
+        // child: Card(
+        //   color: ataaWhite,
+        //   elevation: 8,
+        //   shape:
+        //       RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // IconButton(
-            //   icon: Icon(Icons.cancel),
-            //   onPressed: () {},
-            // ),
-            donationButton('Food', Icons.food_bank, true),
-            donationButton('Clothes', Icons.accessibility_rounded, false),
-            donationButton('Electronics', Icons.power, false),
-            donationButton('Furniture', Icons.house_rounded, false)
+            donationButton('Schedule', Icons.schedule,
+                ScheduleSheet('Schedule', user), true, 1),
+            donationButton('Periodic Donations', Icons.all_inclusive,
+                ScheduleSheet('Periodic donations', user), false, 1),
+            donationButton('Pause Donations', Icons.pause,
+                ScheduleSheet('Pause Donations', user), false, 1),
+            donationButton('Terminate Donations ', Icons.stop_circle_outlined,
+                ScheduleSheet('Terminate Donations', user), false, 1),
           ],
         ),
       ),
@@ -204,7 +215,30 @@ class _DonorPage_2State extends State<DonorPage_2> {
     );
   }
 
-  Widget donationButton(String name, IconData icon, bool food) {
+  Widget subButtons() {
+    return Container(
+      height: hieghtSize * 0.3,
+      width: widthSize * 0.4,
+      child: Container(
+        height: hieghtSize * 0.07,
+        child: Column(
+          children: [
+            donationButton('Food', Icons.food_bank,
+                CustomForm('Food', user, true), true, 0),
+            donationButton('Clothes', Icons.accessibility_rounded,
+                CustomForm('Clothes', user, false), false, 0),
+            donationButton('Electronics', Icons.power,
+                CustomForm('Electronics', user, false), false, 0),
+            donationButton('Furniture', Icons.house_rounded,
+                CustomForm('Furniture', user, false), false, 0)
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget donationButton(
+      String name, IconData icon, Widget content, bool food, int index) {
     return GestureDetector(
       child: Container(
         height: hieghtSize * 0.075,
@@ -229,10 +263,12 @@ class _DonorPage_2State extends State<DonorPage_2> {
         ),
       ),
       onTap: () {
-        showSheet(context, name, CustomForm(name, user, food), food);
+        showSheet(context, name, content, food);
         setState(() {
-          // _subButtons = !_subButtons;
-          cardOpen = !cardOpen;
+          if (index == 0)
+            cardOpen = !cardOpen;
+          else
+            cardKey.currentState.toggleCard();
         });
       },
     );
@@ -359,7 +395,7 @@ class _DonorPage_2State extends State<DonorPage_2> {
   }
 }
 
-showSheet(context, sheetName, content, food) {
+showSheet(context, sheetName, content, padding) {
   showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
@@ -371,7 +407,7 @@ showSheet(context, sheetName, content, food) {
         return Sheet(
           sheetName: sheetName,
           content: content,
-          food: food,
+          padding: padding,
         );
       });
 }

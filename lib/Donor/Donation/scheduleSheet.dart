@@ -12,27 +12,21 @@ final Color ataaGreenField = Color.fromRGBO(28, 102, 74, .5);
 final Color ataaGold = Color.fromRGBO(244, 234, 146, .8);
 final Color ataaWhite = Color.fromRGBO(255, 255, 255, 0.75);
 
-class CustomForm extends StatefulWidget {
+class ScheduleSheet extends StatefulWidget {
   final String type;
   final AppUser user;
-  final bool isFood;
-  CustomForm(this.type, this.user, this.isFood);
+  ScheduleSheet(this.type, this.user);
   @override
-  _CustomFormState createState() => _CustomFormState(type, user);
+  _ScheduleSheetState createState() => _ScheduleSheetState(type, user);
 }
 
-class _CustomFormState extends State<CustomForm> {
+class _ScheduleSheetState extends State<ScheduleSheet> {
   final database = Database();
-  PickedFile _image;
   double heightSize, widthSize;
-  bool isSwitched = false;
   TextEditingController descController = TextEditingController();
-  bool anonymous;
-  bool imagePicked = false;
-  LatLng location;
   final String type;
   final AppUser user;
-  _CustomFormState(this.type, this.user);
+  _ScheduleSheetState(this.type, this.user);
 
   @override
   Widget build(BuildContext context) {
@@ -64,9 +58,7 @@ class _CustomFormState extends State<CustomForm> {
               //       //   child:
               //       Column(children: [
               GestureDetector(
-                onTap: () {
-                  _showPicker(context);
-                },
+                onTap: () {},
                 child: Container(
                   height: heightSize * 0.07,
                   width: widthSize * 0.75,
@@ -79,9 +71,6 @@ class _CustomFormState extends State<CustomForm> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Row(
-                          mainAxisAlignment: !imagePicked
-                              ? MainAxisAlignment.spaceAround
-                              : MainAxisAlignment.center,
                           children: [
                             Icon(
                               Icons.camera_alt_rounded,
@@ -89,13 +78,10 @@ class _CustomFormState extends State<CustomForm> {
                               // color: Colors.grey,
                               color: ataaGold,
                             ),
-                            !imagePicked
-                                ? Text(
-                                    'Upload a Photo',
-                                    style: TextStyle(
-                                        color: ataaGold, fontSize: 20),
-                                  )
-                                : Text(''),
+                            Text(
+                              'Upload a Photo',
+                              style: TextStyle(color: ataaGold, fontSize: 20),
+                            )
                           ],
                         ),
                       ],
@@ -169,26 +155,11 @@ class _CustomFormState extends State<CustomForm> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      !isSwitched
-                          ? Icon(Icons.visibility, color: ataaGold, size: 25)
-                          : Icon(Icons.visibility_off,
-                              color: ataaGold, size: 25),
+                      Icon(Icons.visibility, color: ataaGold, size: 25),
                       Padding(
                         padding: EdgeInsets.only(right: 16.0),
                         child: Text('Anonymous',
                             style: TextStyle(color: ataaGold, fontSize: 20)),
-                      ),
-                      Switch(
-                        value: isSwitched,
-                        onChanged: (value) {
-                          setState(() {
-                            isSwitched = value;
-                            anonymous = value;
-                          });
-                        },
-                        activeTrackColor: ataaWhite,
-                        activeColor: ataaGold,
-                        inactiveThumbColor: ataaWhite,
                       ),
                     ],
                   ),
@@ -207,13 +178,7 @@ class _CustomFormState extends State<CustomForm> {
                     children: [
                       Expanded(
                         child: TextField(
-                          onTap: (() {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        LocationPage(user, changeLocation)));
-                          }),
+                          onTap: (() {}),
                           readOnly: true,
                           cursorColor: ataaGreen,
                           decoration: InputDecoration(
@@ -233,21 +198,7 @@ class _CustomFormState extends State<CustomForm> {
                       // Align(
                       //     // alignment: Alignment.center,
                       //     child:
-                      Container(
-                          height: heightSize * 0.14,
-                          child: location != null
-                              ? GoogleMap(
-                                  initialCameraPosition: CameraPosition(
-                                  target: location,
-                                  zoom: 16.0,
-                                ))
-                              : Center(
-                                  child: Text(
-                                    'no Location selcted',
-                                    style: TextStyle(
-                                        fontSize: 18, color: ataaGreen),
-                                  ),
-                                ))
+
                       // )
                     ],
                   ),
@@ -257,74 +208,7 @@ class _CustomFormState extends State<CustomForm> {
               // ),
               // ),
               SizedBox(height: heightSize * 0.01),
-              widget.isFood
-                  ? GestureDetector(
-                      // onTap: () {
-                      //   _showTimePicker(context);
-                      // },
-                      child: Container(
-                        height: heightSize * 0.07,
-                        width: widthSize * 0.75,
-                        child: Card(
-                          color: ataaGreen,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)),
-                          elevation: 8,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 16.0),
-                                child: Text(
-                                  'Notify Charities In',
-                                  style:
-                                      TextStyle(fontSize: 18, color: ataaGold),
-                                ),
-                              ),
-                              Expanded(
-                                child: DropdownButton(
-                                  value: user.shirtSize,
-                                  icon: Icon(
-                                    Icons.arrow_downward,
-                                    color: ataaGold,
-                                  ),
-                                  iconSize: 22,
-                                  style: TextStyle(
-                                      color: ataaGold,
-                                      // fontSize: 22,
-                                      fontWeight: FontWeight.bold),
-                                  underline:
-                                      Container(height: 2, color: ataaGreen),
-                                  onChanged: (String newValue) {
-                                    setState(() {
-                                      user.shirtSize = newValue;
-                                    });
-                                  },
-                                  items: <String>[
-                                    '0 mins',
-                                    '5 mins',
-                                    '10 mins',
-                                    '15 mins'
-                                  ].map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value,
-                                          style: TextStyle(
-                                              color: ataaGreen,
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold),
-                                          textAlign: TextAlign.center),
-                                    );
-                                  }).toList(),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    )
-                  : Container(),
+
               SizedBox(height: heightSize * 0.03),
               Container(
                 height: heightSize * 0.05,
@@ -335,13 +219,7 @@ class _CustomFormState extends State<CustomForm> {
                       borderRadius: BorderRadius.circular(20)),
                   backgroundColor: ataaGreen,
                   child: Icon(Icons.done, color: ataaGold, size: 30),
-                  onPressed: () {
-                    print('Hi there!');
-                    database.addDonation(user, type, _image,
-                        descController.text, anonymous, location);
-                    Navigator.pop(context);
-                    // call db.addDonation here
-                  },
+                  onPressed: () {},
                 ),
               )
             ],
@@ -349,65 +227,5 @@ class _CustomFormState extends State<CustomForm> {
         ),
       ),
     );
-  }
-
-  void _showPicker(context) {
-    showModalBottomSheet(
-        context: context,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
-        ),
-        builder: (BuildContext bc) {
-          return SafeArea(
-            child: Container(
-              child: new Wrap(
-                children: <Widget>[
-                  new ListTile(
-                      leading: new Icon(Icons.photo_library),
-                      title: new Text('Photo Library'),
-                      onTap: () {
-                        _imgFromGallery();
-                        Navigator.of(context).pop();
-                      }),
-                  new ListTile(
-                    leading: new Icon(Icons.photo_camera),
-                    title: new Text('Camera'),
-                    onTap: () {
-                      _imgFromCamera();
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
-  changeLocation(LatLng _location) {
-    setState(() {
-      print('hi');
-      this.location = _location;
-    });
-  }
-
-  _imgFromCamera() async {
-    PickedFile image = await ImagePicker()
-        .getImage(source: ImageSource.camera, imageQuality: 50);
-
-    setState(() {
-      _image = image;
-      imagePicked = true;
-    });
-  }
-
-  _imgFromGallery() async {
-    PickedFile image = await ImagePicker()
-        .getImage(source: ImageSource.gallery, imageQuality: 50);
-
-    setState(() {
-      _image = image;
-      imagePicked = true;
-    });
   }
 }

@@ -60,10 +60,10 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    if(user.location == null)
-      readWriteToggole[2] = false;
-    if(user.pantSize == null && user.shirtSize == null && user.shoeSize == null)
-      readWriteToggole[3] = false;
+    if (user.location == null) readWriteToggole[2] = false;
+    if (user.pantSize == null &&
+        user.shirtSize == null &&
+        user.shoeSize == null) readWriteToggole[3] = false;
     Size size = MediaQuery.of(context).size;
     hieghtSize = size.height;
     widthSize = size.width;
@@ -588,9 +588,7 @@ class _ProfileState extends State<Profile> {
                                 );
                               }).toList(),
                             ),
-                            SizedBox(
-                              height: 30,
-                            ),
+                            SizedBox(height: 30),
                             DropdownButton(
                               value: user.pantSize,
                               icon: Icon(Icons.arrow_downward),
@@ -627,9 +625,7 @@ class _ProfileState extends State<Profile> {
                                 );
                               }).toList(),
                             ),
-                            SizedBox(
-                              height: 30,
-                            ),
+                            SizedBox(height: 30),
                             SizedBox(
                               width: 100,
                               height: 50,
@@ -666,9 +662,7 @@ class _ProfileState extends State<Profile> {
                         )
                       ],
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
+                    SizedBox(height: 10),
                     Container(
                         padding: EdgeInsets.all(5),
                         child: FlatButton(

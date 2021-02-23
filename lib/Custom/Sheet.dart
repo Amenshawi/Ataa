@@ -7,9 +7,10 @@ final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 class Sheet extends StatefulWidget {
   String sheetName;
   Widget content;
-  bool food = false;
+  bool padding = false;
 
-  Sheet({Key key, this.sheetName, this.content, this.food}) : super(key: key);
+  Sheet({Key key, this.sheetName, this.content, this.padding})
+      : super(key: key);
 
   @override
   _SheetState createState() => _SheetState();
@@ -30,7 +31,7 @@ class _SheetState extends State<Sheet> {
           children: [
             Padding(
               padding: EdgeInsets.only(
-                  top: widget.food
+                  top: widget.padding
                       ? MediaQuery.of(context).size.height * 0.02
                       : MediaQuery.of(context).size.height * 0.05),
               child: Row(
@@ -42,7 +43,7 @@ class _SheetState extends State<Sheet> {
                       widget.sheetName,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 35,
+                          fontSize: 27,
                           color: ataaGreen),
                     ),
                     // ),
