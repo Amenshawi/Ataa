@@ -277,6 +277,33 @@ class _ProfileState extends State<Profile> {
                 if (password) {
                   visiblePassword = false;
                   changePassword(context);
+                } else if (index == 0) {
+                  print('email');
+                  if (!blurBackground[index] || controllers[index].text == '') {
+                    print('first if');
+                    setState(() {
+                      readWriteToggole[index] = !readWriteToggole[index];
+                      blurBackground[index] = !blurBackground[index];
+                      controllers[index].clear();
+                    });
+                  } else {
+                    print('first else');
+                    if (controllers[index].text == user.email) {
+                      print('The email provided is the same as the old email');
+                    } else {
+                      try {
+                        print(controllers[0].text);
+                        user = _auth.changeEmail(controllers[0].text, user);
+                      } catch (error) {
+                        print(error.toString);
+                        //show error message
+                      }
+                    }
+                    setState(() {
+                      readWriteToggole[index] = !readWriteToggole[index];
+                      blurBackground[index] = !blurBackground[index];
+                    });
+                  }
                 } else if ((index != 3 && index != 2) &&
                     (!blurBackground[index] || controllers[index].text == '')) {
                   controllers[index].clear();
@@ -291,25 +318,6 @@ class _ProfileState extends State<Profile> {
                           builder: (context) => LocationPage(user, null)));
                 } else if (index == 3) {
                   clothingCard(context);
-                } else if (index == 0) {
-                  if (blurBackground[index] || controllers[index].text == '') {
-                    setState(() {
-                      readWriteToggole[index] = !readWriteToggole[index];
-                      blurBackground[index] = !blurBackground[index];
-                    });
-                  } else {
-                    try {
-                      print(controllers[0].text);
-                      user = _auth.changeEmail(controllers[0].text, user);
-                      setState(() {
-                        readWriteToggole[index] = !readWriteToggole[index];
-                        blurBackground[index] = !blurBackground[index];
-                      });
-                    } catch (error) {
-                      print(error.toString);
-                      //show error message
-                    }
-                  }
                 }
               },
             ),

@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:Ataa/Charity/charityStandsScreen.dart';
 import 'package:Ataa/Donor/donorPage_2.dart';
+import 'package:Ataa/Login_Signup/login.dart';
 import 'package:Ataa/Receiver/recieverScreen.dart';
+import 'package:Ataa/auth.dart';
 import 'package:Ataa/profilePage.dart';
 import 'package:Ataa/appUser.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +48,7 @@ class _CustomPageState extends State<CustomPage>
 
   double hieghtSize, widthSize;
   final AppUser user;
+  final _auth = AuthService();
   // _DonorScreenState(this.user);
   bool isCollapsed = true;
   // double hieghtSize, widthSize;
@@ -331,17 +334,13 @@ class _CustomPageState extends State<CustomPage>
                         // we can put a condition here if the user doesn't have a pic in the database, we will use his/her initails.
                         backgroundColor: ataaGold,
                         child: Text(
-                          'AA',
-                          // user.fname[0] + user.lname[0],
+                          user.fname[0] + user.lname[0],
                           style: TextStyle(color: ataaGreen),
                         ), // just the user initials.
                       ),
                       SizedBox(height: hieghtSize * 0.02),
                       Text(
                         user.fname + " " + user.lname,
-                        // user.fname +
-                        // ' ' +
-                        // user.lname, // User name (sorry i didn't do it :) )
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
@@ -371,7 +370,11 @@ class _CustomPageState extends State<CustomPage>
                 // }),
                 SizedBox(height: hieghtSize * 0.3),
                 category('Log Out', Icons.logout, () {
-                  // navigate to the profile page
+                  _auth.signOut();
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext bctx) => Login()));
                 }),
               ],
             ),
