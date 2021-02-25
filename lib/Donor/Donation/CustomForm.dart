@@ -258,69 +258,62 @@ class _CustomFormState extends State<CustomForm> {
               // ),
               SizedBox(height: heightSize * 0.01),
               widget.isFood
-                  ? GestureDetector(
-                      // onTap: () {
-                      //   _showTimePicker(context);
-                      // },
-                      child: Container(
-                        height: heightSize * 0.07,
-                        width: widthSize * 0.75,
-                        child: Card(
-                          color: ataaGreen,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)),
-                          elevation: 8,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 16.0),
-                                child: Text(
-                                  'Notify Charities In',
-                                  style:
-                                      TextStyle(fontSize: 18, color: ataaGold),
-                                ),
+                  ? Container(
+                      height: heightSize * 0.07,
+                      width: widthSize * 0.75,
+                      child: Card(
+                        color: ataaWhite,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        elevation: 8,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 16.0),
+                              child: Text(
+                                'Notify Charities In:  ',
+                                style:
+                                    TextStyle(fontSize: 18, color: ataaGreen),
                               ),
-                              Expanded(
-                                child: DropdownButton(
-                                  value: user.shirtSize,
-                                  icon: Icon(
-                                    Icons.arrow_downward,
-                                    color: ataaGold,
-                                  ),
-                                  iconSize: 22,
-                                  style: TextStyle(
-                                      color: ataaGold,
-                                      // fontSize: 22,
-                                      fontWeight: FontWeight.bold),
-                                  underline:
-                                      Container(height: 2, color: ataaGreen),
-                                  onChanged: (String newValue) {
-                                    setState(() {
-                                      user.shirtSize = newValue;
-                                    });
-                                  },
-                                  items: <String>[
-                                    '0 mins',
-                                    '5 mins',
-                                    '10 mins',
-                                    '15 mins'
-                                  ].map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value,
-                                          style: TextStyle(
-                                              color: ataaGreen,
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold),
-                                          textAlign: TextAlign.center),
-                                    );
-                                  }).toList(),
+                            ),
+                            Expanded(
+                              child: DropdownButton(
+                                value: user.shirtSize,
+                                icon: Icon(
+                                  Icons.arrow_downward,
+                                  color: ataaGreen,
                                 ),
+                                iconSize: 20,
+                                style: TextStyle(
+                                    color: ataaGreen,
+                                    // fontSize: 22,
+                                    fontWeight: FontWeight.bold),
+                                // underline: Container(height: 2, color: ataaWhite),
+                                onChanged: (String newValue) {
+                                  setState(() {
+                                    // user.shirtSize = newValue;
+                                  });
+                                },
+                                items: <String>[
+                                  'now',
+                                  '5 mins',
+                                  '10 mins',
+                                  '15 mins'
+                                ].map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value,
+                                        style: TextStyle(
+                                            color: ataaGreen,
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.bold),
+                                        textAlign: TextAlign.center),
+                                  );
+                                }).toList(),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     )

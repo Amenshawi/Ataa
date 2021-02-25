@@ -1,11 +1,13 @@
 // import 'dart:io';
 import 'package:Ataa/appUser.dart';
 import 'package:Ataa/database.dart';
-import 'package:Ataa/locationPage.dart';
+// import 'package:Ataa/locationPage.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_controller/google_maps_controller.dart';
-
-import 'package:image_picker/image_picker.dart';
+// import 'package:google_maps_controller/google_maps_controller.dart';
+import 'package:date_time_picker/date_time_picker.dart';
+// import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+// import 'package:date_range_picker/date_range_picker.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGreenField = Color.fromRGBO(28, 102, 74, .5);
@@ -26,6 +28,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
   TextEditingController descController = TextEditingController();
   final String type;
   final AppUser user;
+  DateTime _dateTime;
   _ScheduleSheetState(this.type, this.user);
 
   @override
@@ -45,183 +48,155 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
               top: heightSize * 0.04, bottom: heightSize * 0.04),
           child: Column(
             children: [
-              // DottedBorder(
-              //   dashPattern: [8, 4],
-              //   color: ataaGreenField,
-              //   strokeWidth: 2,
-              //   borderType: BorderType.RRect,
-              //   radius: Radius.circular(12),
-              //   padding: EdgeInsets.all(6),
-              //   child:
-              //       // ClipRRect(
-              //       //   borderRadius: BorderRadius.all(Radius.circular(12)),
-              //       //   child:
-              //       Column(children: [
-              GestureDetector(
-                onTap: () {},
-                child: Container(
-                  height: heightSize * 0.07,
-                  width: widthSize * 0.75,
-                  child: Card(
-                    color: ataaGreen,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    elevation: 8,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.camera_alt_rounded,
-                              size: 30,
-                              // color: Colors.grey,
-                              color: ataaGold,
-                            ),
-                            Text(
-                              'Upload a Photo',
-                              style: TextStyle(color: ataaGold, fontSize: 20),
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: heightSize * 0.01),
-              // Padding(
-              //   padding: EdgeInsets.only(right: widthSize * 0.27),
-              //   child: Text(
-              //     'Description ',
-              //     style: TextStyle(
-              //         color: ataaGreen, fontSize: 20, fontWeight: FontWeight.bold),
-              //   ),
-              // ),
-              Container(
-                height: heightSize * 0.12,
-                width: widthSize * 0.75,
-                child: Card(
-                  color: ataaGreen,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  elevation: 8,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                        // mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Text('Descrption ',
-                          //     style: TextStyle(color: ataaGreen, fontSize: 20)),
-                          Expanded(
-                            child: TextField(
-                              style: TextStyle(
-                                  color: ataaGold,
-                                  fontSize: 19,
-                                  fontWeight: FontWeight.bold),
-                              controller: descController,
-                              cursorColor: ataaGold,
-                              keyboardType: TextInputType.multiline,
-                              maxLines: 3,
-                              decoration: InputDecoration(
-                                hintText: 'Descrption',
-                                hintStyle:
-                                    TextStyle(color: ataaGold, fontSize: 20),
-                                focusedBorder: InputBorder.none,
-                                border: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                errorBorder: InputBorder.none,
-                                disabledBorder: InputBorder.none,
-                                // UnderlineInputBorder(
-                                //     borderSide:
-                                //         BorderSide(color: ataaGreen)
-                              ),
-                            ),
-                          ),
-                        ]),
-                  ),
-                ),
-              ),
-              SizedBox(height: heightSize * 0.01),
               Container(
                 height: heightSize * 0.07,
                 width: widthSize * 0.75,
                 child: Card(
-                  color: ataaGreen,
+                  color: ataaWhite,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
                   elevation: 8,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Icon(Icons.visibility, color: ataaGold, size: 25),
                       Padding(
-                        padding: EdgeInsets.only(right: 16.0),
-                        child: Text('Anonymous',
-                            style: TextStyle(color: ataaGold, fontSize: 20)),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: heightSize * 0.01),
-              Container(
-                height: heightSize * 0.2,
-                width: widthSize * 0.75,
-                child: Card(
-                  // color: ataaGreen,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  elevation: 8,
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          onTap: (() {}),
-                          readOnly: true,
-                          cursorColor: ataaGreen,
-                          decoration: InputDecoration(
-                              enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: ataaGreen)),
-                              prefixIcon: Icon(
-                                Icons.location_on,
-                                size: 25,
-                                color: ataaGreen,
-                              ),
-                              // fillColor: ataaGreen,
-                              hintText: 'Location..',
-                              hintStyle:
-                                  TextStyle(color: ataaGreen, fontSize: 20)),
+                        padding: const EdgeInsets.only(left: 16.0),
+                        child: Text(
+                          'Donation Type:  ',
+                          style: TextStyle(fontSize: 18, color: ataaGreen),
                         ),
                       ),
-                      // Align(
-                      //     // alignment: Alignment.center,
-                      //     child:
-
-                      // )
+                      Expanded(
+                        child: DropdownButton(
+                          value: user.shirtSize,
+                          icon: Icon(
+                            Icons.arrow_downward,
+                            color: ataaGreen,
+                          ),
+                          iconSize: 20,
+                          style: TextStyle(
+                              color: ataaGreen,
+                              // fontSize: 22,
+                              fontWeight: FontWeight.bold),
+                          // underline: Container(height: 2, color: ataaWhite),
+                          onChanged: (String newValue) {
+                            setState(() {
+                              // user.shirtSize = newValue;
+                            });
+                          },
+                          items: <String>[
+                            'Food',
+                            'Clothes',
+                            'Electronics',
+                            'Devices'
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value,
+                                  style: TextStyle(
+                                      color: ataaGreen,
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.center),
+                            );
+                          }).toList(),
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ),
-              // ]),
+              // Center(
+              //   child: Text(_dateTime == null
+              //       ? 'Nothintg has been selected'
+              //       : _dateTime.toString()),
               // ),
-              // ),
-              SizedBox(height: heightSize * 0.01),
-
-              SizedBox(height: heightSize * 0.03),
+              SizedBox(height: heightSize * 0.02),
               Container(
-                height: heightSize * 0.05,
-                width: widthSize * 0.2,
-                child: FloatingActionButton(
-                  elevation: 8,
+                height: heightSize * 0.07,
+                width: widthSize * 0.75,
+                child: RaisedButton(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
-                  backgroundColor: ataaGreen,
-                  child: Icon(Icons.done, color: ataaGold, size: 30),
-                  onPressed: () {},
+                  color: ataaGreen,
+                  child: Row(
+                    children: [
+                      Icon(Icons.calendar_today_rounded, color: ataaGold),
+                      SizedBox(width: widthSize * 0.03),
+                      Text('Pick date ',
+                          style: TextStyle(color: ataaGold, fontSize: 20)),
+                    ],
+                  ),
+                  onPressed: () {
+                    showDatePicker(
+                        context: context,
+                        initialDate:
+                            _dateTime == null ? DateTime.now() : _dateTime,
+                        firstDate: DateTime.now(),
+                        lastDate: DateTime(2050),
+                        builder: (BuildContext context, Widget child) {
+                          return Theme(
+                            data: ThemeData.light().copyWith(
+                              colorScheme: ColorScheme.light().copyWith(
+                                primary: ataaGreen,
+                                onPrimary: ataaGold,
+                              ),
+                            ),
+                            child: child,
+                          );
+                        }).then((date) {
+                      setState(() {
+                        _dateTime = date;
+                      });
+                    });
+                  },
                 ),
-              )
+              ),
+              SizedBox(height: heightSize * 0.02),
+              Container(
+                  height: heightSize * 0.07,
+                  width: widthSize * 0.75,
+                  child: Card(
+                      color: ataaGreen,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      elevation: 8,
+                      child: TextField(
+                        decoration: InputDecoration(
+                            enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide.none),
+                            focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide.none),
+                            prefixIcon: Icon(
+                              Icons.date_range,
+                              color: ataaGold,
+                            ),
+                            hintText: _dateTime == null
+                                ? 'Select a date'
+                                : DateFormat('dd/MM/yyyy').format(
+                                    DateTime.parse(_dateTime.toString())),
+                            hintStyle:
+                                TextStyle(color: ataaGold, fontSize: 20)),
+                        readOnly: true,
+                      ))),
+              SizedBox(height: heightSize * 0.02),
+              Container(
+                  height: heightSize * 0.05,
+                  width: widthSize * 0.2,
+                  child: FloatingActionButton(
+                    elevation: 8,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    backgroundColor: ataaGreen,
+                    child: Icon(Icons.done, color: ataaGold, size: 30),
+                    onPressed: () {
+                      print('Hi there!');
+                      // database.addDonation(user, type, _image,
+                      //     descController.text, anonymous, location);
+                      Navigator.pop(context);
+                      // call db.addDonation here
+                    },
+                  ))
             ],
           ),
         ),
