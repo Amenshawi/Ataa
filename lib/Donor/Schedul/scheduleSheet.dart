@@ -24,6 +24,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
   DateTime _pickedDate;
   TimeOfDay _timeOfDay;
   String period = '';
+  String placeHolder = 'Food';
   _ScheduleSheetState(this.type, this.user);
 
   @override
@@ -73,7 +74,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                       ),
                       Expanded(
                         child: DropdownButton(
-                          value: user.shirtSize,
+                          value: placeHolder,
                           icon: Icon(
                             Icons.arrow_downward,
                             color: ataaGreen,
@@ -86,7 +87,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                           // underline: Container(height: 2, color: ataaWhite),
                           onChanged: (String newValue) {
                             setState(() {
-                              // user.shirtSize = newValue;
+                              placeHolder = newValue;
                             });
                           },
                           items: <String>[

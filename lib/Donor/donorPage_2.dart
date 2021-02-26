@@ -121,21 +121,32 @@ class _DonorPage_2State extends State<DonorPage_2> {
                       // sheetName: 'Schedul',
                     ),
                     FlipCard(
-                      key: cardKey,
-                      front: CreateButtons(
-                        height: hieghtSize * 0.3,
-                        width: widthSize * 0.4,
-                        icon: Icons.schedule,
-                        cardName: 'Schedul A Donation',
-                        space: true,
-                        spike: false,
-                        // context: context,
-                        // sheetName: 'History',
-                      ),
-                      back: Column(
-                        children: [subButtonsForSchedule()],
-                      ),
-                    ),
+                        key: cardKey,
+                        speed: 800,
+                        front: CreateButtons(
+                          height: hieghtSize * 0.3,
+                          width: widthSize * 0.4,
+                          icon: Icons.schedule,
+                          cardName: 'Schedul A Donation',
+                          space: true,
+                          spike: false,
+                          // context: context,
+                          // sheetName: 'History',
+                        ),
+                        back:
+                            // Card(
+                            //   color: ataaWhite,
+                            //   elevation: 100,
+                            //   shape: RoundedRectangleBorder(
+                            //       borderRadius: BorderRadius.circular(20)),
+                            //   child:
+                            //   Column(
+                            // children: [
+                            subButtonsForSchedule()
+                        //     ],
+                        // ),
+                        // ),
+                        ),
                   ],
                 )
               ],
@@ -194,22 +205,24 @@ class _DonorPage_2State extends State<DonorPage_2> {
       width: widthSize * 0.4,
       child: Container(
         height: hieghtSize * 0.07,
-        // child: Card(
-        //   color: ataaWhite,
-        //   elevation: 8,
-        //   shape:
-        //       RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: Column(
+        child:
+            // Card(
+            //   color: ataaWhite,
+            //   elevation: 8,
+            //   shape:
+            //       RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            //   child:
+            Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             donationButton('Schedule', Icons.schedule,
                 ScheduleSheet('Schedule', user), true, 1),
             donationButton('Periodic Donations', Icons.all_inclusive,
                 PeriodcSheet('Periodic donations', user), false, 1),
-            donationButton('Pause Donations', Icons.pause,
-                ScheduleSheet('Pause Donations', user), false, 1),
-            donationButton('Terminate Donations ', Icons.stop_circle_outlined,
-                ScheduleSheet('Terminate Donations', user), false, 1),
+            donationButton('Edit Periodic', Icons.edit,
+                ScheduleSheet('Edit Periodic ', user), false, 1),
+            // donationButton('Edit Schedule ', Icons.edit,
+            //     ScheduleSheet('Edit Schedule', user), false, 1),
           ],
         ),
       ),

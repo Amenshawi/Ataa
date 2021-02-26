@@ -32,6 +32,7 @@ class _CustomFormState extends State<CustomForm> {
   LatLng location;
   final String type;
   final AppUser user;
+  String placeHolder = 'now';
   _CustomFormState(this.type, this.user);
 
   @override
@@ -272,14 +273,14 @@ class _CustomFormState extends State<CustomForm> {
                             Padding(
                               padding: const EdgeInsets.only(left: 16.0),
                               child: Text(
-                                'Notify Charities In:  ',
+                                'Notify Charities:  ',
                                 style:
                                     TextStyle(fontSize: 18, color: ataaGreen),
                               ),
                             ),
                             Expanded(
                               child: DropdownButton(
-                                value: user.shirtSize,
+                                value: placeHolder,
                                 icon: Icon(
                                   Icons.arrow_downward,
                                   color: ataaGreen,
@@ -292,7 +293,7 @@ class _CustomFormState extends State<CustomForm> {
                                 // underline: Container(height: 2, color: ataaWhite),
                                 onChanged: (String newValue) {
                                   setState(() {
-                                    // user.shirtSize = newValue;
+                                    placeHolder = newValue;
                                   });
                                 },
                                 items: <String>[
