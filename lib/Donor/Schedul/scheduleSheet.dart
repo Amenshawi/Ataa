@@ -1,3 +1,5 @@
+import 'package:Ataa/Custom/Sheet.dart';
+import 'package:Ataa/Donor/Donation/CustomForm.dart';
 import 'package:Ataa/appUser.dart';
 import 'package:Ataa/database.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +20,6 @@ class ScheduleSheet extends StatefulWidget {
 class _ScheduleSheetState extends State<ScheduleSheet> {
   final database = Database();
   double heightSize, widthSize;
-  TextEditingController descController = TextEditingController();
   final String type;
   final AppUser user;
   DateTime _pickedDate;
@@ -89,6 +90,12 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                             setState(() {
                               placeHolder = newValue;
                             });
+                            if (newValue == 'Food')
+                              showSheet(context, newValue,
+                                  CustomForm(newValue, user, true), true);
+                            else
+                              showSheet(context, newValue,
+                                  CustomForm(newValue, user, false), false);
                           },
                           items: <String>[
                             'Food',
@@ -208,5 +215,22 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
         period = time.period.index == 0 ? 'AM' : 'PM';
         _timeOfDay = time;
       });
+  }
+
+  void showSheet(context, sheetName, content, padding) {
+    showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+        ),
+        elevation: 100,
+        isScrollControlled: true,
+        builder: (BuildContext bc) {
+          return Sheet(
+            sheetName: sheetName,
+            content: content,
+            padding: padding,
+          );
+        });
   }
 }

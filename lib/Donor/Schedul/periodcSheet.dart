@@ -1,3 +1,5 @@
+import 'package:Ataa/Custom/Sheet.dart';
+import 'package:Ataa/Donor/Donation/CustomForm.dart';
 import 'package:Ataa/appUser.dart';
 import 'package:Ataa/database.dart';
 import 'package:flutter/material.dart';
@@ -19,18 +21,18 @@ class PeriodcSheet extends StatefulWidget {
 class _PeriodcSheetState extends State<PeriodcSheet> {
   final database = Database();
   double heightSize, widthSize;
-  TextEditingController descController = TextEditingController();
   final String type;
   final AppUser user;
-  DateTime _pickedDate;
+  String placeHolder = 'Food';
   TimeOfDay _timeOfDay;
   String period = '';
+  DateTime _startDate = DateTime.now();
+  DateTime _endDate = DateTime.now().add(Duration(days: 7));
   _PeriodcSheetState(this.type, this.user);
 
   @override
   void initState() {
     super.initState();
-    _pickedDate = DateTime.now();
     _timeOfDay = TimeOfDay.now();
     period = _timeOfDay.period.index == 0 ? 'AM' : 'PM';
   }
@@ -74,7 +76,7 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
                       ),
                       Expanded(
                         child: DropdownButton(
-                          value: user.shirtSize,
+                          value: placeHolder,
                           icon: Icon(
                             Icons.arrow_downward,
                             color: ataaGreen,
@@ -87,8 +89,14 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
                           // underline: Container(height: 2, color: ataaWhite),
                           onChanged: (String newValue) {
                             setState(() {
-                              // user.shirtSize = newValue;
+                              placeHolder = newValue;
                             });
+                            if (newValue == 'Food')
+                              showSheet(context, newValue,
+                                  CustomForm(newValue, user, true), true);
+                            else
+                              showSheet(context, newValue,
+                                  CustomForm(newValue, user, false), false);
                           },
                           items: <String>[
                             'Food',
@@ -119,7 +127,7 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
                     borderRadius: BorderRadius.circular(25)),
                 child: ListTile(
                     title: Text(
-                      'Date: ${_pickedDate.year}, ${_pickedDate.month}, ${_pickedDate.day}',
+                      'From: ${_startDate.year}/${_startDate.month}/${_startDate.day} \nTo: ${_endDate.year}/${_endDate.month}/${_endDate.day}',
                       style: TextStyle(color: ataaGold, fontSize: 20),
                     ),
                     trailing: Icon(Icons.date_range_rounded, color: ataaGold),
@@ -138,6 +146,7 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
                     trailing: Icon(Icons.timer, color: ataaGold),
                     onTap: _pickTime),
               ),
+              // ),
               SizedBox(height: heightSize * 0.02),
               Container(
                   height: heightSize * 0.05,
@@ -164,30 +173,21 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
   }
 
   void _pickDate() async {
+    // i couldn't change the color of the dates, however, in the login page there is a themdate where it should take the primary color and the primaryswatch.
+    // i changes the primaryswatch but the two button (cancel and ok) dissapered :(
+    // if it was too much just ignore it.
     List<DateTime> date = await DateRagePicker.showDatePicker(
       context: context,
-      // firstDate:
-      // lastDate:
-      // initialDate: _pickedDate,
-      // (BuildContext context, Widget child) {
-      //   return Theme(
-      //     data: ThemeData.light().copyWith(
-      //       colorScheme: ColorScheme.light().copyWith(
-      //         primary: ataaGreen,
-      //         onPrimary: ataaGold,
-      //       ),
-      //     ),
-      //     child: child,
-      //   );
-      // },
-      initialFirstDate: DateTime.now(),
-      initialLastDate: (new DateTime.now()).add(new Duration(days: 7)),
-      firstDate: _pickedDate,
-      lastDate: DateTime(DateTime.now().year + 5),
+      initialFirstDate: _startDate,
+      initialLastDate: _endDate,
+      firstDate: new DateTime(DateTime.now().year),
+      lastDate: new DateTime(DateTime.now().year + 5),
     );
-    if (date != null)
+    if (date != null && date.length == 2)
       setState(() {
-        _pickedDate = date as DateTime;
+        _startDate = date[0];
+        _endDate = date[1];
+        print(date);
       });
   }
 
@@ -212,5 +212,22 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
         period = time.period.index == 0 ? 'AM' : 'PM';
         _timeOfDay = time;
       });
+  }
+
+  void showSheet(context, sheetName, content, padding) {
+    showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+        ),
+        elevation: 100,
+        isScrollControlled: true,
+        builder: (BuildContext bc) {
+          return Sheet(
+            sheetName: sheetName,
+            content: content,
+            padding: padding,
+          );
+        });
   }
 }

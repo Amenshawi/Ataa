@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:Ataa/NavigationPage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'signup.dart';
 import 'package:Ataa/auth.dart';
 import 'ForgetPassword.dart';
@@ -15,9 +16,12 @@ class Login extends StatelessWidget {
   static const PrimaryColor = const Color(0xFF1c664a);
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     return MaterialApp(
       theme: ThemeData(
         primaryColor: PrimaryColor,
+        primarySwatch: Colors.blueGrey,
       ),
       initialRoute: '/',
       routes: {

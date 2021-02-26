@@ -8,6 +8,7 @@ import 'package:Ataa/NavigationPage.dart';
 import 'package:Ataa/database.dart';
 import 'package:flip_card/flip_card.dart';
 
+import 'Schedul/EditSheet.dart';
 import 'Schedul/scheduleSheet.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
@@ -220,7 +221,7 @@ class _DonorPage_2State extends State<DonorPage_2> {
             donationButton('Periodic Donations', Icons.all_inclusive,
                 PeriodcSheet('Periodic donations', user), false, 1),
             donationButton('Edit Periodic', Icons.edit,
-                ScheduleSheet('Edit Periodic ', user), false, 1),
+                EditSheet('Edit Periodic ', user), false, 1),
             // donationButton('Edit Schedule ', Icons.edit,
             //     ScheduleSheet('Edit Schedule', user), false, 1),
           ],
