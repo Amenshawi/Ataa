@@ -32,6 +32,7 @@ class _CustomFormState extends State<CustomForm> {
   LatLng location;
   final String type;
   final AppUser user;
+  var time = 0;
   String placeHolder = 'now';
   _CustomFormState(this.type, this.user);
 
@@ -280,7 +281,9 @@ class _CustomFormState extends State<CustomForm> {
                             ),
                             Expanded(
                               child: DropdownButton(
-                                value: placeHolder,
+                                value: time == 0
+                                    ? 'now'
+                                    : time.toString() + ' mins',
                                 icon: Icon(
                                   Icons.arrow_downward,
                                   color: ataaGreen,
@@ -293,7 +296,15 @@ class _CustomFormState extends State<CustomForm> {
                                 // underline: Container(height: 2, color: ataaWhite),
                                 onChanged: (String newValue) {
                                   setState(() {
-                                    placeHolder = newValue;
+                                    if (newValue == 'now') {
+                                      time = 0;
+                                    } else if (newValue == '5 mins') {
+                                      time = 5;
+                                    } else if (newValue == '10 mins') {
+                                      time = 10;
+                                    } else if (newValue == '15 mins') {
+                                      time = 15;
+                                    }
                                   });
                                 },
                                 items: <String>[
@@ -332,7 +343,7 @@ class _CustomFormState extends State<CustomForm> {
                   onPressed: () {
                     print('Hi there!');
                     database.addDonation(user, type, _image,
-                        descController.text, anonymous, location);
+                        descController.text, anonymous, location, time);
                     Navigator.pop(context);
                     // call db.addDonation here
                   },

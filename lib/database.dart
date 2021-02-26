@@ -122,7 +122,7 @@ class Database {
   }
 
   Future addDonation(AppUser user, String type, image, String desc,
-      bool anonymous, location) async {
+      bool anonymous, location, int time) async {
     image = File(image.path);
     if (anonymous != true) {
       anonymous = false;
@@ -136,13 +136,17 @@ class Database {
         .then((value) {
       return value.docs[0].reference;
     });
+    print('time is: ' + time.toString());
+    final current = DateTime.now();
     await firestore.collection('donations').add({
       'type': type,
       'user': ref,
       'image': url,
       'desc': desc,
       'anonymous': anonymous,
-      'location': geopoint
+      'location': geopoint,
+      'notifyAt': current.add(new Duration(minutes: time)),
+      'timeStamp': current
     }).then((value) {
       print('donation added');
       return;
