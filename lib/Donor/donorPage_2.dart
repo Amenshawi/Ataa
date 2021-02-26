@@ -1,12 +1,14 @@
 import 'package:Ataa/Custom/Sheet.dart';
 import 'package:Ataa/Custom/createButtons_2.dart';
 import 'package:Ataa/Donor/Donation/CustomForm.dart';
-import 'package:Ataa/Donor/Donation/scheduleSheet.dart';
+import 'package:Ataa/Donor/Schedul/periodcSheet.dart';
 import 'package:Ataa/appUser.dart';
 import 'package:flutter/material.dart';
 import 'package:Ataa/NavigationPage.dart';
 import 'package:Ataa/database.dart';
 import 'package:flip_card/flip_card.dart';
+
+import 'Schedul/scheduleSheet.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGreenField = Color.fromRGBO(28, 102, 74, .5);
@@ -203,7 +205,7 @@ class _DonorPage_2State extends State<DonorPage_2> {
             donationButton('Schedule', Icons.schedule,
                 ScheduleSheet('Schedule', user), true, 1),
             donationButton('Periodic Donations', Icons.all_inclusive,
-                ScheduleSheet('Periodic donations', user), false, 1),
+                PeriodcSheet('Periodic donations', user), false, 1),
             donationButton('Pause Donations', Icons.pause,
                 ScheduleSheet('Pause Donations', user), false, 1),
             donationButton('Terminate Donations ', Icons.stop_circle_outlined,

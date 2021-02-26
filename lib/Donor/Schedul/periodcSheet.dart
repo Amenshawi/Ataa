@@ -1,35 +1,39 @@
-// import 'dart:io';
 import 'package:Ataa/appUser.dart';
 import 'package:Ataa/database.dart';
-// import 'package:Ataa/locationPage.dart';
 import 'package:flutter/material.dart';
-// import 'package:google_maps_controller/google_maps_controller.dart';
-import 'package:date_time_picker/date_time_picker.dart';
-// import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
-// import 'package:date_range_picker/date_range_picker.dart';
+import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGreenField = Color.fromRGBO(28, 102, 74, .5);
 final Color ataaGold = Color.fromRGBO(244, 234, 146, .8);
 final Color ataaWhite = Color.fromRGBO(255, 255, 255, 0.75);
 
-class ScheduleSheet extends StatefulWidget {
+class PeriodcSheet extends StatefulWidget {
   final String type;
   final AppUser user;
-  ScheduleSheet(this.type, this.user);
+  PeriodcSheet(this.type, this.user);
   @override
-  _ScheduleSheetState createState() => _ScheduleSheetState(type, user);
+  _PeriodcSheetState createState() => _PeriodcSheetState(type, user);
 }
 
-class _ScheduleSheetState extends State<ScheduleSheet> {
+class _PeriodcSheetState extends State<PeriodcSheet> {
   final database = Database();
   double heightSize, widthSize;
   TextEditingController descController = TextEditingController();
   final String type;
   final AppUser user;
-  DateTime _dateTime;
-  _ScheduleSheetState(this.type, this.user);
+  DateTime _pickedDate;
+  TimeOfDay _timeOfDay;
+  String period = '';
+  _PeriodcSheetState(this.type, this.user);
+
+  @override
+  void initState() {
+    super.initState();
+    _pickedDate = DateTime.now();
+    _timeOfDay = TimeOfDay.now();
+    period = _timeOfDay.period.index == 0 ? 'AM' : 'PM';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +51,8 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
           padding: EdgeInsets.only(
               top: heightSize * 0.04, bottom: heightSize * 0.04),
           child: Column(
+            // crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Container(
                 height: heightSize * 0.07,
@@ -106,79 +112,32 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                   ),
                 ),
               ),
-              // Center(
-              //   child: Text(_dateTime == null
-              //       ? 'Nothintg has been selected'
-              //       : _dateTime.toString()),
-              // ),
               SizedBox(height: heightSize * 0.02),
-              Container(
-                height: heightSize * 0.07,
-                width: widthSize * 0.75,
-                child: RaisedButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  color: ataaGreen,
-                  child: Row(
-                    children: [
-                      Icon(Icons.calendar_today_rounded, color: ataaGold),
-                      SizedBox(width: widthSize * 0.03),
-                      Text('Pick date ',
-                          style: TextStyle(color: ataaGold, fontSize: 20)),
-                    ],
-                  ),
-                  onPressed: () {
-                    showDatePicker(
-                        context: context,
-                        initialDate:
-                            _dateTime == null ? DateTime.now() : _dateTime,
-                        firstDate: DateTime.now(),
-                        lastDate: DateTime(2050),
-                        builder: (BuildContext context, Widget child) {
-                          return Theme(
-                            data: ThemeData.light().copyWith(
-                              colorScheme: ColorScheme.light().copyWith(
-                                primary: ataaGreen,
-                                onPrimary: ataaGold,
-                              ),
-                            ),
-                            child: child,
-                          );
-                        }).then((date) {
-                      setState(() {
-                        _dateTime = date;
-                      });
-                    });
-                  },
-                ),
+              Card(
+                color: ataaGreen,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25)),
+                child: ListTile(
+                    title: Text(
+                      'Date: ${_pickedDate.year}, ${_pickedDate.month}, ${_pickedDate.day}',
+                      style: TextStyle(color: ataaGold, fontSize: 20),
+                    ),
+                    trailing: Icon(Icons.date_range_rounded, color: ataaGold),
+                    onTap: _pickDate),
               ),
-              SizedBox(height: heightSize * 0.02),
-              Container(
-                  height: heightSize * 0.07,
-                  width: widthSize * 0.75,
-                  child: Card(
-                      color: ataaGreen,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      elevation: 8,
-                      child: TextField(
-                        decoration: InputDecoration(
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide.none),
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide.none),
-                            prefixIcon: Icon(
-                              Icons.date_range,
-                              color: ataaGold,
-                            ),
-                            hintText: _dateTime == null
-                                ? 'Select a date'
-                                : DateFormat('dd/MM/yyyy').format(
-                                    DateTime.parse(_dateTime.toString())),
-                            hintStyle:
-                                TextStyle(color: ataaGold, fontSize: 20)),
-                        readOnly: true,
-                      ))),
+              SizedBox(height: heightSize * 0.01),
+              Card(
+                color: ataaGreen,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25)),
+                child: ListTile(
+                    title: Text(
+                      'Time: ${_timeOfDay.hour}: ${_timeOfDay.minute} ${period}',
+                      style: TextStyle(color: ataaGold, fontSize: 20),
+                    ),
+                    trailing: Icon(Icons.timer, color: ataaGold),
+                    onTap: _pickTime),
+              ),
               SizedBox(height: heightSize * 0.02),
               Container(
                   height: heightSize * 0.05,
@@ -202,5 +161,56 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
         ),
       ),
     );
+  }
+
+  void _pickDate() async {
+    List<DateTime> date = await DateRagePicker.showDatePicker(
+      context: context,
+      // firstDate:
+      // lastDate:
+      // initialDate: _pickedDate,
+      // (BuildContext context, Widget child) {
+      //   return Theme(
+      //     data: ThemeData.light().copyWith(
+      //       colorScheme: ColorScheme.light().copyWith(
+      //         primary: ataaGreen,
+      //         onPrimary: ataaGold,
+      //       ),
+      //     ),
+      //     child: child,
+      //   );
+      // },
+      initialFirstDate: DateTime.now(),
+      initialLastDate: (new DateTime.now()).add(new Duration(days: 7)),
+      firstDate: _pickedDate,
+      lastDate: DateTime(DateTime.now().year + 5),
+    );
+    if (date != null)
+      setState(() {
+        _pickedDate = date as DateTime;
+      });
+  }
+
+  void _pickTime() async {
+    TimeOfDay time = await showTimePicker(
+        context: context,
+        initialTime: _timeOfDay,
+        builder: (BuildContext context, Widget child) {
+          return Theme(
+            data: ThemeData.light().copyWith(
+              colorScheme: ColorScheme.light().copyWith(
+                primary: ataaGreen,
+                onPrimary: ataaGold,
+              ),
+            ),
+            child: child,
+          );
+        });
+
+    if (time != null)
+      setState(() {
+        period = time.period.index == 0 ? 'AM' : 'PM';
+        _timeOfDay = time;
+      });
   }
 }

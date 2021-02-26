@@ -27,10 +27,6 @@ dependencies:
   cloud_firestore: ^0.16.0
   firebase_storage: ^7.0.0
   firebase_auth: ^0.20.0
-  # bottom_navy_bar: ^5.6.0
-  # smooth_page_indicator: ^0.2.0
-  # image_picker: ^0.6.7+22
-  # dotted_border: ^1.0.7
   flutter_icons: ^1.1.0
   google_maps_flutter: ^1.2.0
   geolocator: ^6.2.0
@@ -40,8 +36,7 @@ dependencies:
   google_maps_controller: ^1.1.0
   image_picker: ^0.6.6+5
   flip_card: ^0.4.4
-  date_time_picker: ^1.1.1
-  # date_range_picker: ^1.0.6
+  date_range_picker: ^1.0.6
 
 
 
