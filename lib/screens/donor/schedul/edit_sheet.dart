@@ -1,5 +1,5 @@
-import 'package:Ataa/appUser.dart';
-import 'package:Ataa/database.dart';
+import 'package:Ataa/Models/app_user.dart';
+import 'package:Ataa/Services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:toast/toast.dart';
@@ -55,10 +55,12 @@ class _EditSheetState extends State<EditSheet> {
                         icon: Icons.pause,
                         closeOnTap: false,
                         onTap: () {
-                          Toast.show('Pause on $index', context,
-                              duration: Toast.LENGTH_LONG,
-                              gravity: Toast.BOTTOM,
-                              );
+                          Toast.show(
+                            'Pause on $index',
+                            context,
+                            duration: Toast.LENGTH_LONG,
+                            gravity: Toast.BOTTOM,
+                          );
                         },
                       ),
                       IconSlideAction(

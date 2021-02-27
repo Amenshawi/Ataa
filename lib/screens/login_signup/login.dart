@@ -1,13 +1,10 @@
-import 'package:Ataa/Custom/customPage_2.dart';
-import 'package:Ataa/Donor/donorPage_2.dart';
+import 'package:Ataa/Screens/home_page.dart';
 import 'package:flutter/material.dart';
-import 'package:Ataa/NavigationPage.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'signup.dart';
-import 'package:Ataa/auth.dart';
-import 'ForgetPassword.dart';
+import 'package:Ataa/services/auth.dart';
+import 'package:Ataa/screens/login_signup/forget_password.dart';
 
 var visible = false;
 var signedIn = false;

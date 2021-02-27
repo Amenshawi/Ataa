@@ -1,7 +1,7 @@
 // import 'dart:io';
-import 'package:Ataa/appUser.dart';
-import 'package:Ataa/database.dart';
-import 'package:Ataa/locationPage.dart';
+import 'package:Ataa/Models/app_user.dart';
+import 'package:Ataa/Services/database.dart';
+import 'package:Ataa/Screens/location_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_controller/google_maps_controller.dart';
 
@@ -12,16 +12,16 @@ final Color ataaGreenField = Color.fromRGBO(28, 102, 74, .5);
 final Color ataaGold = Color.fromRGBO(244, 234, 146, .8);
 final Color ataaWhite = Color.fromRGBO(255, 255, 255, 0.75);
 
-class CustomForm extends StatefulWidget {
+class DonationForm extends StatefulWidget {
   final String type;
   final AppUser user;
   final bool isFood;
-  CustomForm(this.type, this.user, this.isFood);
+  DonationForm(this.type, this.user, this.isFood);
   @override
-  _CustomFormState createState() => _CustomFormState(type, user);
+  _DonationFormState createState() => _DonationFormState(type, user);
 }
 
-class _CustomFormState extends State<CustomForm> {
+class _DonationFormState extends State<DonationForm> {
   final database = Database();
   PickedFile _image;
   double heightSize, widthSize;
@@ -33,8 +33,7 @@ class _CustomFormState extends State<CustomForm> {
   final String type;
   final AppUser user;
   var time = 0;
-  String placeHolder = 'now';
-  _CustomFormState(this.type, this.user);
+  _DonationFormState(this.type, this.user);
 
   @override
   Widget build(BuildContext context) {
@@ -53,18 +52,6 @@ class _CustomFormState extends State<CustomForm> {
               top: heightSize * 0.04, bottom: heightSize * 0.04),
           child: Column(
             children: [
-              // DottedBorder(
-              //   dashPattern: [8, 4],
-              //   color: ataaGreenField,
-              //   strokeWidth: 2,
-              //   borderType: BorderType.RRect,
-              //   radius: Radius.circular(12),
-              //   padding: EdgeInsets.all(6),
-              //   child:
-              //       // ClipRRect(
-              //       //   borderRadius: BorderRadius.all(Radius.circular(12)),
-              //       //   child:
-              //       Column(children: [
               GestureDetector(
                 onTap: () {
                   _showPicker(context);
@@ -88,7 +75,6 @@ class _CustomFormState extends State<CustomForm> {
                             Icon(
                               Icons.camera_alt_rounded,
                               size: 30,
-                              // color: Colors.grey,
                               color: ataaGold,
                             ),
                             !imagePicked
@@ -106,14 +92,6 @@ class _CustomFormState extends State<CustomForm> {
                 ),
               ),
               SizedBox(height: heightSize * 0.01),
-              // Padding(
-              //   padding: EdgeInsets.only(right: widthSize * 0.27),
-              //   child: Text(
-              //     'Description ',
-              //     style: TextStyle(
-              //         color: ataaGreen, fontSize: 20, fontWeight: FontWeight.bold),
-              //   ),
-              // ),
               Container(
                 height: heightSize * 0.12,
                 width: widthSize * 0.75,
@@ -125,11 +103,8 @@ class _CustomFormState extends State<CustomForm> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
-                        // mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Text('Descrption ',
-                          //     style: TextStyle(color: ataaGreen, fontSize: 20)),
                           Expanded(
                             child: TextField(
                               style: TextStyle(
@@ -149,9 +124,6 @@ class _CustomFormState extends State<CustomForm> {
                                 enabledBorder: InputBorder.none,
                                 errorBorder: InputBorder.none,
                                 disabledBorder: InputBorder.none,
-                                // UnderlineInputBorder(
-                                //     borderSide:
-                                //         BorderSide(color: ataaGreen)
                               ),
                             ),
                           ),
@@ -226,15 +198,11 @@ class _CustomFormState extends State<CustomForm> {
                                 size: 25,
                                 color: ataaGreen,
                               ),
-                              // fillColor: ataaGreen,
                               hintText: 'Location..',
                               hintStyle:
                                   TextStyle(color: ataaGreen, fontSize: 20)),
                         ),
                       ),
-                      // Align(
-                      //     // alignment: Alignment.center,
-                      //     child:
                       Container(
                           height: heightSize * 0.14,
                           child: location != null
@@ -250,14 +218,10 @@ class _CustomFormState extends State<CustomForm> {
                                         fontSize: 18, color: ataaGreen),
                                   ),
                                 ))
-                      // )
                     ],
                   ),
                 ),
               ),
-              // ]),
-              // ),
-              // ),
               SizedBox(height: heightSize * 0.01),
               widget.isFood
                   ? Container(
@@ -291,9 +255,7 @@ class _CustomFormState extends State<CustomForm> {
                                 iconSize: 20,
                                 style: TextStyle(
                                     color: ataaGreen,
-                                    // fontSize: 22,
                                     fontWeight: FontWeight.bold),
-                                // underline: Container(height: 2, color: ataaWhite),
                                 onChanged: (String newValue) {
                                   setState(() {
                                     if (newValue == 'now') {
@@ -345,7 +307,6 @@ class _CustomFormState extends State<CustomForm> {
                     database.addDonation(user, type, _image,
                         descController.text, anonymous, location, time);
                     Navigator.pop(context);
-                    // call db.addDonation here
                   },
                 ),
               )

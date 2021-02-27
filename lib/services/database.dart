@@ -1,12 +1,10 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:Ataa/appUser.dart';
-import 'package:Ataa/auth.dart';
+import 'package:Ataa/Models/app_user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:image_picker/image_picker.dart';
 
 class Database {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -67,7 +65,7 @@ class Database {
   }
 
   Future changePrivacy(AppUser user, bool changTo) async {
-    final doc = await firestore
+    await firestore
         .collection('users')
         .where('uid', isEqualTo: user.uid)
         .get()

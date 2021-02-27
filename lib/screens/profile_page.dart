@@ -1,21 +1,19 @@
 import 'dart:ui';
-import 'package:Ataa/appUser.dart';
-import 'package:Ataa/auth.dart';
+import 'package:Ataa/Models/app_user.dart';
+import 'package:Ataa/Services/auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:Ataa/database.dart';
+import 'package:Ataa/Services/database.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:google_maps_controller/google_maps_controller.dart';
-import 'package:Ataa/locationPage.dart';
+import 'package:Ataa/Screens/location_page.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGold = Color.fromRGBO(244, 234, 146, 1);
 
 class Profile extends StatefulWidget {
   final AppUser user;
-  Profile(@required this.user);
+  Profile(this.user);
   @override
   _ProfileState createState() => _ProfileState(user);
 }
@@ -719,81 +717,4 @@ class _ProfileState extends State<Profile> {
           ));
     });
   }
-
-  /*locationCard(context) {
-    showModalBottomSheet(
-        context: context,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
-        ),
-        elevation: 10,
-        isScrollControlled: true,
-        builder: (BuildContext bc) {
-          return Padding(
-              padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom * 0.5),
-              child: SingleChildScrollView(child:locationSheet()));
-        });
-  }
-  Widget locationSheet() {
-    bool once = true;
-    return StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
-          if(once)
-          _getUserLocation().whenComplete((){
-            setState((){
-              once = false;
-            });
-          });
-      return foundLocation?
-      Container(
-          height: MediaQuery.of(context).size.height * 0.8 ,
-          margin: EdgeInsets.all(30),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  height: MediaQuery.of(context).size.height *0.7,
-                  width: MediaQuery.of(context).size.width *0.9,
-                  child: GoogleMap(
-                    onMapCreated: _onMapCreated,
-                    mapType: MapType.normal,
-                    initialCameraPosition: CameraPosition(target: currentPosition, zoom: 5),
-                  ),
-                ),
-              ]
-            )
-          )
-        ):Container( 
-        child: CircularProgressIndicator(
-                backgroundColor:
-                  Color.fromRGBO(244, 234, 146, 1),
-                valueColor: AlwaysStoppedAnimation(
-                  Color.fromRGBO(28, 102, 74, 1)),
-              ),
-        height:MediaQuery.of(context).size.height * .4 ,
-        margin: EdgeInsets.all(30),);
-      
-      });
-  }
-  Future _getUserLocation() async {
-    print('asking permission');
-     Map<Permission, PermissionStatus> statuses = await [
-      Permission.location,].request();
-        var position = await GeolocatorPlatform.instance
-            .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-        if(statuses[Permission.location].isGranted)
-        setState(() {
-          currentPosition = LatLng(position.latitude, position.longitude);
-          foundLocation = true;
-        });
-        print("lat " + currentPosition.latitude.toString() + " log " + currentPosition.longitude.toString());
-        print(' done loading');
-  }
-  void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
-  }*/
-
 }

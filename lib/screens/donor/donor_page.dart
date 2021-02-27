@@ -1,15 +1,13 @@
 import 'package:Ataa/Custom/Sheet.dart';
-import 'package:Ataa/Custom/createButtons_2.dart';
-import 'package:Ataa/Donor/Donation/CustomForm.dart';
-import 'package:Ataa/Donor/Schedul/periodcSheet.dart';
-import 'package:Ataa/appUser.dart';
+import 'package:Ataa/Custom/create_buttons.dart';
+import 'package:Ataa/Screens/Donor/donation_form.dart';
+import 'package:Ataa/Screens/Donor/Schedul/periodc_sheet.dart';
+import 'package:Ataa/Models/app_user.dart';
 import 'package:flutter/material.dart';
-import 'package:Ataa/NavigationPage.dart';
-import 'package:Ataa/database.dart';
+import 'package:Ataa/Services/database.dart';
 import 'package:flip_card/flip_card.dart';
-
-import 'Schedul/EditSheet.dart';
-import 'Schedul/scheduleSheet.dart';
+import 'package:Ataa/Screens/Donor/Schedul/edit_sheet.dart';
+import 'package:Ataa/Screens/Donor/Schedul/schedule_sheet.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGreenField = Color.fromRGBO(28, 102, 74, .5);
@@ -17,34 +15,27 @@ final Color ataaGold = Color.fromRGBO(244, 234, 146, .8);
 final Color ataaWhite = Color.fromRGBO(255, 255, 255, 0.75);
 
 // ignore: camel_case_types
-class DonorPage_2 extends StatefulWidget {
+class DonorPage extends StatefulWidget {
   final AppUser user;
-  DonorPage_2(this.user);
+  DonorPage(this.user);
   @override
-  _DonorPage_2State createState() => _DonorPage_2State(user);
+  _DonorPageState createState() => _DonorPageState(user);
 }
 
 // ignore: camel_case_types
-class _DonorPage_2State extends State<DonorPage_2> {
+class _DonorPageState extends State<DonorPage> {
   double hieghtSize, widthSize;
   bool visible = false;
   bool _subButtons = false;
   bool cardOpen = false;
-  int _currentIndex = 0;
   final database = Database();
   final AppUser user;
   GlobalKey<FlipCardState> cardKey = GlobalKey<FlipCardState>();
 
-  _DonorPage_2State(this.user);
+  _DonorPageState(this.user);
   var charities;
-  // void _update(int index) {
-  //   print('from: ' + _currentIndex.toString());
-  //   print('to: ' + index.toString());
-  //   setState(() => _currentIndex = index);
-  // }
   @override
   Widget build(BuildContext context) {
-    AppUser user;
     Size size = MediaQuery.of(context).size;
     hieghtSize = size.height;
     widthSize = size.width;
@@ -53,7 +44,6 @@ class _DonorPage_2State extends State<DonorPage_2> {
         searchBar(),
         SizedBox(height: hieghtSize * 0.02),
         donorButtons(),
-        // TabNavigationItem.getNavBar(_currentIndex, user, _update),
       ],
     );
   }
@@ -61,8 +51,6 @@ class _DonorPage_2State extends State<DonorPage_2> {
   Widget donorButtons() {
     return !visible
         ? Container(
-            // padding: EdgeInsets.all(50),
-            // color: ataaGreen,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -77,8 +65,6 @@ class _DonorPage_2State extends State<DonorPage_2> {
                       },
                       child: AnimatedCrossFade(
                           duration: Duration(milliseconds: 300),
-                          // opacity: fadeAway ? 0 : 1,
-                          // sizeCurve: Curves.easeIn,
                           crossFadeState: !cardOpen
                               ? CrossFadeState.showFirst
                               : CrossFadeState.showSecond,
@@ -89,9 +75,6 @@ class _DonorPage_2State extends State<DonorPage_2> {
                             cardName: 'Make A Donation',
                             space: true,
                             spike: true,
-                            // context: context,
-                            // sheetName: 'Donate',
-                            // content: MakeAdonation(),
                           ),
                           secondChild: subButtons()),
                     ),
@@ -102,8 +85,6 @@ class _DonorPage_2State extends State<DonorPage_2> {
                       cardName: 'Cancel A Donation',
                       space: false,
                       spike: false,
-                      // context: context,
-                      // sheetName: 'Cancel',
                     )
                   ],
                 ),
@@ -131,23 +112,8 @@ class _DonorPage_2State extends State<DonorPage_2> {
                           cardName: 'Schedul A Donation',
                           space: true,
                           spike: false,
-                          // context: context,
-                          // sheetName: 'History',
                         ),
-                        back:
-                            // Card(
-                            //   color: ataaWhite,
-                            //   elevation: 100,
-                            //   shape: RoundedRectangleBorder(
-                            //       borderRadius: BorderRadius.circular(20)),
-                            //   child:
-                            //   Column(
-                            // children: [
-                            subButtonsForSchedule()
-                        //     ],
-                        // ),
-                        // ),
-                        ),
+                        back: subButtonsForSchedule()),
                   ],
                 )
               ],
@@ -196,7 +162,6 @@ class _DonorPage_2State extends State<DonorPage_2> {
                 ),
               ),
             ],
-            // ),
           );
   }
 
@@ -206,14 +171,7 @@ class _DonorPage_2State extends State<DonorPage_2> {
       width: widthSize * 0.4,
       child: Container(
         height: hieghtSize * 0.07,
-        child:
-            // Card(
-            //   color: ataaWhite,
-            //   elevation: 8,
-            //   shape:
-            //       RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            //   child:
-            Column(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             donationButton('Schedule', Icons.schedule,
@@ -222,12 +180,9 @@ class _DonorPage_2State extends State<DonorPage_2> {
                 PeriodcSheet('Periodic donations', user), false, 1),
             donationButton('Edit Periodic', Icons.edit,
                 EditSheet('Edit Periodic ', user), false, 1),
-            // donationButton('Edit Schedule ', Icons.edit,
-            //     ScheduleSheet('Edit Schedule', user), false, 1),
           ],
         ),
       ),
-      // ),
     );
   }
 
@@ -240,13 +195,13 @@ class _DonorPage_2State extends State<DonorPage_2> {
         child: Column(
           children: [
             donationButton('Food', Icons.food_bank,
-                CustomForm('Food', user, true), true, 0),
+                DonationForm('Food', user, true), true, 0),
             donationButton('Clothes', Icons.accessibility_rounded,
-                CustomForm('Clothes', user, false), false, 0),
+                DonationForm('Clothes', user, false), false, 0),
             donationButton('Electronics', Icons.power,
-                CustomForm('Electronics', user, false), false, 0),
+                DonationForm('Electronics', user, false), false, 0),
             donationButton('Furniture', Icons.house_rounded,
-                CustomForm('Furniture', user, false), false, 0)
+                DonationForm('Furniture', user, false), false, 0)
           ],
         ),
       ),
@@ -264,7 +219,6 @@ class _DonorPage_2State extends State<DonorPage_2> {
           color: ataaGreen,
           child: ListTile(
             contentPadding: EdgeInsets.symmetric(horizontal: 1),
-            // leading: Icon(icon, size: 25, color: ataaGold),
             title: Transform(
                 transform: Matrix4.translationValues(8, 0.0, 0.0),
                 child: Text(
@@ -402,8 +356,6 @@ class _DonorPage_2State extends State<DonorPage_2> {
             },
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            // tileColor: Colors.white,
-            // focusColor: Colors.white,
           ),
         );
       },

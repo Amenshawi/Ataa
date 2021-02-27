@@ -1,4 +1,3 @@
-import 'package:Ataa/NavigationPage.dart';
 import 'package:flutter/material.dart';
 
 class RecieverPage extends StatelessWidget {

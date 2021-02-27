@@ -1,38 +1,37 @@
 import 'package:Ataa/Custom/Sheet.dart';
-import 'package:Ataa/Donor/Donation/CustomForm.dart';
-import 'package:Ataa/appUser.dart';
-import 'package:Ataa/database.dart';
+import 'package:Ataa/Screens/Donor/Donation/DonationForm.dart';
+import 'package:Ataa/Models/app_user.dart';
+import 'package:Ataa/Services/database.dart';
 import 'package:flutter/material.dart';
-import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGreenField = Color.fromRGBO(28, 102, 74, .5);
 final Color ataaGold = Color.fromRGBO(244, 234, 146, .8);
 final Color ataaWhite = Color.fromRGBO(255, 255, 255, 0.75);
 
-class PeriodcSheet extends StatefulWidget {
+class ScheduleSheet extends StatefulWidget {
   final String type;
   final AppUser user;
-  PeriodcSheet(this.type, this.user);
+  ScheduleSheet(this.type, this.user);
   @override
-  _PeriodcSheetState createState() => _PeriodcSheetState(type, user);
+  _ScheduleSheetState createState() => _ScheduleSheetState(type, user);
 }
 
-class _PeriodcSheetState extends State<PeriodcSheet> {
+class _ScheduleSheetState extends State<ScheduleSheet> {
   final database = Database();
   double heightSize, widthSize;
   final String type;
   final AppUser user;
-  String placeHolder = 'Food';
+  DateTime _pickedDate;
   TimeOfDay _timeOfDay;
   String period = '';
-  DateTime _startDate = DateTime.now();
-  DateTime _endDate = DateTime.now().add(Duration(days: 7));
-  _PeriodcSheetState(this.type, this.user);
+  String placeHolder = 'Food';
+  _ScheduleSheetState(this.type, this.user);
 
   @override
   void initState() {
     super.initState();
+    _pickedDate = DateTime.now();
     _timeOfDay = TimeOfDay.now();
     period = _timeOfDay.period.index == 0 ? 'AM' : 'PM';
   }
@@ -93,10 +92,10 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
                             });
                             if (newValue == 'Food')
                               showSheet(context, newValue,
-                                  CustomForm(newValue, user, true), true);
+                                  DonationForm(newValue, user, true), true);
                             else
                               showSheet(context, newValue,
-                                  CustomForm(newValue, user, false), false);
+                                  DonationForm(newValue, user, false), false);
                           },
                           items: <String>[
                             'Food',
@@ -127,7 +126,7 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
                     borderRadius: BorderRadius.circular(25)),
                 child: ListTile(
                     title: Text(
-                      'From: ${_startDate.year}/${_startDate.month}/${_startDate.day} \nTo: ${_endDate.year}/${_endDate.month}/${_endDate.day}',
+                      'Date: ${_pickedDate.year}, ${_pickedDate.month}, ${_pickedDate.day}',
                       style: TextStyle(color: ataaGold, fontSize: 20),
                     ),
                     trailing: Icon(Icons.date_range_rounded, color: ataaGold),
@@ -146,7 +145,6 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
                     trailing: Icon(Icons.timer, color: ataaGold),
                     onTap: _pickTime),
               ),
-              // ),
               SizedBox(height: heightSize * 0.02),
               Container(
                   height: heightSize * 0.05,
@@ -173,21 +171,26 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
   }
 
   void _pickDate() async {
-    // i couldn't change the color of the dates, however, in the login page there is a themdate where it should take the primary color and the primaryswatch.
-    // i changes the primaryswatch but the two button (cancel and ok) dissapered :(
-    // if it was too much just ignore it.
-    List<DateTime> date = await DateRagePicker.showDatePicker(
-      context: context,
-      initialFirstDate: _startDate,
-      initialLastDate: _endDate,
-      firstDate: new DateTime(DateTime.now().year),
-      lastDate: new DateTime(DateTime.now().year + 5),
-    );
-    if (date != null && date.length == 2)
+    DateTime date = await showDatePicker(
+        context: context,
+        firstDate: DateTime.now(),
+        lastDate: DateTime(DateTime.now().year + 5),
+        initialDate: _pickedDate,
+        builder: (BuildContext context, Widget child) {
+          return Theme(
+            data: ThemeData.light().copyWith(
+              colorScheme: ColorScheme.light().copyWith(
+                primary: ataaGreen,
+                onPrimary: ataaGold,
+              ),
+            ),
+            child: child,
+          );
+        });
+
+    if (date != null)
       setState(() {
-        _startDate = date[0];
-        _endDate = date[1];
-        print(date);
+        _pickedDate = date;
       });
   }
 

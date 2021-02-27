@@ -1,4 +1,3 @@
-// import 'donorPage_2.dart';
 import 'package:flutter/material.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
@@ -17,7 +16,6 @@ class Sheet extends StatefulWidget {
 }
 
 class _SheetState extends State<Sheet> {
-  // var emailController = TextEditingController();
   var charities;
 
   @override
@@ -37,8 +35,6 @@ class _SheetState extends State<Sheet> {
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // child: Align(
-                    //   alignment: Alignment.topLeft,
                     Text(
                       widget.sheetName,
                       style: TextStyle(
@@ -46,8 +42,6 @@ class _SheetState extends State<Sheet> {
                           fontSize: 27,
                           color: ataaGreen),
                     ),
-                    // ),
-                    // ),
                     IconButton(
                       icon: Icon(
                         Icons.cancel_rounded,
@@ -66,7 +60,6 @@ class _SheetState extends State<Sheet> {
 
             // should be implemented with the future function to keep changing with the input
 
-            // SizedBox(height: 1),
             widget.content
           ],
         ));

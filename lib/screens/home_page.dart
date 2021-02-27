@@ -1,14 +1,10 @@
 import 'dart:async';
-
-import 'package:Ataa/Charity/charityStandsScreen.dart';
-import 'package:Ataa/Donor/donorPage_2.dart';
-import 'package:Ataa/Login_Signup/login.dart';
-import 'package:Ataa/Receiver/recieverScreen.dart';
-import 'package:Ataa/auth.dart';
-import 'package:Ataa/profilePage.dart';
-import 'package:Ataa/appUser.dart';
+import 'package:Ataa/Screens/Login_Signup/login.dart';
+import 'package:Ataa/Services/auth.dart';
+import 'package:Ataa/Screens/profile_page.dart';
+import 'package:Ataa/Models/app_user.dart';
 import 'package:flutter/material.dart';
-import '../NavigationPage.dart';
+import 'package:Ataa/Screens/navigation_page.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGreenField = Color.fromRGBO(28, 102, 74, .5);
@@ -90,46 +86,8 @@ class _CustomPageState extends State<CustomPage>
     widthSize = size.width;
 
     return Scaffold(
-      // bottomNavigationBar: BottomNavigationBar(
-      //     currentIndex: _currentIndex,
-      //     onTap: (int index) => setState(() => _currentIndex = index),
-      //     items: [
-      //       for (final tabItem in TabNavigationItem.items(user))
-      //         BottomNavigationBarItem(
-      //             icon: tabItem.icon,
-      //             label: tabItem.title,
-      //             backgroundColor: Colors.green)
-      //     ]),
       backgroundColor: ataaGreen,
       body: customBody(context),
-      /* bottomNavigationBar: BottomNavyBar(
-                           curve: Curves.easeIn,
-                           containerHeight: 65,
-                           selectedIndex: _currentIndex,
-                           onItemSelected: (int index) {
-                             setState(() {
-                               _currentIndex = index;
-                             });
-                           },
-                           items: [
-                             BottomNavyBarItem(
-                                 icon: Icon(Icons.clean_hands),
-                                title: Text('Donate'),
-                                 activeColor: ataaGreen,
-                                 inactiveColor: ataaGreenField),
-                            BottomNavyBarItem(
-                                 icon: Icon(Icons.clean_hands),
-                                title: Text('Donate'),
-                               activeColor: ataaGreen,
-                                 inactiveColor: ataaGreenField),
-                            BottomNavyBarItem(
-                                icon: Icon(Icons.local_post_office),
-                                title: Text('Charity Stands'),
-                                activeColor: ataaGreen,
-                                inactiveColor: ataaGreenField,
-                            ),
-                          ],
-                          ),*/
     );
   }
 
@@ -188,16 +146,11 @@ class _CustomPageState extends State<CustomPage>
                             isCharityStand
                                 ? SizedBox(width: widthSize * 0.1)
                                 : SizedBox(width: widthSize * 0.2),
-                            // Padding(
-                            //     padding:
-                            //         EdgeInsets.only(right: widthSize * 0.32),
-                            // child:
                             Text(pageName,
                                 style: TextStyle(
                                     color: ataaGreen,
                                     fontSize: 25,
                                     fontWeight: FontWeight.bold))
-                            // ),
                           ],
                         ),
                       ),
@@ -205,76 +158,6 @@ class _CustomPageState extends State<CustomPage>
                       message('Hi ' + user.fname, 30),
                       message('Welcome Back', 22),
                       SizedBox(height: hieghtSize * 0.02),
-
-                      // Container(
-                      //   child: Center(
-                      //     child: Text('Hi'),
-                      //   ),
-                      // ),
-
-                      // Container(
-                      //   // height: hieghtSize * 0.15,
-                      //   // width: widthSize * 0.9,
-                      //   padding: EdgeInsets.all(15),
-                      //   decoration: BoxDecoration(
-                      //       borderRadius: BorderRadius.circular(80)),
-                      //   child: BottomNavigationBar(
-                      //     backgroundColor: ataaWhite,
-                      //       currentIndex: _currentIndex,
-                      //       onTap: (int index) =>
-                      //           setState(() => _currentIndex = index),
-                      //       items: [
-                      //         for (final tabItem in TabNavigationItem.items(user))
-                      //           BottomNavigationBarItem(
-                      //               icon: tabItem.icon,
-                      //               label: tabItem.title,
-                      //               backgroundColor: Colors.green)
-                      //       ]),
-                      // )
-                      /*BottomNavyBar(
-                           curve: Curves.easeIn,
-                           containerHeight: 50,
-                           selectedIndex: _currentIndex,
-                           onItemSelected: (int index) {
-                             setState(() {
-                               _currentIndex = index;
-                             });
-                           },
-                           items: [
-                             BottomNavyBarItem(
-                                 icon: Icon(Icons.clean_hands),
-                                title: Text('Donate'),
-                                 activeColor: ataaGreen,
-                                 inactiveColor: ataaGreenField),
-                            BottomNavyBarItem(
-                                 icon: Icon(Icons.clean_hands),
-                                title: Text('Donate'),
-                               activeColor: ataaGreen,
-                                 inactiveColor: ataaGreenField),
-                            BottomNavyBarItem(
-                                icon: Icon(Icons.local_post_office),
-                                title: Text('Charity Stands'),
-                                activeColor: ataaGreen,
-                                inactiveColor: ataaGreenField,
-                            ),
-                          ],
-                          ),*/
-
-                      //),
-                      // ),
-
-                      // BottomNavigationBar(
-                      //   currentIndex: _currentIndex,
-                      //   onTap: (int index) =>
-                      //       setState(() => _currentIndex = index),
-                      //   items: [
-                      //     for (final tabItem in TabNavigationItem.items(user))
-                      //       BottomNavigationBarItem(
-                      //           icon: tabItem.icon,
-                      //           label: tabItem.title,
-                      //           backgroundColor: Colors.green)
-                      //   ],
-                      // ),
                       IndexedStack(index: _currentIndex, children: [
                         for (final tabItem in TabNavigationItem.items(user))
                           tabItem.page,
@@ -320,8 +203,6 @@ class _CustomPageState extends State<CustomPage>
           child: Align(
             alignment: Alignment.centerLeft,
             child: Column(
-              // mainAxisSize: MainAxisSize.max,
-              // mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
@@ -336,7 +217,7 @@ class _CustomPageState extends State<CustomPage>
                         child: Text(
                           user.fname[0] + user.lname[0],
                           style: TextStyle(color: ataaGreen),
-                        ), // just the user initials.
+                        ),
                       ),
                       SizedBox(height: hieghtSize * 0.02),
                       Text(
@@ -400,48 +281,4 @@ class _CustomPageState extends State<CustomPage>
       },
     );
   }
-
-  // Widget customNavBar() {
-  //   return Padding(
-  //     padding: EdgeInsets.only(top: hieghtSize * 0.03),
-  //     child: Card(
-  //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-  //       elevation: 8,
-  //       // child: Expanded(
-  //       // child: Padding(
-  //       //   padding:
-  //       //       EdgeInsets.only(left: widthSize * 0.04, top: hieghtSize * 0.02),
-  //       child: Padding(
-  //         padding: EdgeInsets.only(top: hieghtSize * 0.01),
-  //         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-  //           SizedBox(width: 1),
-  //           customTabBar(Icons.clean_hands, 'Donate'),
-  //           SizedBox(width: 50),
-  //           customTabBar(Icons.clean_hands_outlined, 'Recieve'),
-  //           SizedBox(width: 25),
-  //           customTabBar(Icons.store_mall_directory_rounded, 'Charity Stands')
-  //         ]),
-  //       ),
-  //       // ),
-  //       // ),
-  //     ),
-  //   );
-  // }
-
-  // Widget customTabBar(IconData icon, String name) {
-  //   return Column(
-  //     children: [
-  //       IconButton(
-  //         icon: Icon(icon, size: 35, color: ataaGreen),
-  //         onPressed: () {},
-  //       ),
-  //       Text(
-  //         name,
-  //         style: TextStyle(
-  //             color: ataaGreen, fontSize: 15, fontWeight: FontWeight.bold),
-  //       )
-  //     ],
-  //   );
-  // }
-
 }
