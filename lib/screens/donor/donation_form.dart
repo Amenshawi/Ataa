@@ -40,7 +40,6 @@ class _DonationFormState extends State<DonationForm> {
     Size size = MediaQuery.of(context).size;
     heightSize = size.height;
     widthSize = size.width;
-
     return Container(
       width: widthSize,
       child: Card(
@@ -303,10 +302,21 @@ class _DonationFormState extends State<DonationForm> {
                   backgroundColor: ataaGreen,
                   child: Icon(Icons.done, color: ataaGold, size: 30),
                   onPressed: () {
+                    if(location == null ||!imagePicked){
+                      print(location.toString() +' '+ imagePicked.toString());
+                      _dialog(
+                        context , 
+                        'Error' ,
+                        Colors.red,
+                        'Missing Location or Picture',
+                        'Back',);
+                    }
+                    else{ 
                     print('Hi there!');
                     database.addDonation(user, type, _image,
                         descController.text, anonymous, location, time);
                     Navigator.pop(context);
+                    }
                   },
                 ),
               )
@@ -375,5 +385,47 @@ class _DonationFormState extends State<DonationForm> {
       _image = image;
       imagePicked = true;
     });
+  }
+  void _dialog(context, String title, Color titleColor, String message,
+      String buttonLabel) {
+    Dialog errorDialog = Dialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0)), //this right here
+      child: Container(
+        height: 250.0,
+        width: 300.0,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Text(
+                title,
+                style: TextStyle(color: titleColor, fontSize: 30.0),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Text(
+                message,
+                style: TextStyle(
+                    color: Color.fromRGBO(28, 102, 74, 1), fontSize: 20),
+              ),
+            ),
+            Padding(padding: EdgeInsets.only(top: 25.0)),
+            FlatButton(
+                onPressed: () {
+                    Navigator.pop(context);
+                },
+                child: Text(
+                  buttonLabel,
+                  style: TextStyle(
+                      color: Color.fromRGBO(28, 102, 74, 1), fontSize: 20),
+                ))
+          ],
+        ),
+      ),
+    );
+    showDialog(context: context, builder: (BuildContext bc) => errorDialog);
   }
 }
