@@ -1,8 +1,8 @@
-import 'package:Ataa/Screens/Donor/donor_page.dart';
+import 'package:Ataa/screens/donor/donor_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:Ataa/Screens/Charity/charity_stands_screen.dart';
-import 'package:Ataa/Screens/Receiver/reciever_screen.dart';
+import 'package:Ataa/screens/charity/charity_stands_screen.dart';
+import 'package:Ataa/screens/receiver/reciever_screen.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 
 class TabNavigationItem {

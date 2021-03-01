@@ -1,12 +1,12 @@
 import 'dart:ui';
-import 'package:Ataa/Models/app_user.dart';
-import 'package:Ataa/Services/auth.dart';
+import 'package:Ataa/models/app_user.dart';
+import 'package:Ataa/services/auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:Ataa/Services/database.dart';
+import 'package:Ataa/services/database.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_controller/google_maps_controller.dart';
-import 'package:Ataa/Screens/location_page.dart';
+import 'package:Ataa/screens/location_page.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGold = Color.fromRGBO(244, 234, 146, 1);

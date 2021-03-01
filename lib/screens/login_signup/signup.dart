@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:Ataa/Services/auth.dart';
+import 'package:Ataa/services/auth.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'login.dart';

@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:Ataa/models/donation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:Ataa/Models/app_user.dart';
+import 'package:Ataa/models/app_user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -119,31 +120,26 @@ class Database {
             });
   }
 
-  Future addDonation(AppUser user, String type, image, String desc,
-      bool anonymous, location, int time) async {
-    image = File(image.path);
-    if (anonymous != true) {
-      anonymous = false;
-    }
-    GeoPoint geopoint = GeoPoint(location.latitude, location.longitude);
-    final url = await uploadImage(image);
+  Future addDonation(Donation donation) async {
+    GeoPoint geopoint =
+        GeoPoint(donation.location.latitude, donation.location.longitude);
+    final url = await uploadImage(donation.image);
     final ref = await firestore
         .collection('users')
-        .where('uid', isEqualTo: user.uid)
+        .where('uid', isEqualTo: donation.user.uid)
         .get()
         .then((value) {
       return value.docs[0].reference;
     });
-    print('time is: ' + time.toString());
     final current = DateTime.now();
     await firestore.collection('donations').add({
-      'type': type,
+      'type': donation.type,
       'user': ref,
       'image': url,
-      'desc': desc,
-      'anonymous': anonymous,
+      'desc': donation.desc,
+      'anonymous': donation.anonymous,
       'location': geopoint,
-      'notifyAt': current.add(new Duration(minutes: time)),
+      'notifyAt': current.add(new Duration(minutes: donation.notifyAfter)),
       'timeStamp': current
     }).then((value) {
       print('donation added');

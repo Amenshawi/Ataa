@@ -1,13 +1,13 @@
-import 'package:Ataa/Custom/Sheet.dart';
-import 'package:Ataa/Custom/create_buttons.dart';
-import 'package:Ataa/Screens/Donor/Donation_form.dart';
-import 'package:Ataa/Screens/Donor/Schedul/periodc_sheet.dart';
-import 'package:Ataa/Models/app_user.dart';
+import 'package:Ataa/custom/sheet.dart';
+import 'package:Ataa/custom/create_buttons.dart';
+import 'package:Ataa/screens/donor/donation_form.dart';
+import 'package:Ataa/screens/donor/schedul/periodc_sheet.dart';
+import 'package:Ataa/models/app_user.dart';
 import 'package:flutter/material.dart';
 import 'package:Ataa/Services/database.dart';
 import 'package:flip_card/flip_card.dart';
-import 'package:Ataa/Screens/Donor/Schedul/edit_sheet.dart';
-import 'package:Ataa/Screens/Donor/Schedul/schedule_sheet.dart';
+import 'package:Ataa/screens/donor/schedul/edit_sheet.dart';
+import 'package:Ataa/screens/donor/schedul/schedule_sheet.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGreenField = Color.fromRGBO(28, 102, 74, .5);

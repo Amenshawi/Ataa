@@ -1,8 +1,8 @@
 import 'dart:ui';
-import 'package:Ataa/Models/app_user.dart';
+import 'package:Ataa/models/app_user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:Ataa/Services/database.dart';
+import 'package:Ataa/services/database.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_controller/google_maps_controller.dart';

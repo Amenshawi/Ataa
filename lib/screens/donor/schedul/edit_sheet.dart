@@ -1,5 +1,5 @@
-import 'package:Ataa/Models/app_user.dart';
-import 'package:Ataa/Services/database.dart';
+import 'package:Ataa/models/app_user.dart';
+import 'package:Ataa/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:toast/toast.dart';

@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'package:Ataa/Screens/Login_Signup/login.dart';
-import 'package:Ataa/Services/auth.dart';
-import 'package:Ataa/Screens/profile_page.dart';
-import 'package:Ataa/Models/app_user.dart';
+import 'package:Ataa/screens/login_signup/login.dart';
+import 'package:Ataa/services/auth.dart';
+import 'package:Ataa/screens/profile_page.dart';
+import 'package:Ataa/models/app_user.dart';
 import 'package:flutter/material.dart';
-import 'package:Ataa/Screens/navigation_page.dart';
+import 'package:Ataa/screens/navigation_page.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGreenField = Color.fromRGBO(28, 102, 74, .5);

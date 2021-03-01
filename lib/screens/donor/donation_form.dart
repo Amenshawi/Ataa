@@ -1,7 +1,9 @@
 // import 'dart:io';
-import 'package:Ataa/Models/app_user.dart';
-import 'package:Ataa/Services/database.dart';
-import 'package:Ataa/Screens/location_page.dart';
+import 'dart:io';
+import 'package:Ataa/models/app_user.dart';
+import 'package:Ataa/services/database.dart';
+import 'package:Ataa/screens/location_page.dart';
+import 'package:Ataa/models/donation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_controller/google_maps_controller.dart';
 
@@ -23,11 +25,11 @@ class DonationForm extends StatefulWidget {
 
 class _DonationFormState extends State<DonationForm> {
   final database = Database();
-  PickedFile _image;
+  var _image;
   double heightSize, widthSize;
   bool isSwitched = false;
   TextEditingController descController = TextEditingController();
-  bool anonymous;
+  bool anonymous = false;
   bool imagePicked = false;
   LatLng location;
   final String type;
@@ -303,9 +305,16 @@ class _DonationFormState extends State<DonationForm> {
                   backgroundColor: ataaGreen,
                   child: Icon(Icons.done, color: ataaGold, size: 30),
                   onPressed: () {
-                    print('Hi there!');
-                    database.addDonation(user, type, _image,
-                        descController.text, anonymous, location, time);
+                    _image = File(_image.path);
+                    final donation = Donation(
+                        user: user,
+                        type: type,
+                        image: _image,
+                        desc: descController.text,
+                        anonymous: anonymous,
+                        location: location,
+                        notifyAfter: time);
+                    database.addDonation(donation);
                     Navigator.pop(context);
                   },
                 ),

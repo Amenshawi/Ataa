@@ -1,7 +1,7 @@
-import 'package:Ataa/Custom/Sheet.dart';
-import 'package:Ataa/Screens/Donor/Donation_form.dart';
-import 'package:Ataa/Models/app_user.dart';
-import 'package:Ataa/Services/database.dart';
+import 'package:Ataa/custom/sheet.dart';
+import 'package:Ataa/screens/donor/donation_form.dart';
+import 'package:Ataa/models/app_user.dart';
+import 'package:Ataa/services/database.dart';
 import 'package:flutter/material.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
