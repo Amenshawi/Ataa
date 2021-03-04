@@ -8,18 +8,25 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class Database {
+  String email;
+  String path;
+  String uid ;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
 
-  Future addUser(String uid, String fname, String lname, DateTime bday) async {
+  Database({this.uid});
+
+  Future addUser(String uid, String email, String fname, String lname, DateTime bday) async {
     CollectionReference users = firestore.collection('users');
 
     users.add({
       'uid': uid,
+      'email': email,
       'first_name': fname,
       'last_name': lname,
       'birthdate': bday,
-      'type': 'Donor'
+      'type': 'Donor',
+      'private': false
     }).then((value) {
       print("User Added");
       return true;
@@ -27,6 +34,8 @@ class Database {
   }
 
   Future fetchUserData(User fUser) async {
+    email = fUser.email;
+    uid = fUser.uid;
     return await firestore
         .collection('users')
         .where('uid', isEqualTo: fUser.uid)
@@ -34,20 +43,41 @@ class Database {
         .then((value) {
       final user = AppUser(
           uid: fUser.uid,
-          email: fUser.email,
+          email: value.docs.first.data()['email'],
           fname: value.docs.first.data()['first_name'],
           lname: value.docs.first.data()['last_name'],
           shirtSize: value.docs.first.data()['shirtSize'],
           pantSize: value.docs.first.data()['pantsSize'],
           shoeSize: value.docs.first.data()['shoeSize'],
           addressLine: value.docs.first.data()['adreeLine'],
-          location: value.docs.first.data()['geoPoint']);
+          location: value.docs.first.data()['geoPoint'],
+          privacy: value.docs.first.data()['private']
+          );
       print('user Data fetched successfully !');
       print(user);
       return user;
     }).catchError((error) => print("Failed to fetch user data: $error"));
   }
+  AppUser _fetchDataFromSnapshot(QuerySnapshot snapshot){
+    return AppUser(
+      uid: uid,
+      email: snapshot.docs.first.data()['email'],
+      fname: snapshot.docs.first.data()['first_name'],
+      lname: snapshot.docs.first.data()['last_name'],
+      shirtSize: snapshot.docs.first.data()['shirtSize'],
+      pantSize: snapshot.docs.first.data()['pantsSize'],
+      shoeSize: snapshot.docs.first.data()['shoeSize'],
+      addressLine: snapshot.docs.first.data()['adreeLine'],
+      location: snapshot.docs.first.data()['geoPoint'],
+      privacy: snapshot.docs.first.data()['private']
+    );
+  }
 
+  Stream<AppUser> get user{
+      return firestore.collection('users')
+      .where('uid', isEqualTo:uid)
+      .snapshots().map((_fetchDataFromSnapshot));
+  }
   Future searchForCharity(String name) async {
     final result = await firestore
         .collection('charities')
@@ -186,5 +216,17 @@ class Database {
               print(error.toString)
               //do something when an error happens
             });
+  }
+  Future<void> updateEmail(String email, AppUser user) async{
+    return await firestore
+    .collection('users')
+    .where('uid', isEqualTo: user.uid)
+    .get()
+    .then((value) async{
+      await firestore
+      .collection('users')
+      .doc(value.docs[0].id)
+      .update({'email':email});
+    });
   }
 }

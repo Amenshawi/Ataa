@@ -7,6 +7,7 @@ import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_controller/google_maps_controller.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGold = Color.fromRGBO(244, 234, 146, 1);
@@ -41,6 +42,7 @@ class _LocationPageState extends State<LocationPage> {
   _LocationPageState(this.user, this.changeLocation);
   @override
   Widget build(BuildContext context) {
+    user = Provider.of<AppUser>(context);
     if (!once) _getUserLocation();
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
       foundLocation

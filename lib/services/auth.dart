@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:Ataa/models/app_user.dart';
 import 'package:Ataa/services/database.dart';
 
+
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final fUser = FirebaseAuth.instance.currentUser;
@@ -11,7 +12,9 @@ class AuthService {
     authSubscribe(user);
     return user != null ? AppUser(uid: user.uid, email: user.email) : null;
   }
-
+  Stream<User> get user{
+    return _auth.authStateChanges();
+  }
   authSubscribe(user) {
     FirebaseAuth.instance.authStateChanges().listen((user) {
       if (user == null) {
@@ -45,7 +48,7 @@ class AuthService {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User user = result.user;
-      await database.addUser(user.uid, fname, lname, bday);
+      await database.addUser(user.uid, email, fname, lname, bday);
       return _userFromFirebaseUser(user);
     } catch (error) {
       print(error.toString());
@@ -64,19 +67,21 @@ class AuthService {
   }
 
   changeEmail(String newEmail, AppUser user) async {
+    print('email method reached');
     try {
       await fUser.updateEmail(newEmail);
+      await database.updateEmail(newEmail, user);
       user.email = newEmail;
-      return user;
+      return true;
     } catch (error) {
       print(error.toString);
       throw error;
     }
   }
 
-  confirmPassword(oldPassword) async {
+  confirmPassword(oldPassword, AppUser user) async {
     final credential =
-        EmailAuthProvider.credential(email: fUser.email, password: oldPassword);
+        EmailAuthProvider.credential(email: user.email, password: oldPassword);
     try {
       await fUser.reauthenticateWithCredential(credential);
       return true;

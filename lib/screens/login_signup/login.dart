@@ -9,30 +9,6 @@ import 'package:Ataa/screens/login_signup/forget_password.dart';
 var visible = false;
 var signedIn = false;
 
-class Login extends StatelessWidget {
-  static const PrimaryColor = const Color(0xFF1c664a);
-  @override
-  Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-    return MaterialApp(
-      theme: ThemeData(
-        primaryColor: PrimaryColor,
-        primarySwatch: Colors.blueGrey,
-      ),
-      initialRoute: '/',
-      routes: {
-        // When navigating to the "/" route, build the FirstScreen widget.
-        '/': (context) => LoginPage(),
-        // When navigating to the "/second" route, build the SecondScreen widget.
-        '/signup': (context) => SignupPage(),
-      },
-      debugShowCheckedModeBanner: false,
-      title: "Log In",
-    );
-  }
-}
-
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -177,7 +153,10 @@ class _LoginPageState extends State<LoginPage> {
                               elevation: 100.0,
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.pushNamed(context, '/signup');
+                                  Navigator.push(context, 
+                                   MaterialPageRoute(
+                                    builder: (context) => 
+                                    SignupPage()));
                                 },
                                 child: Center(
                                   heightFactor: 3.0,
@@ -214,12 +193,6 @@ class _LoginPageState extends State<LoginPage> {
 
       print("user is signed in");
       isLoading = false;
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => CustomPage(user)
-            // HomePage(user)
-            ),
-      );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print("Email not found");

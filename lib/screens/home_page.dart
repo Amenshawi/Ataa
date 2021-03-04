@@ -3,8 +3,10 @@ import 'package:Ataa/screens/login_signup/login.dart';
 import 'package:Ataa/services/auth.dart';
 import 'package:Ataa/screens/profile_page.dart';
 import 'package:Ataa/models/app_user.dart';
+import 'package:Ataa/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:Ataa/screens/navigation_page.dart';
+import 'package:provider/provider.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGreenField = Color.fromRGBO(28, 102, 74, .5);
@@ -14,13 +16,13 @@ final Color ataaWhite = Color.fromRGBO(255, 255, 255, 0.75);
 
 // ignore: must_be_immutable
 class CustomPage extends StatefulWidget {
-  final AppUser user;
+  String uid;
 
   @override
-  CustomPage(this.user);
+  CustomPage(this.uid);
 
   @override
-  _CustomPageState createState() => _CustomPageState(user);
+  _CustomPageState createState() => _CustomPageState(uid);
 }
 
 class _CustomPageState extends State<CustomPage>
@@ -43,7 +45,7 @@ class _CustomPageState extends State<CustomPage>
   }
 
   double hieghtSize, widthSize;
-  final AppUser user;
+  String uid;
   final _auth = AuthService();
   // _DonorScreenState(this.user);
   bool isCollapsed = true;
@@ -58,7 +60,7 @@ class _CustomPageState extends State<CustomPage>
   bool isCharityStand = false;
 
   // ignore: invalid_required_positional_param
-  _CustomPageState(@required this.user);
+  _CustomPageState(@required this.uid);
 
   // _CustomPageState(this.user);
 
@@ -81,17 +83,112 @@ class _CustomPageState extends State<CustomPage>
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<AppUser>(context);
     Size size = MediaQuery.of(context).size;
     hieghtSize = size.height;
     widthSize = size.width;
 
     return Scaffold(
-      backgroundColor: ataaGreen,
-      body: customBody(context),
-    );
+        backgroundColor: ataaGreen,
+        body: user == null ?
+        Center(
+          child: CircularProgressIndicator(
+            backgroundColor: Color.fromRGBO(244, 234, 146, 1),
+            valueColor: AlwaysStoppedAnimation(
+              Color.fromRGBO(28, 102, 74, 1)),
+          ),
+        ):
+        SafeArea(
+              bottom: false,
+              top: false,
+              child: Stack(children: [
+              menu(context),
+              AnimatedPositioned(
+              duration: duration,
+              top: 0,
+              bottom: 0,
+              left: isCollapsed ? 0 : 0.6 * widthSize,
+              right: isCollapsed ? 0 : -0.4 * widthSize,
+              child: ScaleTransition(
+                scale: _scaleAnimation,
+                child: Material(
+                borderRadius: BorderRadius.only(
+                  topLeft: isCollapsed ? Radius.zero : Radius.circular(40),
+                  bottomLeft: isCollapsed ? Radius.zero : Radius.circular(40)),
+              elevation: 8,
+              child: Padding(
+                padding: EdgeInsets.only(top: hieghtSize * 0.05),
+                child: SingleChildScrollView(
+                 child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(widthSize * 0.05),
+                        child: Row(
+                          // mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Flexible(
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.menu,
+                                  color: ataaGreen,
+                                  size: 30,
+                                ),
+                                onPressed: () {
+                                  FocusScope.of(context).unfocus();
+                                  Timer(Duration(milliseconds: 300), () {
+                                    setState(() {
+                                      if (isCollapsed)
+                                        _controller.forward();
+                                      else
+                                        _controller.reverse();
+                                      isCollapsed = !isCollapsed;
+                                    });
+                                  });
+                                },
+                              ),
+                            ),
+                            isCharityStand
+                                ? SizedBox(width: widthSize * 0.1)
+                                : SizedBox(width: widthSize * 0.2),
+                            Text(pageName,
+                                style: TextStyle(
+                                    color: ataaGreen,
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.bold))
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: hieghtSize * 0.004),
+                      message('Hi ' + user.fname, 30),
+                      message('Welcome Back', 22),
+                      SizedBox(height: hieghtSize * 0.02),
+                      IndexedStack(index: _currentIndex, children: [
+                        for (final tabItem in TabNavigationItem.items(user))
+                          tabItem.page,
+                      ]),
+                      SizedBox(height: hieghtSize * 0.05),
+                      Flexible(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(40),
+                          child: TabNavigationItem.getNavBar(
+                              _currentIndex, user, this._update),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ]),
+    )
+  );
   }
-
-  Widget customBody(BuildContext context) {
+           
+  /*Widget customBody(BuildContext context) {
     return SafeArea(
       bottom: false,
       top: false,
@@ -179,7 +276,7 @@ class _CustomPageState extends State<CustomPage>
         ),
       ]),
     );
-  }
+  }*/
 
   Widget message(String msg, double size) {
     return Padding(
@@ -193,7 +290,10 @@ class _CustomPageState extends State<CustomPage>
   }
 
   Widget menu(context) {
-    return SlideTransition(
+    final user = Provider.of<AppUser>(context);
+    return user == null ?
+    Container():    
+    SlideTransition(
       position: _slideAnimation,
       child: ScaleTransition(
         scale: _menuScaleAnimation,
@@ -235,7 +335,8 @@ class _CustomPageState extends State<CustomPage>
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (BuildContext bctx) => Profile(user)));
+                          builder: 
+                          (BuildContext bctx) =>  Profile()));
                 }),
                 SizedBox(height: hieghtSize * 0.02),
                 category('History', Icons.history, () {
@@ -252,10 +353,6 @@ class _CustomPageState extends State<CustomPage>
                 SizedBox(height: hieghtSize * 0.3),
                 category('Log Out', Icons.logout, () {
                   _auth.signOut();
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext bctx) => Login()));
                 }),
               ],
             ),

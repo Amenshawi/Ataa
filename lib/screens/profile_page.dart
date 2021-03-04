@@ -7,19 +7,20 @@ import 'package:Ataa/services/database.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_controller/google_maps_controller.dart';
 import 'package:Ataa/screens/location_page.dart';
+import 'package:provider/provider.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGold = Color.fromRGBO(244, 234, 146, 1);
 
 class Profile extends StatefulWidget {
-  final AppUser user;
-  Profile(this.user);
   @override
-  _ProfileState createState() => _ProfileState(user);
+  _ProfileState createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
-  TextEditingController shoeSizeController;
+
+  TextEditingController shoeSizeController = TextEditingController();
+
   double hieghtSize, widthSize;
   bool visiblePassword = false;
   bool isSwitched;
@@ -35,56 +36,42 @@ class _ProfileState extends State<Profile> {
     TextEditingController(),
     TextEditingController()
   ];
-  AppUser user;
-  final database = Database();
+  Database database = Database();
   final _auth = AuthService();
 
   LatLng currentPosition;
   bool foundLocation = false;
   GoogleMapController mapController;
 
-  _ProfileState(this.user);
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    private = database.getPrivacy(user);
-    if (user.shoeSize == null)
-      shoeSizeController = TextEditingController();
-    else
-      shoeSizeController =
-          TextEditingController(text: user.shoeSize.toString());
   }
-
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<AppUser>(context);
+    print('shoe size: '+ user.shoeSize.toString());
+    if(user != null){
+    setState(() {
+      database = Database(uid: user.uid);
+        });
     if (user.location == null) readWriteToggole[2] = false;
     if (user.pantSize == null &&
         user.shirtSize == null &&
         user.shoeSize == null) readWriteToggole[3] = false;
+  }
     Size size = MediaQuery.of(context).size;
     hieghtSize = size.height;
     widthSize = size.width;
     return Scaffold(
-        body: FutureBuilder<bool>(
-            future: private,
-            builder: (context, snapshot) {
-              return snapshot.hasData
-                  ? SafeArea(child: profileContainer(snapshot.data))
-                  : Center(
-                      child: CircularProgressIndicator(
-                        backgroundColor: Color.fromRGBO(244, 234, 146, 1),
-                        valueColor: AlwaysStoppedAnimation(
-                            Color.fromRGBO(28, 102, 74, 1)),
-                      ),
-                    );
-            }));
-  }
-
-  Widget profileContainer(private) {
-    if (isSwitched == null) {
-      isSwitched = private;
+        body:  SafeArea(child: profileContainer()
+        )
+      );
     }
+
+  Widget profileContainer() {
+    final user = Provider.of<AppUser>(context);
     return SingleChildScrollView(
         child: Column(
             mainAxisSize: MainAxisSize.max,
@@ -153,7 +140,7 @@ class _ProfileState extends State<Profile> {
                         children: [
                           Padding(
                               padding: EdgeInsets.all(widthSize * 0.02),
-                              child: !private
+                              child: user.privacy
                                   ? Icon(
                                       Icons.visibility,
                                       size: 25,
@@ -171,7 +158,7 @@ class _ProfileState extends State<Profile> {
                                       color: ataaGreen,
                                       fontWeight: FontWeight.bold))),
                           Switch(
-                            value: isSwitched,
+                            value: user.privacy,
                             onChanged: (value) {
                               setState(() {
                                 isSwitched = value;
@@ -187,7 +174,8 @@ class _ProfileState extends State<Profile> {
               ]),
             )),
           ]),
-        ]));
+        ])
+        );
   }
 
   Widget cardBlur(
@@ -224,6 +212,7 @@ class _ProfileState extends State<Profile> {
       IconData pressedCornerIcon,
       bool password,
       String pressedText) {
+        final user = Provider.of<AppUser>(context);
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       elevation: 50,
@@ -274,7 +263,7 @@ class _ProfileState extends State<Profile> {
               onPressed: () {
                 if (password) {
                   visiblePassword = false;
-                  changePassword(context);
+                  changePassword(context, user);
                 } else if (index == 0) {
                   print('email');
                   if (!blurBackground[index] || controllers[index].text == '') {
@@ -291,7 +280,7 @@ class _ProfileState extends State<Profile> {
                     } else {
                       try {
                         print(controllers[0].text);
-                        user = _auth.changeEmail(controllers[0].text, user);
+                        _auth.changeEmail(controllers[0].text, user);
                       } catch (error) {
                         print(error.toString);
                         //show error message
@@ -315,7 +304,7 @@ class _ProfileState extends State<Profile> {
                       MaterialPageRoute(
                           builder: (context) => LocationPage(user, null)));
                 } else if (index == 3) {
-                  clothingCard(context);
+                  clothingCard(context, user.shoeSize, user.shirtSize, user.pantSize, user);
                 }
               },
             ),
@@ -349,7 +338,7 @@ class _ProfileState extends State<Profile> {
     ]);
   }
 
-  Widget passwordSheet() {
+  Widget passwordSheet(AppUser user) {
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
       return Container(
@@ -444,7 +433,7 @@ class _ProfileState extends State<Profile> {
                         }
                       } else {
                         var correctPassword = await _auth
-                            .confirmPassword(oldPasswordController.text);
+                            .confirmPassword(oldPasswordController.text, user);
                         print(
                             'correct password: ' + correctPassword.toString());
                         if (correctPassword) {
@@ -463,7 +452,7 @@ class _ProfileState extends State<Profile> {
     });
   }
 
-  changePassword(context) {
+  changePassword(context , AppUser user) {
     showModalBottomSheet(
         context: context,
         shape: RoundedRectangleBorder(
@@ -475,11 +464,13 @@ class _ProfileState extends State<Profile> {
           return Padding(
               padding: EdgeInsets.only(
                   bottom: MediaQuery.of(context).viewInsets.bottom * 0.5),
-              child: SingleChildScrollView(child: passwordSheet()));
+              child: SingleChildScrollView(child: passwordSheet(user)));
         });
   }
 
-  clothingCard(context) {
+  clothingCard(context,int shoeSize, String shirtSize, String pantSize, AppUser user) {
+    if(shoeSize != null)
+    shoeSizeController.text = shoeSize.toString();
     showModalBottomSheet(
         context: context,
         shape: RoundedRectangleBorder(
@@ -491,11 +482,18 @@ class _ProfileState extends State<Profile> {
           return Padding(
               padding: EdgeInsets.only(
                   bottom: MediaQuery.of(context).viewInsets.bottom * 0.5),
-              child: SingleChildScrollView(child: clothingSheet()));
+              child: SingleChildScrollView(
+                child: clothingSheet(
+                  shoeSize, 
+                shirtSize,
+                pantSize,
+                user)
+                )
+              );
         });
   }
 
-  Widget clothingSheet() {
+  Widget clothingSheet(int shoeSize, String shirtSize, String pantSize, AppUser user) {
     bool error = false;
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
@@ -559,7 +557,7 @@ class _ProfileState extends State<Profile> {
                         Column(
                           children: [
                             DropdownButton(
-                              value: user.shirtSize,
+                              value: shirtSize,
                               icon: Icon(Icons.arrow_downward),
                               iconSize: 22,
                               style: TextStyle(
@@ -569,7 +567,7 @@ class _ProfileState extends State<Profile> {
                               underline: Container(height: 2, color: ataaGreen),
                               onChanged: (String newValue) {
                                 setState(() {
-                                  user.shirtSize = newValue;
+                                  shirtSize = newValue;
                                 });
                               },
                               items: <String>[
@@ -596,7 +594,7 @@ class _ProfileState extends State<Profile> {
                             ),
                             SizedBox(height: 30),
                             DropdownButton(
-                              value: user.pantSize,
+                              value: pantSize,
                               icon: Icon(Icons.arrow_downward),
                               iconSize: 22,
                               style: TextStyle(
@@ -606,7 +604,8 @@ class _ProfileState extends State<Profile> {
                               underline: Container(height: 2, color: ataaGreen),
                               onChanged: (String newValue) {
                                 setState(() {
-                                  user.pantSize = newValue;
+                                  print(newValue);
+                                  pantSize = newValue;
                                 });
                               },
                               items: <String>[
@@ -636,6 +635,7 @@ class _ProfileState extends State<Profile> {
                               width: 100,
                               height: 50,
                               child: TextField(
+                                maxLines: 1,
                                 maxLength: 2,
                                 maxLengthEnforced: true,
                                 decoration: InputDecoration(
@@ -656,12 +656,6 @@ class _ProfileState extends State<Profile> {
                                     fontWeight: FontWeight.bold),
                                 keyboardType: TextInputType.number,
                                 textAlign: TextAlign.center,
-                                onChanged: (String value) {
-                                  setState(() {
-                                    int temp = int.tryParse(value);
-                                    if (temp == null) error = true;
-                                  });
-                                },
                               ),
                             )
                           ],
@@ -692,18 +686,15 @@ class _ProfileState extends State<Profile> {
                                   int.tryParse(shoeSizeController.text) >= 55) {
                                 error = true;
                               } else {
-                                user.shoeSize = temp;
                                 error = false;
                               }
                             } else {
-                              user.shoeSize = null;
                               error = false;
                             }
-                            print(user.shoeSize);
                             if (!error) {
                               Navigator.pop(context);
-                              await database.updateClothesSizes(user.shirtSize,
-                                  user.pantSize, user.shoeSize, user);
+                              await database.updateClothesSizes(shirtSize,
+                                  pantSize, temp , user);
                             } else
                               setState(() {
                                 error = true;
