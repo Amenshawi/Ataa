@@ -27,9 +27,15 @@ class _ProfileState extends State<Profile> {
   Future<bool> private;
   List<bool> readWriteToggole = [true, true, true, true];
   List<bool> blurBackground = [false, false, false, false];
+
   var oldPasswordController = TextEditingController();
+
   var newPassword1Controller = TextEditingController();
   var newPassword2Controller = TextEditingController();
+
+  var newEmail1Controller = TextEditingController();
+  var newEmail2Controller = TextEditingController();
+
   List<TextEditingController> controllers = [
     TextEditingController(),
     TextEditingController(),
@@ -265,32 +271,13 @@ class _ProfileState extends State<Profile> {
                   visiblePassword = false;
                   changePassword(context, user);
                 } else if (index == 0) {
-                  print('email');
-                  if (!blurBackground[index] || controllers[index].text == '') {
-                    print('first if');
-                    setState(() {
-                      readWriteToggole[index] = !readWriteToggole[index];
-                      blurBackground[index] = !blurBackground[index];
-                      controllers[index].clear();
-                    });
-                  } else {
-                    print('first else');
-                    if (controllers[index].text == user.email) {
-                      print('The email provided is the same as the old email');
-                    } else {
-                      try {
-                        print(controllers[0].text);
-                        _auth.changeEmail(controllers[0].text, user);
+                  try {
+                        visiblePassword = false;
+                        changeEmail(context, user);
                       } catch (error) {
                         print(error.toString);
                         //show error message
                       }
-                    }
-                    setState(() {
-                      readWriteToggole[index] = !readWriteToggole[index];
-                      blurBackground[index] = !blurBackground[index];
-                    });
-                  }
                 } else if ((index != 3 && index != 2) &&
                     (!blurBackground[index] || controllers[index].text == '')) {
                   controllers[index].clear();
@@ -466,6 +453,7 @@ class _ProfileState extends State<Profile> {
                   bottom: MediaQuery.of(context).viewInsets.bottom * 0.5),
               child: SingleChildScrollView(child: passwordSheet(user)));
         });
+        oldPasswordController = TextEditingController();
   }
 
   clothingCard(context,int shoeSize, String shirtSize, String pantSize, AppUser user) {
@@ -707,5 +695,133 @@ class _ProfileState extends State<Profile> {
             ),
           ));
     });
+  }
+  Widget emailSheet(AppUser user) {
+    return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+      return Container(
+          height: MediaQuery.of(context).size.height * .4,
+          margin: EdgeInsets.all(30),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: EdgeInsets.all(10),
+              ),
+              Container(
+                  child: visiblePassword
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextField(
+                              controller: newEmail1Controller,
+                              decoration: InputDecoration(
+                                  enabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(color: ataaGreen)),
+                                  focusedBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(color: ataaGreen)),
+                                  labelText: 'New email',
+                                  labelStyle: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500,
+                                      color: ataaGreen)),
+                            ),
+                            TextField(
+                              controller: newEmail2Controller,
+                              decoration: InputDecoration(
+                                  enabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(color: ataaGreen)),
+                                  focusedBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(color: ataaGreen)),
+                                  labelText: 'Re-enter email',
+                                  labelStyle: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500,
+                                      color: ataaGreen)),
+                            ),
+                          ],
+                        )
+                      : TextField(
+                          controller: oldPasswordController,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: ataaGreen)),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: ataaGreen)),
+                              labelText: 'Old Password',
+                              labelStyle: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                  color: ataaGreen)),
+                        )),
+              SizedBox(height: 25),
+              Container(
+                  padding: EdgeInsets.all(5),
+                  child: FlatButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    color: ataaGreen,
+                    height: 40,
+                    minWidth: 80,
+                    child: Icon(
+                      Icons.navigate_next,
+                      color: ataaGold,
+                    ),
+                    onPressed: () async {
+                      if (visiblePassword) {
+                        var newEmail1 = newEmail1Controller.text;
+                        var newEmail2 = newEmail2Controller.text;
+                        if (newEmail1 == newEmail2) {
+                          if (await _auth.changeEmail(newEmail1, user)) {
+                            print('Email changed !');
+                            Navigator.pop(context);
+                          } else {
+                            print(
+                                'Email inavild or error with the connection');
+                            //error message
+                          }
+                        } else {
+                          print('emails don\'t match');
+                          //error message
+                        }
+                      } else {
+                        var correctPassword = await _auth
+                            .confirmPassword(oldPasswordController.text, user);
+                        print(
+                            'correct password: ' + correctPassword.toString());
+                        if (correctPassword) {
+                          print('before setState');
+                          setState(() {
+                            visiblePassword = !visiblePassword;
+                          });
+                        } else {
+                          print('wrong pawword');
+                        }
+                      }
+                    },
+                  )),
+            ],
+          ));
+    });
+  }
+
+  changeEmail(context , AppUser user) {
+    showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+        ),
+        elevation: 10,
+        isScrollControlled: true,
+        builder: (BuildContext bc) {
+          return Padding(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom * 0.5),
+              child: SingleChildScrollView(child: emailSheet(user)));
+        });
+        oldPasswordController = TextEditingController();
   }
 }
