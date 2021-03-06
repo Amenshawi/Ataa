@@ -4,6 +4,7 @@ import 'package:Ataa/models/app_user.dart';
 import 'package:Ataa/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
+import 'package:provider/provider.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGreenField = Color.fromRGBO(28, 102, 74, .5);
@@ -12,23 +13,21 @@ final Color ataaWhite = Color.fromRGBO(255, 255, 255, 0.75);
 
 class PeriodcSheet extends StatefulWidget {
   final String type;
-  final AppUser user;
-  PeriodcSheet(this.type, this.user);
+  PeriodcSheet(this.type);
   @override
-  _PeriodcSheetState createState() => _PeriodcSheetState(type, user);
+  _PeriodcSheetState createState() => _PeriodcSheetState(type);
 }
 
 class _PeriodcSheetState extends State<PeriodcSheet> {
   final database = Database();
   double heightSize, widthSize;
   final String type;
-  final AppUser user;
   String placeHolder = 'Food';
   TimeOfDay _timeOfDay;
   String period = '';
   DateTime _startDate = DateTime.now();
   DateTime _endDate = DateTime.now().add(Duration(days: 7));
-  _PeriodcSheetState(this.type, this.user);
+  _PeriodcSheetState(this.type);
 
   @override
   void initState() {
@@ -93,10 +92,10 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
                             });
                             if (newValue == 'Food')
                               showSheet(context, newValue,
-                                  DonationForm(newValue, user, true), true);
+                                  DonationForm(newValue, true), true);
                             else
                               showSheet(context, newValue,
-                                  DonationForm(newValue, user, false), false);
+                                  DonationForm(newValue, false), false);
                           },
                           items: <String>[
                             'Food',

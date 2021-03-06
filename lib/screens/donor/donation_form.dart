@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_controller/google_maps_controller.dart';
 
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGreenField = Color.fromRGBO(28, 102, 74, .5);
@@ -16,11 +17,10 @@ final Color ataaWhite = Color.fromRGBO(255, 255, 255, 0.75);
 
 class DonationForm extends StatefulWidget {
   final String type;
-  final AppUser user;
   final bool isFood;
-  DonationForm(this.type, this.user, this.isFood);
+  DonationForm(this.type, this.isFood);
   @override
-  _DonationFormState createState() => _DonationFormState(type, user);
+  _DonationFormState createState() => _DonationFormState(type);
 }
 
 class _DonationFormState extends State<DonationForm> {
@@ -33,12 +33,12 @@ class _DonationFormState extends State<DonationForm> {
   bool imagePicked = false;
   LatLng location;
   final String type;
-  final AppUser user;
   var time = 0;
-  _DonationFormState(this.type, this.user);
+  _DonationFormState(this.type);
 
   @override
   Widget build(BuildContext context) {
+    AppUser user = Provider.of<AppUser>(context);
     Size size = MediaQuery.of(context).size;
     heightSize = size.height;
     widthSize = size.width;

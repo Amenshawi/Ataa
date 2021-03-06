@@ -11,18 +11,16 @@ final Color ataaWhite = Color.fromRGBO(255, 255, 255, 0.75);
 
 class EditSheet extends StatefulWidget {
   final String type;
-  final AppUser user;
-  EditSheet(this.type, this.user);
+  EditSheet(this.type);
   @override
-  _EditSheetState createState() => _EditSheetState(type, user);
+  _EditSheetState createState() => _EditSheetState(type);
 }
 
 class _EditSheetState extends State<EditSheet> {
   final database = Database();
   double heightSize, widthSize;
   final String type;
-  final AppUser user;
-  _EditSheetState(this.type, this.user);
+  _EditSheetState(this.type);
 
   @override
   Widget build(BuildContext context) {

@@ -16,9 +16,9 @@ class TabNavigationItem {
     @required this.icon,
   });
 
-  static List<TabNavigationItem> items(user) => [
+  static List<TabNavigationItem> items() => [
         TabNavigationItem(
-          page: DonorPage(user),
+          page: DonorPage(),
           icon: Icon(FontAwesome5.handshake),
           title: "Donate",
         ),
@@ -40,12 +40,12 @@ class TabNavigationItem {
         )
       ];
 
-  static getNavBar(_currentIndex, user, update) {
+  static getNavBar(_currentIndex, update) {
     return BottomNavigationBar(
       currentIndex: _currentIndex,
       onTap: (int index) => update(index),
       items: [
-        for (final tabItem in TabNavigationItem.items(user))
+        for (final tabItem in TabNavigationItem.items())
           BottomNavigationBarItem(
             icon: tabItem.icon,
             label: tabItem.title,

@@ -28,7 +28,7 @@ class Wrapper extends StatelessWidget{
                 title: "Ata'a",
                 home: Builder(
                   builder: (context){
-                    return CustomPage(fuser.uid);
+                    return HomePage();
                   },
                   ),
               ),

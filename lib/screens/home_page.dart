@@ -15,17 +15,16 @@ final Color ataaWhite = Color.fromRGBO(255, 255, 255, 0.75);
 // var _currentIndex = 0;
 
 // ignore: must_be_immutable
-class CustomPage extends StatefulWidget {
-  String uid;
+class HomePage extends StatefulWidget {
 
   @override
-  CustomPage(this.uid);
+  HomePage();
 
   @override
-  _CustomPageState createState() => _CustomPageState(uid);
+  _HomePageState createState() => _HomePageState();
 }
 
-class _CustomPageState extends State<CustomPage>
+class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   void _update(int index) {
     // setState(() => _currentIndex = index);
@@ -45,7 +44,6 @@ class _CustomPageState extends State<CustomPage>
   }
 
   double hieghtSize, widthSize;
-  String uid;
   final _auth = AuthService();
   // _DonorScreenState(this.user);
   bool isCollapsed = true;
@@ -60,9 +58,9 @@ class _CustomPageState extends State<CustomPage>
   bool isCharityStand = false;
 
   // ignore: invalid_required_positional_param
-  _CustomPageState(@required this.uid);
+  _HomePageState();
 
-  // _CustomPageState(this.user);
+  // _HomePageState(this.user);
 
   @override
   void initState() {
@@ -126,7 +124,6 @@ class _CustomPageState extends State<CustomPage>
                       Padding(
                         padding: EdgeInsets.all(widthSize * 0.05),
                         child: Row(
-                          // mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Flexible(
                               child: IconButton(
@@ -165,7 +162,7 @@ class _CustomPageState extends State<CustomPage>
                       message('Welcome Back', 22),
                       SizedBox(height: hieghtSize * 0.02),
                       IndexedStack(index: _currentIndex, children: [
-                        for (final tabItem in TabNavigationItem.items(user))
+                        for (final tabItem in TabNavigationItem.items())
                           tabItem.page,
                       ]),
                       SizedBox(height: hieghtSize * 0.05),
@@ -173,7 +170,7 @@ class _CustomPageState extends State<CustomPage>
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(40),
                           child: TabNavigationItem.getNavBar(
-                              _currentIndex, user, this._update),
+                              _currentIndex,this._update),
                         ),
                       ),
                     ],
@@ -188,96 +185,6 @@ class _CustomPageState extends State<CustomPage>
   );
   }
            
-  /*Widget customBody(BuildContext context) {
-    return SafeArea(
-      bottom: false,
-      top: false,
-      child: Stack(children: [
-        menu(context),
-        AnimatedPositioned(
-          duration: duration,
-          top: 0,
-          bottom: 0,
-          left: isCollapsed ? 0 : 0.6 * widthSize,
-          right: isCollapsed ? 0 : -0.4 * widthSize,
-          child: ScaleTransition(
-            scale: _scaleAnimation,
-            child: Material(
-              borderRadius: BorderRadius.only(
-                  topLeft: isCollapsed ? Radius.zero : Radius.circular(40),
-                  bottomLeft: isCollapsed ? Radius.zero : Radius.circular(40)),
-              elevation: 8,
-              child: Padding(
-                padding: EdgeInsets.only(top: hieghtSize * 0.05),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(widthSize * 0.05),
-                        child: Row(
-                          // mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Flexible(
-                              child: IconButton(
-                                icon: Icon(
-                                  Icons.menu,
-                                  color: ataaGreen,
-                                  size: 30,
-                                ),
-                                onPressed: () {
-                                  FocusScope.of(context).unfocus();
-                                  Timer(Duration(milliseconds: 300), () {
-                                    setState(() {
-                                      if (isCollapsed)
-                                        _controller.forward();
-                                      else
-                                        _controller.reverse();
-                                      isCollapsed = !isCollapsed;
-                                    });
-                                  });
-                                },
-                              ),
-                            ),
-                            isCharityStand
-                                ? SizedBox(width: widthSize * 0.1)
-                                : SizedBox(width: widthSize * 0.2),
-                            Text(pageName,
-                                style: TextStyle(
-                                    color: ataaGreen,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold))
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: hieghtSize * 0.004),
-                      message('Hi ' + user.fname, 30),
-                      message('Welcome Back', 22),
-                      SizedBox(height: hieghtSize * 0.02),
-                      IndexedStack(index: _currentIndex, children: [
-                        for (final tabItem in TabNavigationItem.items(user))
-                          tabItem.page,
-                      ]),
-                      SizedBox(height: hieghtSize * 0.05),
-                      Flexible(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(40),
-                          child: TabNavigationItem.getNavBar(
-                              _currentIndex, user, this._update),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ]),
-    );
-  }*/
-
   Widget message(String msg, double size) {
     return Padding(
       padding: EdgeInsets.only(left: widthSize * 0.08),

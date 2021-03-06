@@ -16,10 +16,9 @@ final Color ataaWhite = Color.fromRGBO(255, 255, 255, 0.75);
 
 // ignore: camel_case_types
 class DonorPage extends StatefulWidget {
-  final AppUser user;
-  DonorPage(this.user);
+  DonorPage();
   @override
-  _DonorPageState createState() => _DonorPageState(user);
+  _DonorPageState createState() => _DonorPageState();
 }
 
 // ignore: camel_case_types
@@ -29,10 +28,9 @@ class _DonorPageState extends State<DonorPage> {
   bool _subButtons = false;
   bool cardOpen = false;
   final database = Database();
-  final AppUser user;
   GlobalKey<FlipCardState> cardKey = GlobalKey<FlipCardState>();
 
-  _DonorPageState(this.user);
+  _DonorPageState();
   var charities;
   @override
   Widget build(BuildContext context) {
@@ -175,11 +173,11 @@ class _DonorPageState extends State<DonorPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             donationButton('Schedule', Icons.schedule,
-                ScheduleSheet('Schedule', user), true, 1),
+                ScheduleSheet('Schedule'), true, 1),
             donationButton('Periodic Donations', Icons.all_inclusive,
-                PeriodcSheet('Periodic donations', user), false, 1),
+                PeriodcSheet('Periodic donations'), false, 1),
             donationButton('Edit Periodic', Icons.edit,
-                EditSheet('Edit Periodic ', user), false, 1),
+                EditSheet('Edit Periodic '), false, 1),
           ],
         ),
       ),
@@ -195,13 +193,13 @@ class _DonorPageState extends State<DonorPage> {
         child: Column(
           children: [
             donationButton('Food', Icons.food_bank,
-                DonationForm('Food', user, true), true, 0),
+                DonationForm('Food', true), true, 0),
             donationButton('Clothes', Icons.accessibility_rounded,
-                DonationForm('Clothes', user, false), false, 0),
+                DonationForm('Clothes', false), false, 0),
             donationButton('Electronics', Icons.power,
-                DonationForm('Electronics', user, false), false, 0),
+                DonationForm('Electronics', false), false, 0),
             donationButton('Furniture', Icons.house_rounded,
-                DonationForm('Furniture', user, false), false, 0)
+                DonationForm('Furniture', false), false, 0)
           ],
         ),
       ),

@@ -3,6 +3,7 @@ import 'package:Ataa/screens/donor/donation_form.dart';
 import 'package:Ataa/models/app_user.dart';
 import 'package:Ataa/services/database.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGreenField = Color.fromRGBO(28, 102, 74, .5);
@@ -11,22 +12,20 @@ final Color ataaWhite = Color.fromRGBO(255, 255, 255, 0.75);
 
 class ScheduleSheet extends StatefulWidget {
   final String type;
-  final AppUser user;
-  ScheduleSheet(this.type, this.user);
+  ScheduleSheet(this.type);
   @override
-  _ScheduleSheetState createState() => _ScheduleSheetState(type, user);
+  _ScheduleSheetState createState() => _ScheduleSheetState(type);
 }
 
 class _ScheduleSheetState extends State<ScheduleSheet> {
   final database = Database();
   double heightSize, widthSize;
   final String type;
-  final AppUser user;
   DateTime _pickedDate;
   TimeOfDay _timeOfDay;
   String period = '';
   String placeHolder = 'Food';
-  _ScheduleSheetState(this.type, this.user);
+  _ScheduleSheetState(this.type);
 
   @override
   void initState() {
@@ -92,10 +91,10 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                             });
                             if (newValue == 'Food')
                               showSheet(context, newValue,
-                                  DonationForm(newValue, user, true), true);
+                                  DonationForm(newValue, true), true);
                             else
                               showSheet(context, newValue,
-                                  DonationForm(newValue, user, false), false);
+                                  DonationForm(newValue, false), false);
                           },
                           items: <String>[
                             'Food',
