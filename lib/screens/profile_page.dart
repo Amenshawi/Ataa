@@ -57,7 +57,6 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<AppUser>(context);
-    print('shoe size: '+ user.shoeSize.toString());
     if(user != null){
     setState(() {
       database = Database(uid: user.uid);
