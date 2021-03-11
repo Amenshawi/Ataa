@@ -2,6 +2,7 @@ import 'package:Ataa/custom/sheet.dart';
 import 'package:Ataa/custom/create_buttons.dart';
 import 'package:Ataa/screens/donor/Cancel/cancel_sheet.dart';
 import 'package:Ataa/screens/donor/donation_form.dart';
+import 'package:Ataa/screens/donor/donHistory.dart';
 import 'package:Ataa/screens/donor/schedul/periodc_sheet.dart';
 import 'package:Ataa/models/app_user.dart';
 import 'package:flutter/material.dart';
@@ -119,15 +120,22 @@ class _DonorPageState extends State<DonorPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CreateButtons(
-                      height: hieghtSize * 0.15,
-                      width: widthSize * 0.4,
-                      icon: Icons.menu_book_rounded,
-                      cardName: 'Donation History',
-                      space: false,
-                      spike: false,
-                      // context: context,
-                      // sheetName: 'Schedul',
+                    GestureDetector(
+                      onTap: () {
+                        print('Hi');
+                        showSheet(context, 'History',
+                            DonHistorySheet('History', user), false);
+                      },
+                      child: CreateButtons(
+                        height: hieghtSize * 0.15,
+                        width: widthSize * 0.4,
+                        icon: Icons.menu_book_rounded,
+                        cardName: 'Donation History',
+                        space: false,
+                        spike: false,
+                        // context: context,
+                        // sheetName: 'Schedul',
+                      ),
                     ),
                     FlipCard(
                         key: cardKey,
