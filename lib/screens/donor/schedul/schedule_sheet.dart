@@ -10,23 +10,22 @@ final Color ataaGold = Color.fromRGBO(244, 234, 146, .8);
 final Color ataaWhite = Color.fromRGBO(255, 255, 255, 0.75);
 
 class ScheduleSheet extends StatefulWidget {
-  final String type;
+  //final String type;
   final AppUser user;
-  ScheduleSheet(this.type, this.user);
+  ScheduleSheet(this.user);
   @override
-  _ScheduleSheetState createState() => _ScheduleSheetState(type, user);
+  _ScheduleSheetState createState() => _ScheduleSheetState(user);
 }
 
 class _ScheduleSheetState extends State<ScheduleSheet> {
   final database = Database();
   double heightSize, widthSize;
-  final String type;
   final AppUser user;
   DateTime _pickedDate;
   TimeOfDay _timeOfDay;
   String period = '';
-  String placeHolder = 'Food';
-  _ScheduleSheetState(this.type, this.user);
+  String type = 'Food';
+  _ScheduleSheetState(this.user);
 
   @override
   void initState() {
@@ -75,7 +74,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                       ),
                       Expanded(
                         child: DropdownButton(
-                          value: placeHolder,
+                          value: type,
                           icon: Icon(
                             Icons.arrow_downward,
                             color: ataaGreen,
@@ -88,14 +87,14 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                           // underline: Container(height: 2, color: ataaWhite),
                           onChanged: (String newValue) {
                             setState(() {
-                              placeHolder = newValue;
+                              type = newValue;
                             });
-                            if (newValue == 'Food')
-                              showSheet(context, newValue,
-                                  DonationForm(newValue, user, true), true);
-                            else
-                              showSheet(context, newValue,
-                                  DonationForm(newValue, user, false), false);
+                            // if (newValue == 'Food')
+                            //   showSheet(context, newValue,
+                            //       DonationForm(newValue, user, true), true);
+                            // else
+                            //   showSheet(context, newValue,
+                            //       DonationForm(newValue, user, false), false);
                           },
                           items: <String>[
                             'Food',
@@ -157,10 +156,18 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                     child: Icon(Icons.done, color: ataaGold, size: 30),
                     onPressed: () {
                       print('Hi there!');
-                      // database.addDonation(user, type, _image,
-                      //     descController.text, anonymous, location);
+                      DateTime date = new DateTime(
+                          _pickedDate.year,
+                          _pickedDate.month,
+                          _pickedDate.day,
+                          _timeOfDay.hour,
+                          _timeOfDay.minute);
                       Navigator.pop(context);
-                      // call db.addDonation here
+                      showSheet(
+                          context,
+                          'Schedule A Donation',
+                          DonationForm(type, user, false, notifyAt: date),
+                          false);
                     },
                   ))
             ],

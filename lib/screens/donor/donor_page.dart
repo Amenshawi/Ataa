@@ -209,8 +209,8 @@ class _DonorPageState extends State<DonorPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            donationButton('Schedule', Icons.schedule,
-                ScheduleSheet('Schedule', user), true, 1),
+            donationButton(
+                'Schedule', Icons.schedule, ScheduleSheet(user), true, 1),
             donationButton('Periodic Donations', Icons.all_inclusive,
                 PeriodcSheet('Periodic donations', user), false, 1),
             donationButton('Edit Periodic', Icons.edit,

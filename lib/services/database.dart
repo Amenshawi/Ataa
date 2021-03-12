@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:Ataa/models/Periodic_donation.dart';
 import 'package:Ataa/models/donation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:Ataa/models/app_user.dart';
@@ -102,7 +103,6 @@ class Database {
 
   Future updateClothesSizes(
       String shirtSize, String pantsSize, int shoeSize, AppUser user) async {
-    print('hi');
     return await firestore
         .collection('users')
         .where('uid', isEqualTo: user.uid)
@@ -131,7 +131,6 @@ class Database {
         .then((value) {
       return value.docs[0].reference;
     });
-    final current = DateTime.now();
     await firestore.collection('donations').add({
       'type': donation.type,
       'user': ref,
@@ -139,8 +138,8 @@ class Database {
       'desc': donation.desc,
       'anonymous': donation.anonymous,
       'location': geopoint,
-      'notifyAt': current.add(new Duration(minutes: donation.notifyAfter)),
-      'timeStamp': current
+      'notifyAt': donation.notifyAt,
+      'timeStamp': donation.timeStamp
     }).then((value) {
       print('donation added');
       return;
@@ -186,5 +185,30 @@ class Database {
               print(error.toString)
               //do something when an error happens
             });
+  }
+
+  Future<List<PeriodicDonation>> fetchPeriodcDonations(AppUser user) async {
+    List<PeriodicDonation> donations = [];
+    await firestore
+        .collection('periodic_donations')
+        .where('uid', isEqualTo: user.uid)
+        .get()
+        .then((snapshot) {
+      snapshot.docs.forEach((doc) {
+        donations.add(new PeriodicDonation(
+            doc.data()['type'],
+            DateTime.parse(doc.data()['date'].toDate().toString()),
+            doc.data()['status'],
+            pdid: doc.id));
+      });
+    });
+    return donations;
+  }
+
+  void PauseDonation(String pdid) async {
+    var update = await firestore
+        .collection('periodic_donations')
+        .doc(pdid)
+        .update({'status': 'paused'});
   }
 }

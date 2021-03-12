@@ -12,8 +12,8 @@ class Donation {
   final String desc;
   final bool anonymous;
   final LatLng location;
-  final DateTime timeStamp;
-  final int notifyAfter;
+  final DateTime timeStamp = DateTime.now();
+  final DateTime notifyAt;
   Donation(
       {this.type,
       this.user,
@@ -21,6 +21,5 @@ class Donation {
       this.desc,
       this.anonymous,
       this.location,
-      this.timeStamp,
-      this.notifyAfter});
+      this.notifyAt});
 }

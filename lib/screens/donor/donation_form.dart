@@ -18,9 +18,10 @@ class DonationForm extends StatefulWidget {
   final String type;
   final AppUser user;
   final bool isFood;
-  DonationForm(this.type, this.user, this.isFood);
+  DateTime notifyAt;
+  DonationForm(this.type, this.user, this.isFood, {this.notifyAt});
   @override
-  _DonationFormState createState() => _DonationFormState(type, user);
+  _DonationFormState createState() => _DonationFormState(type, user, notifyAt);
 }
 
 class _DonationFormState extends State<DonationForm> {
@@ -34,8 +35,9 @@ class _DonationFormState extends State<DonationForm> {
   LatLng location;
   final String type;
   final AppUser user;
+  DateTime notifyAt;
   var time = 0;
-  _DonationFormState(this.type, this.user);
+  _DonationFormState(this.type, this.user, this.notifyAt);
 
   @override
   Widget build(BuildContext context) {
@@ -305,6 +307,10 @@ class _DonationFormState extends State<DonationForm> {
                     child: Icon(Icons.done, color: ataaGold, size: 30),
                     onPressed: () {
                       _image = File(_image.path);
+                      if (notifyAt == null) {
+                        notifyAt =
+                            DateTime.now().add(new Duration(minutes: time));
+                      }
                       final donation = Donation(
                           user: user,
                           type: type,
@@ -312,7 +318,7 @@ class _DonationFormState extends State<DonationForm> {
                           desc: descController.text,
                           anonymous: anonymous,
                           location: location,
-                          notifyAfter: time);
+                          notifyAt: notifyAt);
                       database.addDonation(donation);
                       Navigator.pop(context);
                     }),
