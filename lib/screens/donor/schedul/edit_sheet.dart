@@ -58,7 +58,9 @@ class _EditSheetState extends State<EditSheet> {
                         itemCount: donations.length,
                         itemBuilder: (context, int index) {
                           return Card(
-                            color: ataaGreen,
+                            color: donations[index].status != 'paused'
+                                ? ataaGreen
+                                : ataaGreenField,
                             elevation: 8,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20)),
@@ -97,21 +99,27 @@ class _EditSheetState extends State<EditSheet> {
                                 dismissal: SlidableDismissal(
                                     child: SlidableDrawerDismissal()),
                                 child: ListTile(
-                                  title: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          donations[index].type,
-                                          style: TextStyle(
-                                              color: ataaGold, fontSize: 20),
-                                        ),
-                                        Text(
-                                          donations[index].status,
-                                          style: TextStyle(
-                                              color: ataaGold, fontSize: 20),
-                                        )
-                                      ]),
+                                  title:
+                                      // Row(
+                                      //     mainAxisAlignment:
+                                      //         MainAxisAlignment.spaceBetween,
+                                      //     children: [
+                                      //       Text(
+                                      //         donations[index].type,
+                                      //         style: TextStyle(
+                                      //             color: ataaGold, fontSize: 20),
+                                      //       ),
+                                      //       Text(
+                                      //         donations[index].status,
+                                      //         style: TextStyle(
+                                      //             color: ataaGold, fontSize: 20),
+                                      //       )
+                                      //     ]),
+                                      Text(
+                                    donations[index].type,
+                                    style: TextStyle(
+                                        color: ataaGold, fontSize: 20),
+                                  ),
                                   subtitle: Text(
                                     donations[index].date.toString(),
                                     style: TextStyle(color: ataaGold),
