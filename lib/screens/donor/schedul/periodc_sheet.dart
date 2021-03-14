@@ -44,6 +44,7 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
     _timeOfDay = TimeOfDay.now();
     period = _timeOfDay.period.index == 0 ? 'AM' : 'PM';
     _periodType = 1;
+    //Sunday is index 0 ,Monday is index 1,..., Saturday is index 6
     weekdays = [false,false,false,false,false,false,false];
   }
 
@@ -63,6 +64,7 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
         selectionMode: SelectionMode.MULTI,
         weekdayLabelsRow: CustomWeekdayLabelsRow(),
         onTap: (date) {
+          // add functionality on date selection here 
           print("onTap: $date");
         });
 
