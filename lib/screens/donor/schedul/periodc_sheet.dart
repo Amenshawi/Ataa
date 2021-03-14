@@ -37,7 +37,7 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
   List<bool> weekdays;
   List<int> monthDays = [];
   Calendarro monthCalendarro;
-
+  DateTime date;
   @override
   void initState() {
     super.initState();
@@ -197,7 +197,7 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
                           initialDateTime: DateTime.now(),
                           maximumDate: DateTime(DateTime.now().year + 2),
                           onDateTimeChanged: (DateTime newDateTime) {
-                            startDate = newDateTime;
+                            date = newDateTime;
                           },
                         ),
                         data: CupertinoThemeData(
@@ -298,9 +298,9 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
                     child: Icon(Icons.done, color: ataaGold, size: 30),
                     onPressed: () {
                       if (_periodType == 1) //weekly
-                        database.addWeekly(user, type, _startDate, weekdays);
+                        database.addWeekly(user, type, date, weekdays);
                       else
-                        database.addMonthly(user, type, _startDate, monthDays);
+                        database.addMonthly(user, type, date, monthDays);
                       // database.addDonation(user, type, _image,
                       //     descController.text, anonymous, location);
                       Navigator.pop(context);
