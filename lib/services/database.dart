@@ -205,10 +205,62 @@ class Database {
     return donations;
   }
 
-  void PauseDonation(String pdid) async {
-    var update = await firestore
+  void pauseDonation(String pdid) async {
+    await firestore
         .collection('periodic_donations')
         .doc(pdid)
         .update({'status': 'paused'});
+  }
+
+  void addWeekly(
+      AppUser user, String type, DateTime startDate, List<bool> days) async {
+    String stringDays = _getDays(days);
+    await firestore.collection('periodic_donations').add({
+      'uid': user.uid,
+      'status': 'active',
+      'type': type,
+      'date': startDate,
+      'frequency': 'Weekly',
+      'days': stringDays
+    });
+
+    print('done');
+  }
+
+  String _getDays(List<bool> days) {
+    String stringDays = '';
+    if (days[0]) stringDays = stringDays + 'Sunday,';
+    if (days[1]) stringDays = stringDays + 'Monday,';
+    if (days[2]) stringDays = stringDays + 'Tuesday,';
+    if (days[3]) stringDays = stringDays + 'Wednesday,';
+    if (days[4]) stringDays = stringDays + 'Thursday,';
+    if (days[5]) stringDays = stringDays + 'Friday,';
+    if (days[6]) stringDays = stringDays + 'Saturday,';
+
+    return stringDays;
+  }
+
+  void addMonthly(
+      AppUser user, String type, DateTime startDate, List<int> days) async {
+    final String stringDays = _getMonthDays(days);
+    await firestore.collection('periodic_donations').add({
+      'uid': user.uid,
+      'status': 'active',
+      'type': type,
+      'date': startDate,
+      'frequency': 'Monthly',
+      'days': stringDays
+    });
+
+    print('done');
+  }
+
+  String _getMonthDays(List<int> days) {
+    String stringDays = '';
+    days.forEach((day) {
+      stringDays = stringDays + day.toString() + ',';
+    });
+
+    return stringDays;
   }
 }

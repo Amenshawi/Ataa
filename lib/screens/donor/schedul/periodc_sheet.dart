@@ -26,9 +26,8 @@ class PeriodcSheet extends StatefulWidget {
 class _PeriodcSheetState extends State<PeriodcSheet> {
   final database = Database();
   double heightSize, widthSize;
-  final String type;
   final AppUser user;
-  String placeHolder = 'Food';
+  String type;
   TimeOfDay _timeOfDay;
   String period = '';
   DateTime _startDate = DateTime.now();
@@ -36,6 +35,7 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
   _PeriodcSheetState(this.type, this.user);
   int _periodType;
   List<bool> weekdays;
+  List<int> monthDays = [];
   Calendarro monthCalendarro;
 
   @override
@@ -44,8 +44,9 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
     _timeOfDay = TimeOfDay.now();
     period = _timeOfDay.period.index == 0 ? 'AM' : 'PM';
     _periodType = 1;
+    type = 'Food';
     //Sunday is index 0 ,Monday is index 1,..., Saturday is index 6
-    weekdays = [false,false,false,false,false,false,false];
+    weekdays = [false, false, false, false, false, false, false];
   }
 
   @override
@@ -57,15 +58,18 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
     var startDate = DateUtils.getFirstDayOfCurrentMonth();
     var endDate = DateUtils.getLastDayOfNextMonth();
     monthCalendarro = Calendarro(
-      dayTileBuilder: CustomDayTileBuilder(),
+        dayTileBuilder: CustomDayTileBuilder(),
         startDate: startDate,
         endDate: endDate,
         displayMode: DisplayMode.MONTHS,
         selectionMode: SelectionMode.MULTI,
         weekdayLabelsRow: CustomWeekdayLabelsRow(),
         onTap: (date) {
-          // add functionality on date selection here 
-          print("onTap: $date");
+          // add functionality on date selection here
+          if (monthDays == null)
+            monthDays = [date.day];
+          else
+            monthDays.add(date.day);
         });
 
     return Container(
@@ -101,7 +105,7 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
                       ),
                       Expanded(
                         child: DropdownButton(
-                          value: placeHolder,
+                          value: type,
                           icon: Icon(
                             Icons.arrow_downward,
                             color: ataaGreen,
@@ -114,20 +118,20 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
                           // underline: Container(height: 2, color: ataaWhite),
                           onChanged: (String newValue) {
                             setState(() {
-                              placeHolder = newValue;
+                              type = newValue;
                             });
-                            if (newValue == 'Food')
-                              showSheet(context, newValue,
-                                  DonationForm(newValue, user, true), true);
-                            else
-                              showSheet(context, newValue,
-                                  DonationForm(newValue, user, false), false);
+                            // if (newValue == 'Food')
+                            //   showSheet(context, newValue,
+                            //       DonationForm(newValue, user, true), true);
+                            // else
+                            //   showSheet(context, newValue,
+                            //       DonationForm(newValue, user, false), false);
                           },
                           items: <String>[
                             'Food',
                             'Clothes',
                             'Electronics',
-                            'Devices'
+                            'Furniture'
                           ].map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
@@ -160,44 +164,45 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
               ),*/
               Card(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  side: BorderSide(
-                    color: Color.fromRGBO(28, 102, 74, 1.0),
-                    width: 3.0,
-                    style: BorderStyle.solid)),
-                  color: Color.fromRGBO(255, 255, 255, 1.0),
-                  shadowColor: Colors.grey,
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: heightSize *0.01,
+                    borderRadius: BorderRadius.circular(20),
+                    side: BorderSide(
+                        color: Color.fromRGBO(28, 102, 74, 1.0),
+                        width: 3.0,
+                        style: BorderStyle.solid)),
+                color: Color.fromRGBO(255, 255, 255, 1.0),
+                shadowColor: Colors.grey,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: heightSize * 0.01,
+                    ),
+                    Text(
+                      'Start Date',
+                      style: TextStyle(
+                        color: Color.fromRGBO(28, 102, 74, 1.0),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
-                      Text('Start Date',
-                        style: TextStyle(
-                          color: Color.fromRGBO(28, 102, 74, 1.0),
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                    ),
+                    SizedBox(
+                      height: heightSize * 0.01,
+                    ),
+                    SizedBox(
+                      height: heightSize * 0.07,
+                      child: CupertinoTheme(
+                        child: CupertinoDatePicker(
+                          backgroundColor: Color.fromRGBO(255, 255, 255, 1.0),
+                          mode: CupertinoDatePickerMode.date,
+                          minimumDate: DateTime.now(),
+                          initialDateTime: DateTime.now(),
+                          maximumDate: DateTime(DateTime.now().year + 2),
+                          onDateTimeChanged: (DateTime newDateTime) {
+                            startDate = newDateTime;
+                          },
                         ),
-                      ),
-                      SizedBox(
-                        height: heightSize *0.01,
-                      ),
-                      SizedBox(
-                        height: heightSize *0.07,
-                        child: CupertinoTheme(
-                          child: CupertinoDatePicker(
-                            backgroundColor: Color.fromRGBO(255, 255, 255, 1.0),
-                            mode: CupertinoDatePickerMode.date,
-                            minimumDate: DateTime.now(),
-                            initialDateTime: DateTime.now(),
-                            maximumDate: DateTime(DateTime.now().year+2),
-                            onDateTimeChanged:(DateTime newDateTime) {
-                                              startDate = newDateTime;
-                                            },
-                          ),
                         data: CupertinoThemeData(
-                          textTheme:CupertinoTextThemeData(
-                            dateTimePickerTextStyle:TextStyle(
+                          textTheme: CupertinoTextThemeData(
+                            dateTimePickerTextStyle: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 18,
                               color: Color.fromRGBO(28, 102, 74, 1.0),
@@ -214,59 +219,62 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Weekly',
-                    style: TextStyle(
-                      color: ataaGreen,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold
-                    ),
+                    Text(
+                      'Weekly',
+                      style: TextStyle(
+                          color: ataaGreen,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
                     ),
                     Radio(
-                      focusColor: ataaGreen,
-                      groupValue: _periodType,
-                      value: 1,
-                      onChanged: (value){
-                        _radioChanged(value);
-                        }
+                        focusColor: ataaGreen,
+                        groupValue: _periodType,
+                        value: 1,
+                        onChanged: (value) {
+                          _radioChanged(value);
+                        }),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.1,
                     ),
-                    SizedBox( width: MediaQuery.of(context).size.width * 0.1,),
-                    Text('Monthly',
-                    style: TextStyle(
-                      color: ataaGreen,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold
+                    Text(
+                      'Monthly',
+                      style: TextStyle(
+                          color: ataaGreen,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
                     ),
-                    ),
-                     Radio(
-                       focusColor: ataaGreen,
-                      groupValue: _periodType,
-                      value: 2,
-                      onChanged: (value){
-                        _radioChanged(value);
-                        }
-                    )
-                  ],),
-              ),
-              SizedBox(height: heightSize*0.01,),
-              _periodType == 1?
-              Container(
-                child: WeekdaySelector(
-                  values: weekdays,
-                  onChanged:(value){
-                    print(value);
-                    _weekdayChanged(value);
-                  } ,
-                  firstDayOfWeek: 7,
-                  selectedFillColor: ataaGreen,
-                  selectedColor: ataaGold,
+                    Radio(
+                        focusColor: ataaGreen,
+                        groupValue: _periodType,
+                        value: 2,
+                        onChanged: (value) {
+                          _radioChanged(value);
+                        })
+                  ],
                 ),
-              ):
-              Container(
-                height: heightSize * 0.3,
-                child: monthCalendarro,
               ),
+              SizedBox(
+                height: heightSize * 0.01,
+              ),
+              _periodType == 1
+                  ? Container(
+                      child: WeekdaySelector(
+                        values: weekdays,
+                        onChanged: (value) {
+                          print(value);
+                          _weekdayChanged(value);
+                        },
+                        firstDayOfWeek: 7,
+                        selectedFillColor: ataaGreen,
+                        selectedColor: ataaGold,
+                      ),
+                    )
+                  : Container(
+                      height: heightSize * 0.3,
+                      child: monthCalendarro,
+                    ),
 
-             /* Card(
+              /* Card(
                 color: ataaGreen,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25)),
@@ -289,7 +297,10 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
                     backgroundColor: ataaGreen,
                     child: Icon(Icons.done, color: ataaGold, size: 30),
                     onPressed: () {
-                      print('Hi there!');
+                      if (_periodType == 1) //weekly
+                        database.addWeekly(user, type, _startDate, weekdays);
+                      else
+                        database.addMonthly(user, type, _startDate, monthDays);
                       // database.addDonation(user, type, _image,
                       //     descController.text, anonymous, location);
                       Navigator.pop(context);
@@ -361,28 +372,36 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
           );
         });
   }
-  void _radioChanged(dynamic value){
+
+  void _radioChanged(dynamic value) {
     setState(() {
-          _periodType = value;
-        });
+      _periodType = value;
+    });
   }
-  void _weekdayChanged(int day){
+
+  void _weekdayChanged(int day) {
     setState(() {
-      if(day == 7)
-          weekdays[0] = !weekdays[0];
+      if (day == 7)
+        weekdays[0] = !weekdays[0];
       else
-      weekdays[day] = !weekdays[day];
-        });
-        print(weekdays.toString());
+        weekdays[day] = !weekdays[day];
+    });
+    print(weekdays.toString());
   }
 }
+
 class CustomWeekdayLabelsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
       children: <Widget>[
-        Expanded(child: Text("Days of The Month", textAlign: TextAlign.center,
-        style: TextStyle(color: ataaGreen, fontSize: 18, fontWeight: FontWeight.bold))),
+        Expanded(
+            child: Text("Days of The Month",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: ataaGreen,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold))),
       ],
     );
   }

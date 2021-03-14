@@ -74,8 +74,8 @@ class _EditSheetState extends State<EditSheet> {
                                     icon: Icons.pause,
                                     closeOnTap: false,
                                     onTap: () {
-                                      database.PauseDonation(
-                                          donations[index].pdid);
+                                      database
+                                          .pauseDonation(donations[index].pdid);
                                       Toast.show(
                                         'Pause on $index',
                                         context,
@@ -121,7 +121,15 @@ class _EditSheetState extends State<EditSheet> {
                                         color: ataaGold, fontSize: 20),
                                   ),
                                   subtitle: Text(
-                                    donations[index].date.toString(),
+                                    donations[index].date.year.toString() +
+                                        '-' +
+                                        donations[index].date.month.toString() +
+                                        '-' +
+                                        donations[index].date.day.toString() +
+                                        ' ' +
+                                        donations[index].date.hour.toString() +
+                                        ':' +
+                                        donations[index].date.minute.toString(),
                                     style: TextStyle(color: ataaGold),
                                   ),
                                   leading: Icon(Icons.edit,
