@@ -39,6 +39,8 @@ dependencies:
   date_range_picker: ^1.0.6
   flutter_slidable: ^0.5.7
   toast: ^0.1.5
+  weekday_selector: ^0.4.0
+  calendarro: ^1.2.0
 
 
 

@@ -19,7 +19,8 @@ class DonationForm extends StatefulWidget {
   final AppUser user;
   final bool isFood;
   DateTime notifyAt;
-  DonationForm(this.type, this.user, this.isFood, {this.notifyAt});
+  String periodString;
+  DonationForm(this.type, this.user, this.isFood, {this.notifyAt, this.periodString});
   @override
   _DonationFormState createState() => _DonationFormState(type, user, notifyAt);
 }

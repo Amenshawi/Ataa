@@ -1,8 +1,13 @@
 import 'package:Ataa/custom/Sheet.dart';
+import 'package:Ataa/Custom/custom_daytile_builder.dart';
 import 'package:Ataa/screens/donor/donation_form.dart';
 import 'package:Ataa/models/app_user.dart';
 import 'package:Ataa/services/database.dart';
 import 'package:flutter/material.dart';
+import 'package:weekday_selector/weekday_selector.dart';
+import 'package:calendarro/calendarro.dart';
+import 'package:calendarro/date_utils.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
@@ -29,12 +34,17 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
   DateTime _startDate = DateTime.now();
   DateTime _endDate = DateTime.now().add(Duration(days: 7));
   _PeriodcSheetState(this.type, this.user);
+  int _periodType;
+  List<bool> weekdays;
+  Calendarro monthCalendarro;
 
   @override
   void initState() {
     super.initState();
     _timeOfDay = TimeOfDay.now();
     period = _timeOfDay.period.index == 0 ? 'AM' : 'PM';
+    _periodType = 1;
+    weekdays = [false,false,false,false,false,false,false];
   }
 
   @override
@@ -42,6 +52,19 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
     Size size = MediaQuery.of(context).size;
     heightSize = size.height;
     widthSize = size.width;
+
+    var startDate = DateUtils.getFirstDayOfCurrentMonth();
+    var endDate = DateUtils.getLastDayOfNextMonth();
+    monthCalendarro = Calendarro(
+      dayTileBuilder: CustomDayTileBuilder(),
+        startDate: startDate,
+        endDate: endDate,
+        displayMode: DisplayMode.MONTHS,
+        selectionMode: SelectionMode.MULTI,
+        weekdayLabelsRow: CustomWeekdayLabelsRow(),
+        onTap: (date) {
+          print("onTap: $date");
+        });
 
     return Container(
       width: widthSize,
@@ -51,7 +74,7 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
         color: ataaWhite,
         child: Padding(
           padding: EdgeInsets.only(
-              top: heightSize * 0.04, bottom: heightSize * 0.04),
+              top: heightSize * 0.02, bottom: heightSize * 0.02),
           child: Column(
             // crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -120,8 +143,8 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
                   ),
                 ),
               ),
-              SizedBox(height: heightSize * 0.02),
-              Card(
+              SizedBox(height: heightSize * 0.01),
+              /*Card(
                 color: ataaGreen,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25)),
@@ -132,9 +155,116 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
                     ),
                     trailing: Icon(Icons.date_range_rounded, color: ataaGold),
                     onTap: _pickDate),
+              ),*/
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  side: BorderSide(
+                    color: Color.fromRGBO(28, 102, 74, 1.0),
+                    width: 3.0,
+                    style: BorderStyle.solid)),
+                  color: Color.fromRGBO(255, 255, 255, 1.0),
+                  shadowColor: Colors.grey,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: heightSize *0.01,
+                      ),
+                      Text('Start Date',
+                        style: TextStyle(
+                          color: Color.fromRGBO(28, 102, 74, 1.0),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(
+                        height: heightSize *0.01,
+                      ),
+                      SizedBox(
+                        height: heightSize *0.07,
+                        child: CupertinoTheme(
+                          child: CupertinoDatePicker(
+                            backgroundColor: Color.fromRGBO(255, 255, 255, 1.0),
+                            mode: CupertinoDatePickerMode.date,
+                            minimumDate: DateTime.now(),
+                            initialDateTime: DateTime.now(),
+                            maximumDate: DateTime(DateTime.now().year+2),
+                            onDateTimeChanged:(DateTime newDateTime) {
+                                              startDate = newDateTime;
+                                            },
+                          ),
+                        data: CupertinoThemeData(
+                          textTheme:CupertinoTextThemeData(
+                            dateTimePickerTextStyle:TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: Color.fromRGBO(28, 102, 74, 1.0),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               SizedBox(height: heightSize * 0.01),
-              Card(
+              Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Weekly',
+                    style: TextStyle(
+                      color: ataaGreen,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold
+                    ),
+                    ),
+                    Radio(
+                      focusColor: ataaGreen,
+                      groupValue: _periodType,
+                      value: 1,
+                      onChanged: (value){
+                        _radioChanged(value);
+                        }
+                    ),
+                    SizedBox( width: MediaQuery.of(context).size.width * 0.1,),
+                    Text('Monthly',
+                    style: TextStyle(
+                      color: ataaGreen,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold
+                    ),
+                    ),
+                     Radio(
+                       focusColor: ataaGreen,
+                      groupValue: _periodType,
+                      value: 2,
+                      onChanged: (value){
+                        _radioChanged(value);
+                        }
+                    )
+                  ],),
+              ),
+              SizedBox(height: heightSize*0.01,),
+              _periodType == 1?
+              Container(
+                child: WeekdaySelector(
+                  values: weekdays,
+                  onChanged:(value){
+                    print(value);
+                    _weekdayChanged(value);
+                  } ,
+                  firstDayOfWeek: 7,
+                  selectedFillColor: ataaGreen,
+                  selectedColor: ataaGold,
+                ),
+              ):
+              Container(
+                height: heightSize * 0.3,
+                child: monthCalendarro,
+              ),
+
+             /* Card(
                 color: ataaGreen,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25)),
@@ -145,9 +275,8 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
                     ),
                     trailing: Icon(Icons.timer, color: ataaGold),
                     onTap: _pickTime),
-              ),
+              ),*/
               // ),
-              SizedBox(height: heightSize * 0.02),
               Container(
                   height: heightSize * 0.05,
                   width: widthSize * 0.2,
@@ -229,5 +358,30 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
             padding: padding,
           );
         });
+  }
+  void _radioChanged(dynamic value){
+    setState(() {
+          _periodType = value;
+        });
+  }
+  void _weekdayChanged(int day){
+    setState(() {
+      if(day == 7)
+          weekdays[0] = !weekdays[0];
+      else
+      weekdays[day] = !weekdays[day];
+        });
+        print(weekdays.toString());
+  }
+}
+class CustomWeekdayLabelsRow extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Expanded(child: Text("Days of The Month", textAlign: TextAlign.center,
+        style: TextStyle(color: ataaGreen, fontSize: 18, fontWeight: FontWeight.bold))),
+      ],
+    );
   }
 }
