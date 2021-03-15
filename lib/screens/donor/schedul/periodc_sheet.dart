@@ -37,7 +37,7 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
   List<bool> weekdays;
   List<int> monthDays = [];
   Calendarro monthCalendarro;
-  DateTime date;
+  DateTime date = DateTime.now();
   @override
   void initState() {
     super.initState();
