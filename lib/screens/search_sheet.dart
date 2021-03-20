@@ -65,7 +65,6 @@ class _SearchSheetState extends State<SearchSheet> {
                     charities = await database.searchForCharity(val);
                     setState(
                         () {}); //IDK why is has to be here but it's the only way I could find to make it work
-                    print(charities.first.data());
                   });
                 } else {
                   setState(() {

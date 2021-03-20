@@ -261,7 +261,6 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
                       child: WeekdaySelector(
                         values: weekdays,
                         onChanged: (value) {
-                          print(value);
                           _weekdayChanged(value);
                         },
                         firstDayOfWeek: 7,
@@ -329,7 +328,6 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
       setState(() {
         _startDate = date[0];
         _endDate = date[1];
-        print(date);
       });
   }
 
@@ -386,7 +384,6 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
       else
         weekdays[day] = !weekdays[day];
     });
-    print(weekdays.toString());
   }
 }
 

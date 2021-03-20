@@ -44,7 +44,6 @@ class Database {
           addressLine: value.docs.first.data()['adreeLine'],
           location: value.docs.first.data()['geoPoint']);
       print('user Data fetched successfully !');
-      print(user);
       return user;
     }).catchError((error) => print("Failed to fetch user data: $error"));
   }
@@ -57,9 +56,6 @@ class Database {
         .endAt([name + '\uf8ff'])
         .get()
         .then((snapshot) {
-          for (var i = 0; i < snapshot.docs.length; i++) {
-            print(snapshot.docs[i].data()['name']);
-          }
           return snapshot.docs;
         })
         .catchError((error) => print("Failed to search for charities: $error"));
@@ -83,7 +79,6 @@ class Database {
   }
 
   Future<bool> getPrivacy(AppUser user) async {
-    print('getting privacy');
     final doc = await firestore
         .collection('users')
         .where('uid', isEqualTo: user.uid)
@@ -91,12 +86,9 @@ class Database {
         .then((value) {
       return value.docs[0].data();
     });
-    print(doc['private']);
     if (doc['private'] == true) {
-      print('returning true');
       return true;
     } else {
-      print('returning false');
       return false;
     }
   }
@@ -121,6 +113,8 @@ class Database {
   }
 
   Future addDonation(Donation donation) async {
+    String status =
+        donation.timeStamp == donation.notifyAt ? 'active' : 'scheduled';
     GeoPoint geopoint =
         GeoPoint(donation.location.latitude, donation.location.longitude);
     final url = await uploadImage(donation.image);
@@ -139,7 +133,8 @@ class Database {
       'anonymous': donation.anonymous,
       'location': geopoint,
       'notifyAt': donation.notifyAt,
-      'timeStamp': donation.timeStamp
+      'timeStamp': donation.timeStamp,
+      'status': status
     }).then((value) {
       print('donation added');
       return;
@@ -224,7 +219,7 @@ class Database {
       'days': stringDays
     });
 
-    print('done');
+    print('donation added');
   }
 
   String _getDays(List<bool> days) {
@@ -252,7 +247,7 @@ class Database {
       'days': stringDays
     });
 
-    print('done');
+    print('donation added');
   }
 
   String _getMonthDays(List<int> days) {
@@ -262,5 +257,32 @@ class Database {
     });
 
     return stringDays;
+  }
+
+  Future<List<Donation>> fetchDonations(AppUser user) async {
+    final ref = await firestore
+        .collection('users')
+        .where('uid', isEqualTo: user.uid)
+        .get()
+        .then((value) {
+      return value.docs[0].reference;
+    });
+    List<Donation> donations = [];
+    await firestore
+        .collection('donations')
+        .where('user', isEqualTo: ref)
+        .get()
+        .then((snapshot) {
+      snapshot.docs.forEach((doc) {
+        donations.add(new Donation(
+            type: doc.data()['type'],
+            timeStamp:
+                DateTime.parse(doc.data()['timeStamp'].toDate().toString()),
+            status: doc.data()['status'],
+            did: doc.id,
+            imageURL: doc.data()['image']));
+      });
+    });
+    return donations;
   }
 }

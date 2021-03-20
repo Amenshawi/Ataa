@@ -20,7 +20,8 @@ class DonationForm extends StatefulWidget {
   final bool isFood;
   DateTime notifyAt;
   String periodString;
-  DonationForm(this.type, this.user, this.isFood, {this.notifyAt, this.periodString});
+  DonationForm(this.type, this.user, this.isFood,
+      {this.notifyAt, this.periodString});
   @override
   _DonationFormState createState() => _DonationFormState(type, user, notifyAt);
 }
@@ -366,7 +367,6 @@ class _DonationFormState extends State<DonationForm> {
 
   changeLocation(LatLng _location) {
     setState(() {
-      print('hi');
       this.location = _location;
     });
   }

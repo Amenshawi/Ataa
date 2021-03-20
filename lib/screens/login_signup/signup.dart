@@ -320,13 +320,11 @@ class _SignupState extends State<SignupPage> {
           'You Have Been Successfully Registered, Welcome to Ataa',
           'Continue',
           true);
-      print('test');
       Future.delayed(const Duration(seconds: 4), () {
         Navigator.pop(context);
         Navigator.pop(context);
       });
     } on FirebaseAuthException catch (e) {
-      print('by');
       _dialog(context, 'Error !', Color.fromRGBO(28, 102, 74, 1.0),
           'Sorry an error occured\n Error: ' + e.message, 'Try Again', false);
     }
@@ -452,7 +450,6 @@ class _SignupState extends State<SignupPage> {
   }
 
   calculateAge(DateTime birthDate) {
-    print("in the caclulate age method");
     DateTime currentDate = DateTime.now();
     int age = currentDate.year - birthDate.year;
     int month1 = currentDate.month;

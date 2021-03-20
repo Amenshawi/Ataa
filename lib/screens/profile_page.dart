@@ -276,21 +276,17 @@ class _ProfileState extends State<Profile> {
                   visiblePassword = false;
                   changePassword(context);
                 } else if (index == 0) {
-                  print('email');
                   if (!blurBackground[index] || controllers[index].text == '') {
-                    print('first if');
                     setState(() {
                       readWriteToggole[index] = !readWriteToggole[index];
                       blurBackground[index] = !blurBackground[index];
                       controllers[index].clear();
                     });
                   } else {
-                    print('first else');
                     if (controllers[index].text == user.email) {
                       print('The email provided is the same as the old email');
                     } else {
                       try {
-                        print(controllers[0].text);
                         user = _auth.changeEmail(controllers[0].text, user);
                       } catch (error) {
                         print(error.toString);
@@ -448,7 +444,6 @@ class _ProfileState extends State<Profile> {
                         print(
                             'correct password: ' + correctPassword.toString());
                         if (correctPassword) {
-                          print('before setState');
                           setState(() {
                             visiblePassword = !visiblePassword;
                           });
@@ -699,7 +694,6 @@ class _ProfileState extends State<Profile> {
                               user.shoeSize = null;
                               error = false;
                             }
-                            print(user.shoeSize);
                             if (!error) {
                               Navigator.pop(context);
                               await database.updateClothesSizes(user.shirtSize,
