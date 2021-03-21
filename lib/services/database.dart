@@ -114,7 +114,9 @@ class Database {
 
   Future addDonation(Donation donation) async {
     String status =
-        donation.timeStamp == donation.notifyAt ? 'active' : 'scheduled';
+        donation.timeStamp
+        .add(Duration(seconds: 1))
+        .isAfter(donation.notifyAt)? 'active' : 'scheduled';
     GeoPoint geopoint =
         GeoPoint(donation.location.latitude, donation.location.longitude);
     final url = await uploadImage(donation.image);
@@ -190,6 +192,7 @@ class Database {
         .get()
         .then((snapshot) {
       snapshot.docs.forEach((doc) {
+        if(doc.data()['status'] != 'terminated')
         donations.add(new PeriodicDonation(
             doc.data()['type'],
             DateTime.parse(doc.data()['date'].toDate().toString()),
@@ -200,11 +203,23 @@ class Database {
     return donations;
   }
 
-  void pauseDonation(String pdid) async {
+  void pausePeriodicDonation(String pdid) async {
     await firestore
         .collection('periodic_donations')
         .doc(pdid)
         .update({'status': 'paused'});
+  }
+  void terminatePeriodicDonation(String pdid) async {
+    await firestore
+        .collection('periodic_donations')
+        .doc(pdid)
+        .update({'status': 'terminated'});
+  }
+  void resumePeriodicDonation(String pdid) async {
+    await firestore
+        .collection('periodic_donations')
+        .doc(pdid)
+        .update({'status': 'active'});
   }
 
   void addWeekly(
@@ -284,5 +299,11 @@ class Database {
       });
     });
     return donations;
+  }
+  void cancelDonation(String ddid) async {
+    await firestore
+        .collection('donations')
+        .doc(ddid)
+        .update({'status': 'canceled'});
   }
 }

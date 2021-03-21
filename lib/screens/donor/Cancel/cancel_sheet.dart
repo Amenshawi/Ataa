@@ -132,10 +132,14 @@ class _CancelSheetState extends State<CancelSheet> {
                                           caption: 'Cancel',
                                           color: Colors.red,
                                           icon: Icons.delete_forever_rounded,
-                                          closeOnTap: false,
+                                          closeOnTap: true,
                                           onTap: () {
+                                            database.cancelDonation(currentList[index].did);
+                                            setState(() {
+                                              currentList.remove(currentList[index]);
+                                            });
                                             Toast.show(
-                                                'Cancel on $index', context,
+                                                'Donation Canceled Successfully', context,
                                                 duration: Toast.LENGTH_LONG,
                                                 gravity: Toast.BOTTOM);
                                           },
@@ -200,6 +204,7 @@ class _CancelSheetState extends State<CancelSheet> {
                                             //   }
                                             // });
                                             print('Hi');
+                                            
                                           },
                                         ),
                                       )),
