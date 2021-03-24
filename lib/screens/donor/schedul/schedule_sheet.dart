@@ -3,7 +3,6 @@ import 'package:Ataa/screens/donor/donation_form.dart';
 import 'package:Ataa/models/app_user.dart';
 import 'package:Ataa/services/database.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGreenField = Color.fromRGBO(28, 102, 74, .5);
@@ -11,21 +10,20 @@ final Color ataaGold = Color.fromRGBO(244, 234, 146, .8);
 final Color ataaWhite = Color.fromRGBO(255, 255, 255, 0.75);
 
 class ScheduleSheet extends StatefulWidget {
-  final String type;
-  ScheduleSheet(this.type);
+  //final String type;
+  ScheduleSheet();
   @override
-  _ScheduleSheetState createState() => _ScheduleSheetState(type);
+  _ScheduleSheetState createState() => _ScheduleSheetState();
 }
 
 class _ScheduleSheetState extends State<ScheduleSheet> {
   final database = Database();
   double heightSize, widthSize;
-  final String type;
   DateTime _pickedDate;
   TimeOfDay _timeOfDay;
   String period = '';
-  String placeHolder = 'Food';
-  _ScheduleSheetState(this.type);
+  String type = 'Food';
+  _ScheduleSheetState();
 
   @override
   void initState() {
@@ -74,7 +72,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                       ),
                       Expanded(
                         child: DropdownButton(
-                          value: placeHolder,
+                          value: type,
                           icon: Icon(
                             Icons.arrow_downward,
                             color: ataaGreen,
@@ -87,20 +85,20 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                           // underline: Container(height: 2, color: ataaWhite),
                           onChanged: (String newValue) {
                             setState(() {
-                              placeHolder = newValue;
+                              type = newValue;
                             });
-                            if (newValue == 'Food')
-                              showSheet(context, newValue,
-                                  DonationForm(newValue, true), true);
-                            else
-                              showSheet(context, newValue,
-                                  DonationForm(newValue, false), false);
+                            // if (newValue == 'Food')
+                            //   showSheet(context, newValue,
+                            //       DonationForm(newValue, user, true), true);
+                            // else
+                            //   showSheet(context, newValue,
+                            //       DonationForm(newValue, user, false), false);
                           },
                           items: <String>[
                             'Food',
                             'Clothes',
                             'Electronics',
-                            'Devices'
+                            'Furniture'
                           ].map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
@@ -155,11 +153,18 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                     backgroundColor: ataaGreen,
                     child: Icon(Icons.done, color: ataaGold, size: 30),
                     onPressed: () {
-                      print('Hi there!');
-                      // database.addDonation(user, type, _image,
-                      //     descController.text, anonymous, location);
+                      DateTime date = new DateTime(
+                          _pickedDate.year,
+                          _pickedDate.month,
+                          _pickedDate.day,
+                          _timeOfDay.hour,
+                          _timeOfDay.minute);
                       Navigator.pop(context);
-                      // call db.addDonation here
+                      showSheet(
+                          context,
+                          'Schedule A Donation',
+                          DonationForm(type, false, notifyAt: date),
+                          false);
                     },
                   ))
             ],

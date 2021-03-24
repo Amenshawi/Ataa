@@ -9,18 +9,26 @@ class Donation {
   final String type;
   final AppUser user;
   final File image;
+  final String imageURL;
   final String desc;
   final bool anonymous;
   final LatLng location;
-  final DateTime timeStamp;
-  final int notifyAfter;
+  DateTime timeStamp;
+  final DateTime notifyAt;
+  String status;
+  final String did; // donation  id
   Donation(
       {this.type,
       this.user,
       this.image,
+      this.imageURL,
       this.desc,
       this.anonymous,
       this.location,
+      this.notifyAt,
       this.timeStamp,
-      this.notifyAfter});
+      this.status,
+      this.did}) {
+    if (this.timeStamp == null) this.timeStamp = DateTime.now();
+  }
 }

@@ -1,6 +1,8 @@
 import 'package:Ataa/custom/sheet.dart';
 import 'package:Ataa/custom/create_buttons.dart';
+import 'package:Ataa/screens/donor/Cancel/cancel_sheet.dart';
 import 'package:Ataa/screens/donor/donation_form.dart';
+import 'package:Ataa/screens/donor/donHistory.dart';
 import 'package:Ataa/screens/donor/schedul/periodc_sheet.dart';
 import 'package:Ataa/models/app_user.dart';
 import 'package:flutter/material.dart';
@@ -76,13 +78,38 @@ class _DonorPageState extends State<DonorPage> {
                           ),
                           secondChild: subButtons()),
                     ),
-                    CreateButtons(
-                      height: hieghtSize * 0.15,
-                      width: widthSize * 0.4,
-                      icon: Icons.delete_forever,
-                      cardName: 'Cancel A Donation',
-                      space: false,
-                      spike: false,
+                    GestureDetector(
+                      child: CreateButtons(
+                        height: hieghtSize * 0.15,
+                        width: widthSize * 0.4,
+                        icon: Icons.delete_forever,
+                        cardName: 'Cancel A Donation',
+                        space: false,
+                        spike: false,
+                      ),
+                      onTap: () {
+                        showSheet(context, 'Cancel',
+                            CancelSheet('Cancel'), false);
+                        setState(() {
+                          if (cardOpen) {
+                            if (!cardKey.currentState.isFront) {
+                              cardKey.currentState.toggleCard();
+                              cardOpen = !cardOpen;
+                              _subButtons = !_subButtons;
+                            } else
+                              cardOpen = !cardOpen;
+                          } else {
+                            if (cardOpen) {
+                              cardKey.currentState.toggleCard();
+                              cardOpen = !cardOpen;
+                              _subButtons = !_subButtons;
+                            } else {
+                              cardKey.currentState.toggleCard();
+                              _subButtons = !_subButtons;
+                            }
+                          }
+                        });
+                      },
                     )
                   ],
                 ),
@@ -90,15 +117,21 @@ class _DonorPageState extends State<DonorPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CreateButtons(
-                      height: hieghtSize * 0.15,
-                      width: widthSize * 0.4,
-                      icon: Icons.menu_book_rounded,
-                      cardName: 'Donation History',
-                      space: false,
-                      spike: false,
-                      // context: context,
-                      // sheetName: 'Schedul',
+                    GestureDetector(
+                      onTap: () {
+                        showSheet(context, 'History',
+                            DonHistorySheet('History'), false);
+                      },
+                      child: CreateButtons(
+                        height: hieghtSize * 0.15,
+                        width: widthSize * 0.4,
+                        icon: Icons.menu_book_rounded,
+                        cardName: 'Donation History',
+                        space: false,
+                        spike: false,
+                        // context: context,
+                        // sheetName: 'Schedul',
+                      ),
                     ),
                     FlipCard(
                         key: cardKey,
@@ -172,8 +205,8 @@ class _DonorPageState extends State<DonorPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            donationButton('Schedule', Icons.schedule,
-                ScheduleSheet('Schedule'), true, 1),
+            donationButton(
+                'Schedule', Icons.schedule, ScheduleSheet(), true, 1),
             donationButton('Periodic Donations', Icons.all_inclusive,
                 PeriodcSheet('Periodic donations'), false, 1),
             donationButton('Edit Periodic', Icons.edit,
@@ -233,10 +266,23 @@ class _DonorPageState extends State<DonorPage> {
       onTap: () {
         showSheet(context, name, content, food);
         setState(() {
-          if (index == 0)
-            cardOpen = !cardOpen;
-          else
-            cardKey.currentState.toggleCard();
+          if (index == 0) {
+            if (!cardKey.currentState.isFront) {
+              cardKey.currentState.toggleCard();
+              cardOpen = !cardOpen;
+              _subButtons = !_subButtons;
+            } else
+              cardOpen = !cardOpen;
+          } else {
+            if (cardOpen) {
+              cardKey.currentState.toggleCard();
+              cardOpen = !cardOpen;
+              _subButtons = !_subButtons;
+            } else {
+              cardKey.currentState.toggleCard();
+              _subButtons = !_subButtons;
+            }
+          }
         });
       },
     );

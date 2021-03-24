@@ -6,9 +6,8 @@ import 'package:Ataa/screens/location_page.dart';
 import 'package:Ataa/models/donation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_controller/google_maps_controller.dart';
-
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:image_picker/image_picker.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGreenField = Color.fromRGBO(28, 102, 74, .5);
@@ -18,9 +17,12 @@ final Color ataaWhite = Color.fromRGBO(255, 255, 255, 0.75);
 class DonationForm extends StatefulWidget {
   final String type;
   final bool isFood;
-  DonationForm(this.type, this.isFood);
+  DateTime notifyAt;
+  String periodString;
+  DonationForm(this.type, this.isFood,
+      {this.notifyAt, this.periodString});
   @override
-  _DonationFormState createState() => _DonationFormState(type);
+  _DonationFormState createState() => _DonationFormState(type, notifyAt);
 }
 
 class _DonationFormState extends State<DonationForm> {
@@ -33,8 +35,9 @@ class _DonationFormState extends State<DonationForm> {
   bool imagePicked = false;
   LatLng location;
   final String type;
+  DateTime notifyAt;
   var time = 0;
-  _DonationFormState(this.type);
+  _DonationFormState(this.type, this.notifyAt);
 
   @override
   Widget build(BuildContext context) {
@@ -305,6 +308,10 @@ class _DonationFormState extends State<DonationForm> {
                     child: Icon(Icons.done, color: ataaGold, size: 30),
                     onPressed: () {
                       _image = File(_image.path);
+                      if (notifyAt == null) {
+                        notifyAt =
+                            DateTime.now().add(new Duration(minutes: time));
+                      }
                       final donation = Donation(
                           user: user,
                           type: type,
@@ -312,7 +319,7 @@ class _DonationFormState extends State<DonationForm> {
                           desc: descController.text,
                           anonymous: anonymous,
                           location: location,
-                          notifyAfter: time);
+                          notifyAt: notifyAt);
                       database.addDonation(donation);
                       Navigator.pop(context);
                     }),
@@ -359,7 +366,6 @@ class _DonationFormState extends State<DonationForm> {
 
   changeLocation(LatLng _location) {
     setState(() {
-      print('hi');
       this.location = _location;
     });
   }
