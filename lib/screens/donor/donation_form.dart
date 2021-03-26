@@ -14,14 +14,13 @@ final Color ataaGreenField = Color.fromRGBO(28, 102, 74, .5);
 final Color ataaGold = Color.fromRGBO(244, 234, 146, .8);
 final Color ataaWhite = Color.fromRGBO(255, 255, 255, 0.75);
 
+// ignore: must_be_immutable
 class DonationForm extends StatefulWidget {
   final String type;
   final AppUser user;
   final bool isFood;
   DateTime notifyAt;
-  String periodString;
-  DonationForm(this.type, this.user, this.isFood,
-      {this.notifyAt, this.periodString});
+  DonationForm(this.type, this.user, this.isFood, {this.notifyAt});
   @override
   _DonationFormState createState() => _DonationFormState(type, user, notifyAt);
 }
@@ -367,6 +366,7 @@ class _DonationFormState extends State<DonationForm> {
 
   changeLocation(LatLng _location) {
     setState(() {
+      print('hi');
       this.location = _location;
     });
   }
