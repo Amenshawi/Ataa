@@ -19,7 +19,6 @@ class CancelReq extends StatefulWidget {
 }
 
 class _CancelReqState extends State<CancelReq> {
-  final database = Database();
   double heightSize, widthSize;
   final String type;
   final AppUser user;
@@ -34,7 +33,7 @@ class _CancelReqState extends State<CancelReq> {
     Size size = MediaQuery.of(context).size;
     heightSize = size.height;
     widthSize = size.width;
-    requests = database.fetchDonationRequests(Provider.of<AppUser>(context));
+    requests = Database.fetchDonationRequests(Provider.of<AppUser>(context));
     return Container(
       width: widthSize,
       height: heightSize * 0.65,
@@ -74,7 +73,7 @@ class _CancelReqState extends State<CancelReq> {
                                     icon: Icons.delete_forever_rounded,
                                     closeOnTap: true,
                                     onTap: () {
-                                      database.cancelDonationRequest(
+                                      Database.cancelDonationRequest(
                                           requests[index].rid);
                                       setState(() {
                                         requests.remove(requests[index]);

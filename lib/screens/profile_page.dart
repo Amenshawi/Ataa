@@ -18,7 +18,6 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-
   TextEditingController shoeSizeController = TextEditingController();
 
   double hieghtSize, widthSize;
@@ -42,7 +41,6 @@ class _ProfileState extends State<Profile> {
     TextEditingController(),
     TextEditingController()
   ];
-  Database database = Database();
   final _auth = AuthService();
 
   LatLng currentPosition;
@@ -54,26 +52,21 @@ class _ProfileState extends State<Profile> {
     // TODO: implement initState
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<AppUser>(context);
-    if(user != null){
-    setState(() {
-      database = Database(uid: user.uid);
-        });
-    if (user.location == null) readWriteToggole[2] = false;
-    if (user.pantSize == null &&
-        user.shirtSize == null &&
-        user.shoeSize == null) readWriteToggole[3] = false;
-  }
+    if (user != null) {
+      if (user.location == null) readWriteToggole[2] = false;
+      if (user.pantSize == null &&
+          user.shirtSize == null &&
+          user.shoeSize == null) readWriteToggole[3] = false;
+    }
     Size size = MediaQuery.of(context).size;
     hieghtSize = size.height;
     widthSize = size.width;
-    return Scaffold(
-        body:  SafeArea(child: profileContainer()
-        )
-      );
-    }
+    return Scaffold(body: SafeArea(child: profileContainer()));
+  }
 
   Widget profileContainer() {
     final user = Provider.of<AppUser>(context);
@@ -167,7 +160,7 @@ class _ProfileState extends State<Profile> {
                             onChanged: (value) {
                               setState(() {
                                 isSwitched = value;
-                                database.changePrivacy(user, value);
+                                Database.changePrivacy(user, value);
                               });
                             },
                             activeTrackColor: ataaGreen,
@@ -179,8 +172,7 @@ class _ProfileState extends State<Profile> {
               ]),
             )),
           ]),
-        ])
-        );
+        ]));
   }
 
   Widget cardBlur(
@@ -217,7 +209,7 @@ class _ProfileState extends State<Profile> {
       IconData pressedCornerIcon,
       bool password,
       String pressedText) {
-        final user = Provider.of<AppUser>(context);
+    final user = Provider.of<AppUser>(context);
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       elevation: 50,
@@ -271,12 +263,12 @@ class _ProfileState extends State<Profile> {
                   changePassword(context, user);
                 } else if (index == 0) {
                   try {
-                        visiblePassword = false;
-                        changeEmail(context, user);
-                      } catch (error) {
-                        print(error.toString);
-                        //show error message
-                      }
+                    visiblePassword = false;
+                    changeEmail(context, user);
+                  } catch (error) {
+                    print(error.toString);
+                    //show error message
+                  }
                 } else if ((index != 3 && index != 2) &&
                     (!blurBackground[index] || controllers[index].text == '')) {
                   controllers[index].clear();
@@ -290,7 +282,8 @@ class _ProfileState extends State<Profile> {
                       MaterialPageRoute(
                           builder: (context) => LocationPage(user, null)));
                 } else if (index == 3) {
-                  clothingCard(context, user.shoeSize, user.shirtSize, user.pantSize, user);
+                  clothingCard(context, user.shoeSize, user.shirtSize,
+                      user.pantSize, user);
                 }
               },
             ),
@@ -418,8 +411,8 @@ class _ProfileState extends State<Profile> {
                           //error message
                         }
                       } else {
-                        var correctPassword = await _auth
-                            .confirmPassword(oldPasswordController.text, user);
+                        var correctPassword = await _auth.confirmPassword(
+                            oldPasswordController.text, user);
                         print(
                             'correct password: ' + correctPassword.toString());
                         if (correctPassword) {
@@ -438,7 +431,7 @@ class _ProfileState extends State<Profile> {
     });
   }
 
-  changePassword(context , AppUser user) {
+  changePassword(context, AppUser user) {
     showModalBottomSheet(
         context: context,
         shape: RoundedRectangleBorder(
@@ -452,12 +445,12 @@ class _ProfileState extends State<Profile> {
                   bottom: MediaQuery.of(context).viewInsets.bottom * 0.5),
               child: SingleChildScrollView(child: passwordSheet(user)));
         });
-        oldPasswordController = TextEditingController();
+    oldPasswordController = TextEditingController();
   }
 
-  clothingCard(context,int shoeSize, String shirtSize, String pantSize, AppUser user) {
-    if(shoeSize != null)
-    shoeSizeController.text = shoeSize.toString();
+  clothingCard(
+      context, int shoeSize, String shirtSize, String pantSize, AppUser user) {
+    if (shoeSize != null) shoeSizeController.text = shoeSize.toString();
     showModalBottomSheet(
         context: context,
         shape: RoundedRectangleBorder(
@@ -470,17 +463,12 @@ class _ProfileState extends State<Profile> {
               padding: EdgeInsets.only(
                   bottom: MediaQuery.of(context).viewInsets.bottom * 0.5),
               child: SingleChildScrollView(
-                child: clothingSheet(
-                  shoeSize, 
-                shirtSize,
-                pantSize,
-                user)
-                )
-              );
+                  child: clothingSheet(shoeSize, shirtSize, pantSize, user)));
         });
   }
 
-  Widget clothingSheet(int shoeSize, String shirtSize, String pantSize, AppUser user) {
+  Widget clothingSheet(
+      int shoeSize, String shirtSize, String pantSize, AppUser user) {
     bool error = false;
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
@@ -680,8 +668,8 @@ class _ProfileState extends State<Profile> {
                             }
                             if (!error) {
                               Navigator.pop(context);
-                              await database.updateClothesSizes(shirtSize,
-                                  pantSize, temp , user);
+                              await Database.updateClothesSizes(
+                                  shirtSize, pantSize, temp, user);
                             } else
                               setState(() {
                                 error = true;
@@ -695,6 +683,7 @@ class _ProfileState extends State<Profile> {
           ));
     });
   }
+
   Widget emailSheet(AppUser user) {
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
@@ -778,8 +767,7 @@ class _ProfileState extends State<Profile> {
                             print('Email changed !');
                             Navigator.pop(context);
                           } else {
-                            print(
-                                'Email inavild or error with the connection');
+                            print('Email inavild or error with the connection');
                             //error message
                           }
                         } else {
@@ -787,8 +775,8 @@ class _ProfileState extends State<Profile> {
                           //error message
                         }
                       } else {
-                        var correctPassword = await _auth
-                            .confirmPassword(oldPasswordController.text, user);
+                        var correctPassword = await _auth.confirmPassword(
+                            oldPasswordController.text, user);
                         print(
                             'correct password: ' + correctPassword.toString());
                         if (correctPassword) {
@@ -807,7 +795,7 @@ class _ProfileState extends State<Profile> {
     });
   }
 
-  changeEmail(context , AppUser user) {
+  changeEmail(context, AppUser user) {
     showModalBottomSheet(
         context: context,
         shape: RoundedRectangleBorder(
@@ -821,6 +809,6 @@ class _ProfileState extends State<Profile> {
                   bottom: MediaQuery.of(context).viewInsets.bottom * 0.5),
               child: SingleChildScrollView(child: emailSheet(user)));
         });
-        oldPasswordController = TextEditingController();
+    oldPasswordController = TextEditingController();
   }
 }

@@ -7,7 +7,6 @@ class SearchSheet extends StatefulWidget {
 }
 
 class _SearchSheetState extends State<SearchSheet> {
-  final database = Database();
   var charities;
   @override
   Widget build(BuildContext context) {
@@ -62,7 +61,7 @@ class _SearchSheetState extends State<SearchSheet> {
               onChanged: (val) {
                 if (val != '') {
                   setState(() async {
-                    charities = await database.searchForCharity(val);
+                    charities = await Database.searchForCharity(val);
                     setState(
                         () {}); //IDK why is has to be here but it's the only way I could find to make it work
                     print(charities.first.data());

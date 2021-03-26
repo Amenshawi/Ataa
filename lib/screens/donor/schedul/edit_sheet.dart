@@ -18,7 +18,6 @@ class EditSheet extends StatefulWidget {
 }
 
 class _EditSheetState extends State<EditSheet> {
-  final database = Database();
   double heightSize, widthSize;
   final String type;
   var donations;
@@ -30,7 +29,7 @@ class _EditSheetState extends State<EditSheet> {
     Size size = MediaQuery.of(context).size;
     heightSize = size.height;
     widthSize = size.width;
-    donations = database.fetchPeriodcDonations(user).whenComplete(() {
+    donations = Database.fetchPeriodcDonations(user).whenComplete(() {
       setState(() {});
     });
     return Container(
@@ -68,42 +67,52 @@ class _EditSheetState extends State<EditSheet> {
                                 actionPane: SlidableDrawerActionPane(),
                                 secondaryActions: [
                                   IconSlideAction(
-                                    caption: donations[index].status == 'active'? 'Pause': 'Resume',
-                                    color: donations[index].status == 'active'? ataaWhite : Colors.lightGreen,
-                                    icon: donations[index].status == 'active'? Icons.pause: Icons.play_arrow,
-                                    closeOnTap: true,
-                                    onTap: () {
-                                      if(donations[index].status == 'active'){
-                                      database
-                                          .pausePeriodicDonation(donations[index].pdid);
-                                      Toast.show(
-                                        'Paused Successfully',
-                                        context,
-                                        duration: Toast.LENGTH_LONG,
-                                        gravity: Toast.BOTTOM,
-                                      );
-                                      }else{
-                                        database.resumePeriodicDonation(donations[index].pdid);
-                                        Toast.show(
-                                        'Resumed Successfully',
-                                        context,
-                                        duration: Toast.LENGTH_LONG,
-                                        gravity: Toast.BOTTOM,
-                                      );
-                                      }
-                                    }
-                                  ),
+                                      caption:
+                                          donations[index].status == 'active'
+                                              ? 'Pause'
+                                              : 'Resume',
+                                      color: donations[index].status == 'active'
+                                          ? ataaWhite
+                                          : Colors.lightGreen,
+                                      icon: donations[index].status == 'active'
+                                          ? Icons.pause
+                                          : Icons.play_arrow,
+                                      closeOnTap: true,
+                                      onTap: () {
+                                        if (donations[index].status ==
+                                            'active') {
+                                          Database.pausePeriodicDonation(
+                                              donations[index].pdid);
+                                          Toast.show(
+                                            'Paused Successfully',
+                                            context,
+                                            duration: Toast.LENGTH_LONG,
+                                            gravity: Toast.BOTTOM,
+                                          );
+                                        } else {
+                                          Database.resumePeriodicDonation(
+                                              donations[index].pdid);
+                                          Toast.show(
+                                            'Resumed Successfully',
+                                            context,
+                                            duration: Toast.LENGTH_LONG,
+                                            gravity: Toast.BOTTOM,
+                                          );
+                                        }
+                                      }),
                                   IconSlideAction(
                                     caption: 'Terminate',
                                     color: Colors.red,
                                     icon: Icons.delete_forever_rounded,
                                     closeOnTap: true,
                                     onTap: () {
-                                      database.terminatePeriodicDonation(donations[index].pdid);
+                                      Database.terminatePeriodicDonation(
+                                          donations[index].pdid);
                                       setState(() {
-                                                donations.remove(donations[index]);
-                                                                            });
-                                      Toast.show('Terminated Successfully', context,
+                                        donations.remove(donations[index]);
+                                      });
+                                      Toast.show(
+                                          'Terminated Successfully', context,
                                           duration: Toast.LENGTH_SHORT,
                                           gravity: Toast.BOTTOM);
                                     },

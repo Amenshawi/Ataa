@@ -2,19 +2,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:Ataa/models/app_user.dart';
 import 'package:Ataa/services/database.dart';
 
-
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final fUser = FirebaseAuth.instance.currentUser;
-  final database = Database();
   // create user obj based on firebase user
   AppUser _userFromFirebaseUser(User user) {
     authSubscribe(user);
     return user != null ? AppUser(uid: user.uid, email: user.email) : null;
   }
-  Stream<User> get user{
+
+  Stream<User> get user {
     return _auth.authStateChanges();
   }
+
   authSubscribe(user) {
     FirebaseAuth.instance.authStateChanges().listen((user) {
       if (user == null) {
@@ -33,7 +33,7 @@ class AuthService {
       UserCredential result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       authSubscribe(result.user);
-      final user = await database.fetchUserData(result.user);
+      final user = await Database.fetchUserData(result.user);
       return user;
     } catch (error) {
       print(error.toString());
@@ -48,7 +48,7 @@ class AuthService {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User user = result.user;
-      await database.addUser(user.uid, email, fname, lname, bday);
+      await Database.addUser(user.uid, email, fname, lname, bday);
       return _userFromFirebaseUser(user);
     } catch (error) {
       print(error.toString());
@@ -70,7 +70,7 @@ class AuthService {
     print('email method reached');
     try {
       await fUser.updateEmail(newEmail);
-      await database.updateEmail(newEmail, user);
+      await Database.updateEmail(newEmail, user);
       user.email = newEmail;
       return true;
     } catch (error) {

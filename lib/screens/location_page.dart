@@ -23,7 +23,6 @@ class LocationPage extends StatefulWidget {
 
 class _LocationPageState extends State<LocationPage> {
   AppUser user;
-  final database = Database();
   var changeLocation;
   String addressLine = '';
   LatLng currentPosition = LatLng(37.4219983, -122.084);
@@ -140,8 +139,7 @@ class _LocationPageState extends State<LocationPage> {
                           child: GestureDetector(
                             onTap: () {
                               if (changeLocation == null) {
-                                database
-                                    .addLocation(
+                                Database.addLocation(
                                         addressLine, currentPosition, user)
                                     .whenComplete(() {
                                   Navigator.pop(context);

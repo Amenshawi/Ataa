@@ -25,7 +25,6 @@ class DonationForm extends StatefulWidget {
 }
 
 class _DonationFormState extends State<DonationForm> {
-  final database = Database();
   var _image;
   double heightSize, widthSize;
   bool isSwitched = false;
@@ -320,7 +319,7 @@ class _DonationFormState extends State<DonationForm> {
                           location: location,
                           status: 'Active',
                           notifyAt: notifyAt);
-                      database.addDonation(donation);
+                      Database.addDonation(donation);
                       Navigator.pop(context);
                     }),
               )

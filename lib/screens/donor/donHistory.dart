@@ -15,7 +15,6 @@ class DonHistorySheet extends StatefulWidget {
 class _DonHistorySheetState extends State<DonHistorySheet> {
   double hieghtSize, widthSize;
   final String type;
-  final database = Database();
   var donations;
   _DonHistorySheetState(this.type);
   @override
@@ -26,7 +25,7 @@ class _DonHistorySheetState extends State<DonHistorySheet> {
 
   @override
   Widget build(BuildContext context) {
-    donations = database.fetchDonations(Provider.of<AppUser>(context));
+    donations = Database.fetchDonations(Provider.of<AppUser>(context));
     Size size = MediaQuery.of(context).size;
     hieghtSize = size.height;
     widthSize = size.width;
@@ -61,8 +60,7 @@ class _DonHistorySheetState extends State<DonHistorySheet> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Image.network(
-                                    donations[index]
-                                        .imageURL, // the picture here is what the user uploaded (from the database)
+                                    donations[index].imageURL,
                                     fit: BoxFit.contain,
                                   ),
                                   SizedBox(height: hieghtSize * 0.04),

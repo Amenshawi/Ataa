@@ -19,7 +19,6 @@ class CancelSheet extends StatefulWidget {
 }
 
 class _CancelSheetState extends State<CancelSheet> {
-  final database = Database();
   double heightSize, widthSize;
   final String type;
   var donations = [];
@@ -58,7 +57,7 @@ class _CancelSheetState extends State<CancelSheet> {
 
   @override
   Widget build(BuildContext context) {
-    allDonations = database.fetchDonations(Provider.of<AppUser>(context));
+    allDonations = Database.fetchDonations(Provider.of<AppUser>(context));
     Size size = MediaQuery.of(context).size;
     heightSize = size.height;
     widthSize = size.width;
@@ -133,12 +132,15 @@ class _CancelSheetState extends State<CancelSheet> {
                                           icon: Icons.delete_forever_rounded,
                                           closeOnTap: true,
                                           onTap: () {
-                                            database.cancelDonation(currentList[index].did);
+                                            Database.cancelDonation(
+                                                currentList[index].did);
                                             setState(() {
-                                              currentList.remove(currentList[index]);
+                                              currentList
+                                                  .remove(currentList[index]);
                                             });
                                             Toast.show(
-                                                'Donation Canceled Successfully', context,
+                                                'Donation Canceled Successfully',
+                                                context,
                                                 duration: Toast.LENGTH_LONG,
                                                 gravity: Toast.BOTTOM);
                                           },
@@ -203,7 +205,6 @@ class _CancelSheetState extends State<CancelSheet> {
                                             //   }
                                             // });
                                             print('Hi');
-                                            
                                           },
                                         ),
                                       )),

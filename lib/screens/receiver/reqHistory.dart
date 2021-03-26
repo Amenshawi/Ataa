@@ -17,12 +17,11 @@ class ReqHistorySheet extends StatefulWidget {
 class _ReqHistorySheetState extends State<ReqHistorySheet> {
   double hieghtSize, widthSize;
   final String type;
-  final database = Database();
   var requests;
   _ReqHistorySheetState(this.type);
   @override
   Widget build(BuildContext context) {
-    requests = database.fetchDonationRequests(Provider.of<AppUser>(context));
+    requests = Database.fetchDonationRequests(Provider.of<AppUser>(context));
     Size size = MediaQuery.of(context).size;
     hieghtSize = size.height;
     widthSize = size.width;

@@ -24,7 +24,6 @@ class PeriodcSheet extends StatefulWidget {
 }
 
 class _PeriodcSheetState extends State<PeriodcSheet> {
-  final database = Database();
   double heightSize, widthSize;
   String type;
   TimeOfDay _timeOfDay;
@@ -297,10 +296,10 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
                     child: Icon(Icons.done, color: ataaGold, size: 30),
                     onPressed: () {
                       if (_periodType == 1) //weekly
-                        database.addWeekly(user, type, date, weekdays);
+                        Database.addWeekly(user, type, date, weekdays);
                       else
-                        database.addMonthly(user, type, date, monthDays);
-                      // database.addDonation(user, type, _image,
+                        Database.addMonthly(user, type, date, monthDays);
+                      // Database.addDonation(user, type, _image,
                       //     descController.text, anonymous, location);
                       Navigator.pop(context);
                       // call db.addDonation here

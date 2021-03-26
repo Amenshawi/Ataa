@@ -8,19 +8,17 @@ import 'package:Ataa/models/app_user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:provider/provider.dart';
 
 class Database {
-  String email;
-  String path;
-  String uid;
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
+  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  static final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
+  static String _uid;
+  Database();
 
-  Database({this.uid});
-
-  Future addUser(String uid, String email, String fname, String lname,
+  static Future addUser(String uid, String email, String fname, String lname,
       DateTime bday) async {
-    CollectionReference users = firestore.collection('users');
+    CollectionReference users = _firestore.collection('users');
 
     users.add({
       'uid': uid,
@@ -36,10 +34,9 @@ class Database {
     }).catchError((error) => print("Failed to add user: $error"));
   }
 
-  Future fetchUserData(User fUser) async {
-    email = fUser.email;
-    uid = fUser.uid;
-    return await firestore
+  static Future fetchUserData(User fUser) async {
+    _uid = fUser.uid;
+    return await _firestore
         .collection('users')
         .where('uid', isEqualTo: fUser.uid)
         .get()
@@ -56,14 +53,13 @@ class Database {
           location: value.docs.first.data()['geoPoint'],
           privacy: value.docs.first.data()['private']);
       print('user Data fetched successfully !');
-      print(user);
       return user;
     }).catchError((error) => print("Failed to fetch user data: $error"));
   }
 
-  AppUser _fetchDataFromSnapshot(QuerySnapshot snapshot) {
+  static AppUser _fetchDataFromSnapshot(QuerySnapshot snapshot) {
     return AppUser(
-        uid: uid,
+        uid: snapshot.docs.first.data()['uid'],
         email: snapshot.docs.first.data()['email'],
         fname: snapshot.docs.first.data()['first_name'],
         lname: snapshot.docs.first.data()['last_name'],
@@ -75,16 +71,16 @@ class Database {
         privacy: snapshot.docs.first.data()['private']);
   }
 
-  Stream<AppUser> get user {
-    return firestore
+  static Stream<AppUser> get user {
+    return _firestore
         .collection('users')
-        .where('uid', isEqualTo: uid)
+        .where('uid', isEqualTo: _uid)
         .snapshots()
         .map((_fetchDataFromSnapshot));
   }
 
-  Future searchForCharity(String name) async {
-    final result = await firestore
+  static Future searchForCharity(String name) async {
+    final result = await _firestore
         .collection('charities')
         .orderBy('name')
         .startAt([name])
@@ -100,13 +96,13 @@ class Database {
     return result;
   }
 
-  Future changePrivacy(AppUser user, bool changTo) async {
-    await firestore
+  static Future changePrivacy(AppUser user, bool changTo) async {
+    await _firestore
         .collection('users')
         .where('uid', isEqualTo: user.uid)
         .get()
         .then((value) async {
-      await firestore
+      await _firestore
           .collection('users')
           .doc(value.docs[0].id)
           .update({'private': changTo});
@@ -116,9 +112,9 @@ class Database {
             });
   }
 
-  Future<bool> getPrivacy(AppUser user) async {
+  static Future<bool> getPrivacy(AppUser user) async {
     print('getting privacy');
-    final doc = await firestore
+    final doc = await _firestore
         .collection('users')
         .where('uid', isEqualTo: user.uid)
         .get()
@@ -135,15 +131,15 @@ class Database {
     }
   }
 
-  Future updateClothesSizes(
+  static Future updateClothesSizes(
       String shirtSize, String pantsSize, int shoeSize, AppUser user) async {
     print('hi');
-    return await firestore
+    return await _firestore
         .collection('users')
         .where('uid', isEqualTo: user.uid)
         .get()
         .then((value) async {
-      await firestore.collection('users').doc(value.docs[0].id).update({
+      await _firestore.collection('users').doc(value.docs[0].id).update({
         'shirtSize': shirtSize,
         'pantsSize': pantsSize,
         'shoeSize': shoeSize
@@ -155,7 +151,7 @@ class Database {
             });
   }
 
-  Future addDonation(Donation donation) async {
+  static Future addDonation(Donation donation) async {
     String status =
         donation.timeStamp.add(Duration(seconds: 1)).isAfter(donation.notifyAt)
             ? 'active'
@@ -163,14 +159,14 @@ class Database {
     GeoPoint geopoint =
         GeoPoint(donation.location.latitude, donation.location.longitude);
     final url = await uploadImage(donation.image);
-    final ref = await firestore
+    final ref = await _firestore
         .collection('users')
         .where('uid', isEqualTo: donation.user.uid)
         .get()
         .then((value) {
       return value.docs[0].reference;
     });
-    await firestore.collection('donations').add({
+    await _firestore.collection('donations').add({
       'type': donation.type,
       'user': ref,
       'image': url,
@@ -189,11 +185,11 @@ class Database {
     });
   }
 
-  Future<String> uploadImage(File _image) async {
+  static Future<String> uploadImage(File _image) async {
     final rn = new Random().nextInt(99999);
 
     String url;
-    Reference ref = firebaseStorage
+    Reference ref = _firebaseStorage
         .ref()
         .child('donations/D' + DateTime.now().toString() + rn.toString());
     UploadTask uploadTask = ref.putFile(_image);
@@ -208,15 +204,15 @@ class Database {
     return url;
   }
 
-  Future<void> addLocation(
+  static Future<void> addLocation(
       String addressLine, LatLng location, AppUser user) async {
     GeoPoint geopoint = GeoPoint(location.latitude, location.longitude);
-    return await firestore
+    return await _firestore
         .collection('users')
         .where('uid', isEqualTo: user.uid)
         .get()
         .then((value) async {
-      await firestore
+      await _firestore
           .collection('users')
           .doc(value.docs[0].id)
           .update({'geoPoint': geopoint, 'addressLine': addressLine});
@@ -227,22 +223,23 @@ class Database {
             });
   }
 
-  Future<void> updateEmail(String email, AppUser user) async {
-    return await firestore
+  static Future<void> updateEmail(String email, AppUser user) async {
+    return await _firestore
         .collection('users')
         .where('uid', isEqualTo: user.uid)
         .get()
         .then((value) async {
-      await firestore
+      await _firestore
           .collection('users')
           .doc(value.docs[0].id)
           .update({'email': email});
     });
   }
 
-  Future<List<PeriodicDonation>> fetchPeriodcDonations(AppUser user) async {
+  static Future<List<PeriodicDonation>> fetchPeriodcDonations(
+      AppUser user) async {
     List<PeriodicDonation> donations = [];
-    await firestore
+    await _firestore
         .collection('periodic_donations')
         .where('uid', isEqualTo: user.uid)
         .get()
@@ -259,31 +256,31 @@ class Database {
     return donations;
   }
 
-  void pausePeriodicDonation(String pdid) async {
-    await firestore
+  static void pausePeriodicDonation(String pdid) async {
+    await _firestore
         .collection('periodic_donations')
         .doc(pdid)
         .update({'status': 'paused'});
   }
 
-  void terminatePeriodicDonation(String pdid) async {
-    await firestore
+  static void terminatePeriodicDonation(String pdid) async {
+    await _firestore
         .collection('periodic_donations')
         .doc(pdid)
         .update({'status': 'terminated'});
   }
 
-  void resumePeriodicDonation(String pdid) async {
-    await firestore
+  static void resumePeriodicDonation(String pdid) async {
+    await _firestore
         .collection('periodic_donations')
         .doc(pdid)
         .update({'status': 'active'});
   }
 
-  void addWeekly(
+  static void addWeekly(
       AppUser user, String type, DateTime startDate, List<bool> days) async {
     String stringDays = _getDays(days);
-    await firestore.collection('periodic_donations').add({
+    await _firestore.collection('periodic_donations').add({
       'uid': user.uid,
       'status': 'active',
       'type': type,
@@ -295,7 +292,7 @@ class Database {
     print('donation added');
   }
 
-  String _getDays(List<bool> days) {
+  static String _getDays(List<bool> days) {
     String stringDays = '';
     if (days[0]) stringDays = stringDays + 'Sunday,';
     if (days[1]) stringDays = stringDays + 'Monday,';
@@ -308,10 +305,10 @@ class Database {
     return stringDays;
   }
 
-  void addMonthly(
+  static void addMonthly(
       AppUser user, String type, DateTime startDate, List<int> days) async {
     final String stringDays = _getMonthDays(days);
-    await firestore.collection('periodic_donations').add({
+    await _firestore.collection('periodic_donations').add({
       'uid': user.uid,
       'status': 'active',
       'type': type,
@@ -323,7 +320,7 @@ class Database {
     print('donation added');
   }
 
-  String _getMonthDays(List<int> days) {
+  static String _getMonthDays(List<int> days) {
     String stringDays = '';
     days.forEach((day) {
       stringDays = stringDays + day.toString() + ',';
@@ -332,8 +329,8 @@ class Database {
     return stringDays;
   }
 
-  Future<List<Donation>> fetchDonations(AppUser user) async {
-    final ref = await firestore
+  static Future<List<Donation>> fetchDonations(AppUser user) async {
+    final ref = await _firestore
         .collection('users')
         .where('uid', isEqualTo: user.uid)
         .get()
@@ -341,7 +338,7 @@ class Database {
       return value.docs[0].reference;
     });
     List<Donation> donations = [];
-    await firestore
+    await _firestore
         .collection('donations')
         .where('user', isEqualTo: ref)
         .get()
@@ -359,20 +356,20 @@ class Database {
     return donations;
   }
 
-  void cancelDonation(String ddid) async {
-    await firestore
+  static void cancelDonation(String ddid) async {
+    await _firestore
         .collection('donations')
         .doc(ddid)
         .update({'status': 'canceled'});
   }
 
-  void addDonationRequest(DonationRequest request) async {
+  static void addDonationRequest(DonationRequest request) async {
     GeoPoint geopoint;
     if (request.location != null)
       geopoint =
           GeoPoint(request.location.latitude, request.location.longitude);
 
-    await firestore.collection('donation_requests').add({
+    await _firestore.collection('donation_requests').add({
       'type': request.type,
       'uid': request.user.uid,
       'anonymous': request.anonymous,
@@ -388,9 +385,10 @@ class Database {
     });
   }
 
-  Future<List<DonationRequest>> fetchDonationRequests(AppUser user) async {
+  static Future<List<DonationRequest>> fetchDonationRequests(
+      AppUser user) async {
     List<DonationRequest> requests = [];
-    await firestore
+    await _firestore
         .collection('donation_requests')
         .where('uid', isEqualTo: user.uid)
         .get()
@@ -408,8 +406,8 @@ class Database {
     return requests;
   }
 
-  void cancelDonationRequest(String rid) async {
-    await firestore
+  static void cancelDonationRequest(String rid) async {
+    await _firestore
         .collection('donation_requests')
         .doc(rid)
         .update({'status': 'canceled'});

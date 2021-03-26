@@ -7,34 +7,32 @@ import 'package:provider/provider.dart';
 import 'package:Ataa/screens/login_signup/login.dart';
 import 'package:Ataa/screens/home_page.dart';
 
-class Wrapper extends StatelessWidget{
+class Wrapper extends StatelessWidget {
   GlobalKey<NavigatorState> _homeNavigatorKey = GlobalKey<NavigatorState>();
   static const PrimaryColor = const Color(0xFF1c664a);
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     User fuser = Provider.of<User>(context);
-    if(fuser == null){
+    if (fuser == null) {
       return LoginPage();
-    } else{
+    } else {
       return StreamProvider.value(
-             value: Database(uid: fuser.uid).user,
-             child: MaterialApp(
-               navigatorKey: _homeNavigatorKey,
-               theme: ThemeData(
-                  primaryColor: PrimaryColor,
-                  primarySwatch: Colors.blueGrey,
-                ),
-                debugShowCheckedModeBanner: false,
-                title: "Ata'a",
-                home: Builder(
-                  builder: (context){
-                    return HomePage();
-                  },
-                  ),
-              ),
-             );
+        value: Database.user,
+        child: MaterialApp(
+          navigatorKey: _homeNavigatorKey,
+          theme: ThemeData(
+            primaryColor: PrimaryColor,
+            primarySwatch: Colors.blueGrey,
+          ),
+          debugShowCheckedModeBanner: false,
+          title: "Ata'a",
+          home: Builder(
+            builder: (context) {
+              return HomePage();
+            },
+          ),
+        ),
+      );
     }
   }
-
-  
 }

@@ -17,7 +17,6 @@ class ReqForm extends StatefulWidget {
 }
 
 class _ReqFormState extends State<ReqForm> {
-  final database = Database();
   double hieghtSize, widthSize;
   bool private = false;
   bool isSwitched = false;
@@ -184,7 +183,7 @@ class _ReqFormState extends State<ReqForm> {
                           location: location,
                           anonymous: private,
                           importance: importanceController.text);
-                      database.addDonationRequest(request);
+                      Database.addDonationRequest(request);
                       Navigator.pop(context);
                     }),
               )

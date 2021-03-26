@@ -4,7 +4,6 @@ import 'package:Ataa/screens/donor/Cancel/cancel_sheet.dart';
 import 'package:Ataa/screens/donor/donation_form.dart';
 import 'package:Ataa/screens/donor/donHistory.dart';
 import 'package:Ataa/screens/donor/schedul/periodc_sheet.dart';
-import 'package:Ataa/models/app_user.dart';
 import 'package:flutter/material.dart';
 import 'package:Ataa/Services/database.dart';
 import 'package:flip_card/flip_card.dart';
@@ -29,7 +28,6 @@ class _DonorPageState extends State<DonorPage> {
   bool visible = false;
   bool _subButtons = false;
   bool cardOpen = false;
-  final database = Database();
   GlobalKey<FlipCardState> cardKey = GlobalKey<FlipCardState>();
 
   _DonorPageState();
@@ -88,8 +86,8 @@ class _DonorPageState extends State<DonorPage> {
                         spike: false,
                       ),
                       onTap: () {
-                        showSheet(context, 'Cancel',
-                            CancelSheet('Cancel'), false);
+                        showSheet(
+                            context, 'Cancel', CancelSheet('Cancel'), false);
                         setState(() {
                           if (cardOpen) {
                             if (!cardKey.currentState.isFront) {
@@ -225,8 +223,8 @@ class _DonorPageState extends State<DonorPage> {
         height: hieghtSize * 0.07,
         child: Column(
           children: [
-            donationButton('Food', Icons.food_bank,
-                DonationForm('Food', true), true, 0),
+            donationButton(
+                'Food', Icons.food_bank, DonationForm('Food', true), true, 0),
             donationButton('Clothes', Icons.accessibility_rounded,
                 DonationForm('Clothes', false), false, 0),
             donationButton('Electronics', Icons.power,
@@ -336,7 +334,7 @@ class _DonorPageState extends State<DonorPage> {
                   onChanged: (val) {
                     if (val != '') {
                       setState(() async {
-                        charities = await database.searchForCharity(val);
+                        charities = await Database.searchForCharity(val);
                         setState(
                             () {}); //IDK why is has to be here but it's the only way I could find to make it work
                         print(charities.first.data());
