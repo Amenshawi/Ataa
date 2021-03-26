@@ -54,7 +54,7 @@ class _RecieverPageState extends State<RecieverPage> {
                   icon: Icons.add,
                   cardName: 'Request A Donation',
                   space: true,
-                  spike: true,
+                  imageName: 'assets/Images/spike_3.png',
                 ),
               ),
               GestureDetector(
@@ -64,7 +64,7 @@ class _RecieverPageState extends State<RecieverPage> {
                   icon: Icons.delete_forever,
                   cardName: 'Cancel A Request',
                   space: false,
-                  spike: false,
+                  imageName: null,
                 ),
                 onTap: () {
                   print('Hi there!');
@@ -90,7 +90,7 @@ class _RecieverPageState extends State<RecieverPage> {
                   icon: Icons.search,
                   cardName: 'Search Requests',
                   space: false,
-                  spike: false,
+                  imageName: null,
                   // context: context,
                   // sheetName: 'Schedul',
                 ),
@@ -106,7 +106,7 @@ class _RecieverPageState extends State<RecieverPage> {
                   icon: Icons.menu_book_rounded,
                   cardName: 'Request History',
                   space: true,
-                  spike: false,
+                  imageName: 'assets/Images/history_4.png',
                 ),
               ),
             ],

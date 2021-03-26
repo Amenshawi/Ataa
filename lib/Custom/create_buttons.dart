@@ -11,7 +11,7 @@ class CreateButtons extends StatefulWidget {
   IconData icon;
   String cardName;
   bool space;
-  bool spike;
+  String imageName;
 
   CreateButtons({
     Key key,
@@ -20,7 +20,7 @@ class CreateButtons extends StatefulWidget {
     this.icon,
     this.cardName,
     this.space,
-    this.spike,
+    this.imageName,
   }) : super(key: key);
 
   @override
@@ -36,11 +36,11 @@ class _CreateButtonsState extends State<CreateButtons> {
     hieghtSize = size.height;
     widthSize = size.width;
     return customCard(widget.height, widget.width, widget.icon, widget.cardName,
-        widget.space, widget.spike);
+        widget.space, widget.imageName);
   }
 
   Widget customCard(double height, double width, IconData icon, String cardName,
-      bool space, bool spike) {
+      bool space, String imageName) {
     return Container(
         height: height,
         width: width,
@@ -64,16 +64,16 @@ class _CreateButtonsState extends State<CreateButtons> {
               space
                   ? Column(
                       children: [
-                        Center(
-                          child: Image.asset(
-                            spike
-                                ? 'assets/Images/spike_3.png'
-                                : 'assets/Images/history_4.png',
+                        Center(child: 
+                         imageName != null ? Image.asset(
+                            imageName,
+                                // ? 'assets/Images/spike_3.png'
+                                // : 'assets/Images/history_4.png',
                             height: 100,
                             width: 80,
                             // color: Colors.yellow.shade800,
                             color: ataaGold,
-                          ),
+                          ): Container(),
                         ),
                         SizedBox(height: hieghtSize * 0.03)
                       ],
