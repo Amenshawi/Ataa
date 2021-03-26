@@ -100,7 +100,7 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                             'Food',
                             'Clothes',
                             'Electronics',
-                            'Devices'
+                            'Furniture'
                           ].map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
@@ -155,7 +155,6 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                     backgroundColor: ataaGreen,
                     child: Icon(Icons.done, color: ataaGold, size: 30),
                     onPressed: () {
-                      print('Hi there!');
                       DateTime date = new DateTime(
                           _pickedDate.year,
                           _pickedDate.month,

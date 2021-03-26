@@ -1,8 +1,13 @@
 import 'package:Ataa/custom/Sheet.dart';
+import 'package:Ataa/Custom/custom_daytile_builder.dart';
 import 'package:Ataa/screens/donor/donation_form.dart';
 import 'package:Ataa/models/app_user.dart';
 import 'package:Ataa/services/database.dart';
 import 'package:flutter/material.dart';
+import 'package:weekday_selector/weekday_selector.dart';
+import 'package:calendarro/calendarro.dart';
+import 'package:calendarro/date_utils.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
@@ -21,20 +26,27 @@ class PeriodcSheet extends StatefulWidget {
 class _PeriodcSheetState extends State<PeriodcSheet> {
   final database = Database();
   double heightSize, widthSize;
-  final String type;
   final AppUser user;
-  String placeHolder = 'Food';
+  String type;
   TimeOfDay _timeOfDay;
   String period = '';
   DateTime _startDate = DateTime.now();
   DateTime _endDate = DateTime.now().add(Duration(days: 7));
   _PeriodcSheetState(this.type, this.user);
-
+  int _periodType;
+  List<bool> weekdays;
+  List<int> monthDays = [];
+  Calendarro monthCalendarro;
+  DateTime date = DateTime.now();
   @override
   void initState() {
     super.initState();
     _timeOfDay = TimeOfDay.now();
     period = _timeOfDay.period.index == 0 ? 'AM' : 'PM';
+    _periodType = 1;
+    type = 'Food';
+    //Sunday is index 0 ,Monday is index 1,..., Saturday is index 6
+    weekdays = [false, false, false, false, false, false, false];
   }
 
   @override
@@ -42,6 +54,23 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
     Size size = MediaQuery.of(context).size;
     heightSize = size.height;
     widthSize = size.width;
+
+    var startDate = DateUtils.getFirstDayOfCurrentMonth();
+    var endDate = DateUtils.getLastDayOfNextMonth();
+    monthCalendarro = Calendarro(
+        dayTileBuilder: CustomDayTileBuilder(),
+        startDate: startDate,
+        endDate: endDate,
+        displayMode: DisplayMode.MONTHS,
+        selectionMode: SelectionMode.MULTI,
+        weekdayLabelsRow: CustomWeekdayLabelsRow(),
+        onTap: (date) {
+          // add functionality on date selection here
+          if (monthDays == null)
+            monthDays = [date.day];
+          else
+            monthDays.add(date.day);
+        });
 
     return Container(
       width: widthSize,
@@ -51,7 +80,7 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
         color: ataaWhite,
         child: Padding(
           padding: EdgeInsets.only(
-              top: heightSize * 0.04, bottom: heightSize * 0.04),
+              top: heightSize * 0.02, bottom: heightSize * 0.02),
           child: Column(
             // crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -76,7 +105,7 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
                       ),
                       Expanded(
                         child: DropdownButton(
-                          value: placeHolder,
+                          value: type,
                           icon: Icon(
                             Icons.arrow_downward,
                             color: ataaGreen,
@@ -89,20 +118,20 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
                           // underline: Container(height: 2, color: ataaWhite),
                           onChanged: (String newValue) {
                             setState(() {
-                              placeHolder = newValue;
+                              type = newValue;
                             });
-                            if (newValue == 'Food')
-                              showSheet(context, newValue,
-                                  DonationForm(newValue, user, true), true);
-                            else
-                              showSheet(context, newValue,
-                                  DonationForm(newValue, user, false), false);
+                            // if (newValue == 'Food')
+                            //   showSheet(context, newValue,
+                            //       DonationForm(newValue, user, true), true);
+                            // else
+                            //   showSheet(context, newValue,
+                            //       DonationForm(newValue, user, false), false);
                           },
                           items: <String>[
                             'Food',
                             'Clothes',
                             'Electronics',
-                            'Devices'
+                            'Furniture'
                           ].map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
@@ -120,8 +149,8 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
                   ),
                 ),
               ),
-              SizedBox(height: heightSize * 0.02),
-              Card(
+              SizedBox(height: heightSize * 0.01),
+              /*Card(
                 color: ataaGreen,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25)),
@@ -132,9 +161,119 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
                     ),
                     trailing: Icon(Icons.date_range_rounded, color: ataaGold),
                     onTap: _pickDate),
+              ),*/
+              Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    side: BorderSide(
+                        color: Color.fromRGBO(28, 102, 74, 1.0),
+                        width: 3.0,
+                        style: BorderStyle.solid)),
+                color: Color.fromRGBO(255, 255, 255, 1.0),
+                shadowColor: Colors.grey,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: heightSize * 0.01,
+                    ),
+                    Text(
+                      'Start Date',
+                      style: TextStyle(
+                        color: Color.fromRGBO(28, 102, 74, 1.0),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(
+                      height: heightSize * 0.01,
+                    ),
+                    SizedBox(
+                      height: heightSize * 0.07,
+                      child: CupertinoTheme(
+                        child: CupertinoDatePicker(
+                          backgroundColor: Color.fromRGBO(255, 255, 255, 1.0),
+                          mode: CupertinoDatePickerMode.date,
+                          minimumDate: DateTime.now(),
+                          initialDateTime: DateTime.now(),
+                          maximumDate: DateTime(DateTime.now().year + 2),
+                          onDateTimeChanged: (DateTime newDateTime) {
+                            date = newDateTime;
+                          },
+                        ),
+                        data: CupertinoThemeData(
+                          textTheme: CupertinoTextThemeData(
+                            dateTimePickerTextStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: Color.fromRGBO(28, 102, 74, 1.0),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               SizedBox(height: heightSize * 0.01),
-              Card(
+              Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Weekly',
+                      style: TextStyle(
+                          color: ataaGreen,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Radio(
+                        focusColor: ataaGreen,
+                        groupValue: _periodType,
+                        value: 1,
+                        onChanged: (value) {
+                          _radioChanged(value);
+                        }),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.1,
+                    ),
+                    Text(
+                      'Monthly',
+                      style: TextStyle(
+                          color: ataaGreen,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Radio(
+                        focusColor: ataaGreen,
+                        groupValue: _periodType,
+                        value: 2,
+                        onChanged: (value) {
+                          _radioChanged(value);
+                        })
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: heightSize * 0.01,
+              ),
+              _periodType == 1
+                  ? Container(
+                      child: WeekdaySelector(
+                        values: weekdays,
+                        onChanged: (value) {
+                          _weekdayChanged(value);
+                        },
+                        firstDayOfWeek: 7,
+                        selectedFillColor: ataaGreen,
+                        selectedColor: ataaGold,
+                      ),
+                    )
+                  : Container(
+                      height: heightSize * 0.3,
+                      child: monthCalendarro,
+                    ),
+
+              /* Card(
                 color: ataaGreen,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25)),
@@ -145,9 +284,8 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
                     ),
                     trailing: Icon(Icons.timer, color: ataaGold),
                     onTap: _pickTime),
-              ),
+              ),*/
               // ),
-              SizedBox(height: heightSize * 0.02),
               Container(
                   height: heightSize * 0.05,
                   width: widthSize * 0.2,
@@ -158,7 +296,10 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
                     backgroundColor: ataaGreen,
                     child: Icon(Icons.done, color: ataaGold, size: 30),
                     onPressed: () {
-                      print('Hi there!');
+                      if (_periodType == 1) //weekly
+                        database.addWeekly(user, type, date, weekdays);
+                      else
+                        database.addMonthly(user, type, date, monthDays);
                       // database.addDonation(user, type, _image,
                       //     descController.text, anonymous, location);
                       Navigator.pop(context);
@@ -187,7 +328,6 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
       setState(() {
         _startDate = date[0];
         _endDate = date[1];
-        print(date);
       });
   }
 
@@ -229,5 +369,37 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
             padding: padding,
           );
         });
+  }
+
+  void _radioChanged(dynamic value) {
+    setState(() {
+      _periodType = value;
+    });
+  }
+
+  void _weekdayChanged(int day) {
+    setState(() {
+      if (day == 7)
+        weekdays[0] = !weekdays[0];
+      else
+        weekdays[day] = !weekdays[day];
+    });
+  }
+}
+
+class CustomWeekdayLabelsRow extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Expanded(
+            child: Text("Days of The Month",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: ataaGreen,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold))),
+      ],
+    );
   }
 }

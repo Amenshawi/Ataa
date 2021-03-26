@@ -246,7 +246,6 @@ class _LocationPageState extends State<LocationPage> {
     setState(() {
       marker.add(
           Marker(markerId: MarkerId('address'), position: currentPosition));
-      print(" current marker position " + currentPosition.toString());
     });
   }
 

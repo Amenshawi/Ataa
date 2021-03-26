@@ -90,7 +90,6 @@ class _DonorPageState extends State<DonorPage> {
                         imageName: null,
                       ),
                       onTap: () {
-                        print('Hi there!');
                         showSheet(context, 'Cancel',
                             CancelSheet('Cancel', user), false);
                         setState(() {
@@ -122,7 +121,6 @@ class _DonorPageState extends State<DonorPage> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        print('Hi');
                         showSheet(context, 'History',
                             DonHistorySheet('History', user), false);
                       },

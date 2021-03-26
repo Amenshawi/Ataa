@@ -69,28 +69,42 @@ class _EditSheetState extends State<EditSheet> {
                                 actionPane: SlidableDrawerActionPane(),
                                 secondaryActions: [
                                   IconSlideAction(
-                                    caption: 'Pause',
-                                    color: ataaWhite,
-                                    icon: Icons.pause,
-                                    closeOnTap: false,
+                                    caption: donations[index].status == 'active'? 'Pause': 'Resume',
+                                    color: donations[index].status == 'active'? ataaWhite : Colors.lightGreen,
+                                    icon: donations[index].status == 'active'? Icons.pause: Icons.play_arrow,
+                                    closeOnTap: true,
                                     onTap: () {
-                                      database.PauseDonation(
-                                          donations[index].pdid);
+                                      if(donations[index].status == 'active'){
+                                      database
+                                          .pausePeriodicDonation(donations[index].pdid);
                                       Toast.show(
-                                        'Pause on $index',
+                                        'Paused Successfully',
                                         context,
                                         duration: Toast.LENGTH_LONG,
                                         gravity: Toast.BOTTOM,
                                       );
-                                    },
+                                      }else{
+                                        database.resumePeriodicDonation(donations[index].pdid);
+                                        Toast.show(
+                                        'Resumed Successfully',
+                                        context,
+                                        duration: Toast.LENGTH_LONG,
+                                        gravity: Toast.BOTTOM,
+                                      );
+                                      }
+                                    }
                                   ),
                                   IconSlideAction(
                                     caption: 'Terminate',
                                     color: Colors.red,
                                     icon: Icons.delete_forever_rounded,
-                                    closeOnTap: false,
+                                    closeOnTap: true,
                                     onTap: () {
-                                      Toast.show('Terminate on $index', context,
+                                      database.terminatePeriodicDonation(donations[index].pdid);
+                                      setState(() {
+                                                donations.remove(donations[index]);
+                                                                            });
+                                      Toast.show('Terminated Successfully', context,
                                           duration: Toast.LENGTH_SHORT,
                                           gravity: Toast.BOTTOM);
                                     },
@@ -121,7 +135,15 @@ class _EditSheetState extends State<EditSheet> {
                                         color: ataaGold, fontSize: 20),
                                   ),
                                   subtitle: Text(
-                                    donations[index].date.toString(),
+                                    donations[index].date.year.toString() +
+                                        '-' +
+                                        donations[index].date.month.toString() +
+                                        '-' +
+                                        donations[index].date.day.toString() +
+                                        ' ' +
+                                        donations[index].date.hour.toString() +
+                                        ':' +
+                                        donations[index].date.minute.toString(),
                                     style: TextStyle(color: ataaGold),
                                   ),
                                   leading: Icon(Icons.edit,
