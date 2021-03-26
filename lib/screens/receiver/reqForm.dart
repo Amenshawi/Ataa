@@ -1,6 +1,9 @@
 import 'package:Ataa/models/app_user.dart';
+import 'package:Ataa/models/donation_request.dart';
+import 'package:Ataa/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 
 import '../home_page.dart';
 import '../location_page.dart';
@@ -14,22 +17,24 @@ class ReqForm extends StatefulWidget {
 }
 
 class _ReqFormState extends State<ReqForm> {
+  final database = Database();
   double hieghtSize, widthSize;
   bool private = false;
   bool isSwitched = false;
-  AppUser user;
   var changeLocation;
   LatLng location;
-
+  final typeController = TextEditingController();
+  final importanceController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    AppUser user = Provider.of<AppUser>(context);
     Size size = MediaQuery.of(context).size;
     hieghtSize = size.height;
     widthSize = size.width;
-    return reqDonation();
+    return reqDonation(user);
   }
 
-  Widget reqDonation() {
+  Widget reqDonation(AppUser user) {
     return Container(
       width: widthSize,
       child: Column(children: [
@@ -54,10 +59,10 @@ class _ReqFormState extends State<ReqForm> {
           //   ],
           child: Column(
             children: [
-              customCard(
-                  Icons.receipt, 'Type', 'Food, Clothes, Devices, Furniture'),
+              customCard(Icons.receipt, 'Type',
+                  'Food, Clothes, Devices, Furniture', typeController),
               customCard(Icons.label_important_outline, 'importance',
-                  'High, Medium, Low'),
+                  'High, Medium, Low', importanceController),
               Card(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20)),
@@ -173,16 +178,13 @@ class _ReqFormState extends State<ReqForm> {
                     backgroundColor: ataaGreen,
                     child: Icon(Icons.done, color: ataaGold, size: 30),
                     onPressed: () {
-                      // _image = File(_image.path);
-                      // final donation = Donation(
-                      //     user: user,
-                      //     type: type,
-                      //     image: _image,
-                      //     desc: descController.text,
-                      //     anonymous: anonymous,
-                      //     location: location,
-                      //     notifyAfter: time);
-                      // database.addDonation(donation);
+                      final request = DonationRequest(
+                          type: typeController.text,
+                          user: user,
+                          location: location,
+                          anonymous: private,
+                          importance: importanceController.text);
+                      database.addDonationRequest(request);
                       Navigator.pop(context);
                     }),
               )
@@ -195,7 +197,8 @@ class _ReqFormState extends State<ReqForm> {
     );
   }
 
-  Card customCard(IconData icon, String label, String hint) {
+  Card customCard(IconData icon, String label, String hint,
+      TextEditingController controller) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       elevation: 50,
@@ -206,6 +209,7 @@ class _ReqFormState extends State<ReqForm> {
         children: [
           Expanded(
             child: TextField(
+              controller: controller,
               style: TextStyle(
                   fontSize: 25, fontWeight: FontWeight.bold, color: ataaGreen),
               decoration: InputDecoration(

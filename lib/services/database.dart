@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 import 'package:Ataa/models/Periodic_donation.dart';
 import 'package:Ataa/models/donation.dart';
+import 'package:Ataa/models/donation_request.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:Ataa/models/app_user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,13 +12,14 @@ import 'package:firebase_storage/firebase_storage.dart';
 class Database {
   String email;
   String path;
-  String uid ;
+  String uid;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
 
   Database({this.uid});
 
-  Future addUser(String uid, String email, String fname, String lname, DateTime bday) async {
+  Future addUser(String uid, String email, String fname, String lname,
+      DateTime bday) async {
     CollectionReference users = firestore.collection('users');
 
     users.add({
@@ -52,33 +54,35 @@ class Database {
           shoeSize: value.docs.first.data()['shoeSize'],
           addressLine: value.docs.first.data()['adreeLine'],
           location: value.docs.first.data()['geoPoint'],
-          privacy: value.docs.first.data()['private']
-          );
+          privacy: value.docs.first.data()['private']);
       print('user Data fetched successfully !');
       print(user);
       return user;
     }).catchError((error) => print("Failed to fetch user data: $error"));
   }
-  AppUser _fetchDataFromSnapshot(QuerySnapshot snapshot){
+
+  AppUser _fetchDataFromSnapshot(QuerySnapshot snapshot) {
     return AppUser(
-      uid: uid,
-      email: snapshot.docs.first.data()['email'],
-      fname: snapshot.docs.first.data()['first_name'],
-      lname: snapshot.docs.first.data()['last_name'],
-      shirtSize: snapshot.docs.first.data()['shirtSize'],
-      pantSize: snapshot.docs.first.data()['pantsSize'],
-      shoeSize: snapshot.docs.first.data()['shoeSize'],
-      addressLine: snapshot.docs.first.data()['adreeLine'],
-      location: snapshot.docs.first.data()['geoPoint'],
-      privacy: snapshot.docs.first.data()['private']
-    );
+        uid: uid,
+        email: snapshot.docs.first.data()['email'],
+        fname: snapshot.docs.first.data()['first_name'],
+        lname: snapshot.docs.first.data()['last_name'],
+        shirtSize: snapshot.docs.first.data()['shirtSize'],
+        pantSize: snapshot.docs.first.data()['pantsSize'],
+        shoeSize: snapshot.docs.first.data()['shoeSize'],
+        addressLine: snapshot.docs.first.data()['adreeLine'],
+        location: snapshot.docs.first.data()['geoPoint'],
+        privacy: snapshot.docs.first.data()['private']);
   }
 
-  Stream<AppUser> get user{
-      return firestore.collection('users')
-      .where('uid', isEqualTo:uid)
-      .snapshots().map((_fetchDataFromSnapshot));
+  Stream<AppUser> get user {
+    return firestore
+        .collection('users')
+        .where('uid', isEqualTo: uid)
+        .snapshots()
+        .map((_fetchDataFromSnapshot));
   }
+
   Future searchForCharity(String name) async {
     final result = await firestore
         .collection('charities')
@@ -153,9 +157,9 @@ class Database {
 
   Future addDonation(Donation donation) async {
     String status =
-        donation.timeStamp
-        .add(Duration(seconds: 1))
-        .isAfter(donation.notifyAt)? 'active' : 'scheduled';
+        donation.timeStamp.add(Duration(seconds: 1)).isAfter(donation.notifyAt)
+            ? 'active'
+            : 'scheduled';
     GeoPoint geopoint =
         GeoPoint(donation.location.latitude, donation.location.longitude);
     final url = await uploadImage(donation.image);
@@ -222,19 +226,21 @@ class Database {
               //do something when an error happens
             });
   }
-  Future<void> updateEmail(String email, AppUser user) async{
+
+  Future<void> updateEmail(String email, AppUser user) async {
     return await firestore
-    .collection('users')
-    .where('uid', isEqualTo: user.uid)
-    .get()
-    .then((value) async{
+        .collection('users')
+        .where('uid', isEqualTo: user.uid)
+        .get()
+        .then((value) async {
       await firestore
-      .collection('users')
-      .doc(value.docs[0].id)
-      .update({'email':email});
+          .collection('users')
+          .doc(value.docs[0].id)
+          .update({'email': email});
     });
   }
-Future<List<PeriodicDonation>> fetchPeriodcDonations(AppUser user) async {
+
+  Future<List<PeriodicDonation>> fetchPeriodcDonations(AppUser user) async {
     List<PeriodicDonation> donations = [];
     await firestore
         .collection('periodic_donations')
@@ -242,12 +248,12 @@ Future<List<PeriodicDonation>> fetchPeriodcDonations(AppUser user) async {
         .get()
         .then((snapshot) {
       snapshot.docs.forEach((doc) {
-        if(doc.data()['status'] != 'terminated')
-        donations.add(new PeriodicDonation(
-            doc.data()['type'],
-            DateTime.parse(doc.data()['date'].toDate().toString()),
-            doc.data()['status'],
-            pdid: doc.id));
+        if (doc.data()['status'] != 'terminated')
+          donations.add(new PeriodicDonation(
+              doc.data()['type'],
+              DateTime.parse(doc.data()['date'].toDate().toString()),
+              doc.data()['status'],
+              pdid: doc.id));
       });
     });
     return donations;
@@ -259,12 +265,14 @@ Future<List<PeriodicDonation>> fetchPeriodcDonations(AppUser user) async {
         .doc(pdid)
         .update({'status': 'paused'});
   }
+
   void terminatePeriodicDonation(String pdid) async {
     await firestore
         .collection('periodic_donations')
         .doc(pdid)
         .update({'status': 'terminated'});
   }
+
   void resumePeriodicDonation(String pdid) async {
     await firestore
         .collection('periodic_donations')
@@ -350,10 +358,60 @@ Future<List<PeriodicDonation>> fetchPeriodcDonations(AppUser user) async {
     });
     return donations;
   }
+
   void cancelDonation(String ddid) async {
     await firestore
         .collection('donations')
         .doc(ddid)
+        .update({'status': 'canceled'});
+  }
+
+  void addDonationRequest(DonationRequest request) async {
+    GeoPoint geopoint;
+    if (request.location != null)
+      geopoint =
+          GeoPoint(request.location.latitude, request.location.longitude);
+
+    await firestore.collection('donation_requests').add({
+      'type': request.type,
+      'uid': request.user.uid,
+      'anonymous': request.anonymous,
+      'location': geopoint,
+      'timeStamp': request.timeStamp,
+      'status': request.status
+    }).then((value) {
+      print('donation request added');
+      return;
+    }).catchError((error) {
+      print('couldn\'t add donation request.\nError: ' + error.toString());
+      return error;
+    });
+  }
+
+  Future<List<DonationRequest>> fetchDonationRequests(AppUser user) async {
+    List<DonationRequest> requests = [];
+    await firestore
+        .collection('donation_requests')
+        .where('uid', isEqualTo: user.uid)
+        .get()
+        .then((snapshot) {
+      snapshot.docs.forEach((doc) {
+        if (doc.data()['status'] == 'active')
+          requests.add(new DonationRequest(
+              type: doc.data()['type'],
+              timeStamp:
+                  DateTime.parse(doc.data()['timeStamp'].toDate().toString()),
+              status: doc.data()['status'],
+              rid: doc.id));
+      });
+    });
+    return requests;
+  }
+
+  void cancelDonationRequest(String rid) async {
+    await firestore
+        .collection('donation_requests')
+        .doc(rid)
         .update({'status': 'canceled'});
   }
 }

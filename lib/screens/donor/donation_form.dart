@@ -19,8 +19,7 @@ class DonationForm extends StatefulWidget {
   final bool isFood;
   DateTime notifyAt;
   String periodString;
-  DonationForm(this.type, this.isFood,
-      {this.notifyAt, this.periodString});
+  DonationForm(this.type, this.isFood, {this.notifyAt, this.periodString});
   @override
   _DonationFormState createState() => _DonationFormState(type, notifyAt);
 }
@@ -319,6 +318,7 @@ class _DonationFormState extends State<DonationForm> {
                           desc: descController.text,
                           anonymous: anonymous,
                           location: location,
+                          status: 'Active',
                           notifyAt: notifyAt);
                       database.addDonation(donation);
                       Navigator.pop(context);
