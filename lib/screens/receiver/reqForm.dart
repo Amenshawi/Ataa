@@ -100,7 +100,7 @@ class _ReqFormState extends State<ReqForm> {
               Row(
                 children: [
                   SizedBox(width: widthSize* 0.05,),
-                  Text('Type',
+                  Text('Importance',
                           style: TextStyle(color: ataaGreen, fontSize: 22, fontWeight: FontWeight.bold),),
                 ],
               ),
