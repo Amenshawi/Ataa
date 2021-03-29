@@ -1,6 +1,7 @@
 import 'package:Ataa/models/app_user.dart';
 import 'package:Ataa/models/donation_request.dart';
 import 'package:Ataa/services/database.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -22,8 +23,10 @@ class _ReqFormState extends State<ReqForm> {
   bool isSwitched = false;
   var changeLocation;
   LatLng location;
-  final typeController = TextEditingController();
-  final importanceController = TextEditingController();
+  String selectedType;
+  final types = ['food','clothes','electronics','furniture'];
+  String selectedImportance;
+  final importance = ['high','medium','low'];
   @override
   Widget build(BuildContext context) {
     AppUser user = Provider.of<AppUser>(context);
@@ -45,7 +48,7 @@ class _ReqFormState extends State<ReqForm> {
         //   child:
         Padding(
           padding: EdgeInsets.only(
-              top: hieghtSize * 0.04, bottom: hieghtSize * 0.04),
+              top: hieghtSize * 0.02, bottom: hieghtSize * 0.04),
           // child: Column(
           //   children: [
           //     Text('Type'),
@@ -57,11 +60,80 @@ class _ReqFormState extends State<ReqForm> {
           //     ),
           //   ],
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              customCard(Icons.receipt, 'Type',
+              Row(
+                children: [
+                  SizedBox(width: widthSize* 0.05,),
+                  Text('Type',
+                          style: TextStyle(color: ataaGreen, fontSize: 22, fontWeight: FontWeight.bold),),
+                ],
+              ),
+              Container(
+                height: hieghtSize *0.1,
+                child: Card(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  elevation: 50,
+                  color: Color.fromRGBO(255, 255, 255, 0.75),
+                  child: Container(
+                    height: hieghtSize *0.09,
+                    child: CupertinoPicker(
+                      looping: true,
+                      itemExtent: 30,
+                      onSelectedItemChanged: (value){
+                        selectedType = types[value];
+                      },
+                      children: [
+                      Text('food', 
+                      style: TextStyle(color: ataaGreen, fontSize: 22, fontWeight: FontWeight.bold),),
+                      Text('clothes',
+                      style: TextStyle(color: ataaGreen, fontSize: 22, fontWeight: FontWeight.bold),),
+                      Text('electronics',
+                      style: TextStyle(color: ataaGreen, fontSize: 22, fontWeight: FontWeight.bold),),
+                      Text('furniture',
+                      style: TextStyle(color: ataaGreen, fontSize: 22, fontWeight: FontWeight.bold),)
+                    ],),
+                  ),
+                ),
+              ),
+              SizedBox(height: hieghtSize* 0.01,),
+              Row(
+                children: [
+                  SizedBox(width: widthSize* 0.05,),
+                  Text('Type',
+                          style: TextStyle(color: ataaGreen, fontSize: 22, fontWeight: FontWeight.bold),),
+                ],
+              ),
+              Container(
+                height: hieghtSize *0.1,
+                child: Card(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  elevation: 50,
+                  color: Color.fromRGBO(255, 255, 255, 0.75),
+                  child: Container(
+                    height: hieghtSize *0.09,
+                    child: CupertinoPicker(
+                      looping: true,
+                      itemExtent: 30,
+                      onSelectedItemChanged: (value){
+                        selectedImportance = importance[value];
+                      },
+                      children: [
+                      Text('high', 
+                      style: TextStyle(color: ataaGreen, fontSize: 22, fontWeight: FontWeight.bold),),
+                      Text('medium',
+                      style: TextStyle(color: ataaGreen, fontSize: 22, fontWeight: FontWeight.bold),),
+                      Text('low',
+                      style: TextStyle(color: ataaGreen, fontSize: 22, fontWeight: FontWeight.bold),),
+                    ],),
+                  ),
+                ),
+              ),
+              SizedBox(height: hieghtSize* 0.01,),
+             /* customCard(Icons.receipt, 'Type',
                   'Food, Clothes, Devices, Furniture', typeController),
               customCard(Icons.label_important_outline, 'importance',
-                  'High, Medium, Low', importanceController),
+                  'High, Medium, Low', importanceController),*/
               Card(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20)),
@@ -166,26 +238,28 @@ class _ReqFormState extends State<ReqForm> {
                       ),
                     )
                   : Container(),
-              SizedBox(height: hieghtSize * 0.03),
-              Container(
-                height: hieghtSize * 0.05,
-                width: widthSize * 0.2,
-                child: FloatingActionButton(
-                    elevation: 8,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    backgroundColor: ataaGreen,
-                    child: Icon(Icons.done, color: ataaGold, size: 30),
-                    onPressed: () {
-                      final request = DonationRequest(
-                          type: typeController.text,
-                          user: user,
-                          location: location,
-                          anonymous: private,
-                          importance: importanceController.text);
-                      Database.addDonationRequest(request);
-                      Navigator.pop(context);
-                    }),
+              SizedBox(height: hieghtSize * 0.02),
+              Center(
+                child: Container(
+                  height: hieghtSize * 0.05,
+                  width: widthSize * 0.2,
+                  child: FloatingActionButton(
+                      elevation: 8,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      backgroundColor: ataaGreen,
+                      child: Icon(Icons.done, color: ataaGold, size: 30),
+                      onPressed: () {
+                        final request = DonationRequest(
+                            type: selectedType,
+                            user: user,
+                            location: location,
+                            anonymous: private,
+                            importance: selectedImportance);
+                        Database.addDonationRequest(request);
+                        Navigator.pop(context);
+                      }),
+                ),
               )
             ],
           ),
@@ -196,41 +270,4 @@ class _ReqFormState extends State<ReqForm> {
     );
   }
 
-  Card customCard(IconData icon, String label, String hint,
-      TextEditingController controller) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      elevation: 50,
-      color: Color.fromRGBO(255, 255, 255, 0.75), // for now leave it at white
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: TextField(
-              controller: controller,
-              style: TextStyle(
-                  fontSize: 25, fontWeight: FontWeight.bold, color: ataaGreen),
-              decoration: InputDecoration(
-                hintText: hint,
-                hintStyle: TextStyle(color: ataaGreen, fontSize: 15),
-                labelText: label,
-                labelStyle: TextStyle(color: ataaGreen, fontSize: 20),
-                prefixIcon: Icon(
-                  icon,
-                  color: ataaGreen,
-                  size: 25,
-                ),
-                border: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                errorBorder: InputBorder.none,
-                disabledBorder: InputBorder.none,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }

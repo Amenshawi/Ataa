@@ -59,11 +59,16 @@ class _DonHistorySheetState extends State<DonHistorySheet> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Image.network(
-                                    donations[index].imageURL,
-                                    fit: BoxFit.contain,
+                                  Center(
+                                    child: SizedBox(
+                                      height: hieghtSize *0.25,
+                                      child: Image.network(
+                                        donations[index].imageURL,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
                                   ),
-                                  SizedBox(height: hieghtSize * 0.04),
+                                  SizedBox(height: hieghtSize * 0.02),
                                   Text(donations[index].type,
                                       style: TextStyle(
                                           color: ataaGreen,
