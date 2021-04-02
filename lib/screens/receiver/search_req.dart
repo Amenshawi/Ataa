@@ -20,9 +20,12 @@ class _SearchReqState extends State<SearchReq> {
   double heightSize, widthSize;
   final String type;
   final AppUser user;
-  String title = 'Food';
-  String subTitle = 'Date of Donation';
-  bool isOpen = false;
+  var donations;
+  var requests;
+  var temp;
+  int tab = 0;
+  final TextEditingController searchController = TextEditingController();
+  bool switched = false;
   // final _slidableKey = GlobalKey<SlidableState>();
 
   _SearchReqState(this.type, this.user);
@@ -32,7 +35,8 @@ class _SearchReqState extends State<SearchReq> {
     Size size = MediaQuery.of(context).size;
     heightSize = size.height;
     widthSize = size.width;
-
+    donations = Database.FetchActiveDonations();
+    requests = Database.FetchActiveRequests();
     return DefaultTabController(
       length: 2,
       child: Column(
@@ -46,21 +50,18 @@ class _SearchReqState extends State<SearchReq> {
               labelColor: ataaGreen,
               onTap: (index) {
                 setState(() {
-                  if (index == 0) {
-                    title = 'Food';
-                    subTitle = 'Date of Donation';
-                  } else {
-                    title = 'Clothes';
-                    subTitle = 'Date of Donation';
-                  }
+                  switched = true;
+                  temp = null;
+                  tab = index;
+                  searchController.text = '';
                 });
               },
               tabs: [
                 Text(
-                  'Requests',
+                  'Donations',
                   style: TextStyle(fontSize: 22),
                 ),
-                Text('Donations', style: TextStyle(fontSize: 22))
+                Text('Requests', style: TextStyle(fontSize: 22))
               ],
             ),
           ),
@@ -71,6 +72,7 @@ class _SearchReqState extends State<SearchReq> {
             elevation: 50,
             color: ataaWhite,
             child: TextField(
+              controller: searchController,
               decoration: InputDecoration(
                 hintText: 'Search...',
                 hintStyle: TextStyle(color: ataaGreenField, fontSize: 18),
@@ -85,6 +87,32 @@ class _SearchReqState extends State<SearchReq> {
                 errorBorder: InputBorder.none,
                 disabledBorder: InputBorder.none,
               ),
+              onChanged: ((input) {
+                print('before change');
+                print(temp.toString());
+                if (input == '' || input == null) {
+                  temp = null;
+                  print('empty');
+                  print(temp.toString());
+                  setState(() {});
+                } else if (tab == 0) {
+                  temp = [];
+                  donations.forEach((donation) {
+                    if (donation.type.startsWith(input)) {
+                      temp.add(donation);
+                    }
+                  });
+                  setState(() {});
+                } else {
+                  temp = [];
+                  requests.forEach((request) {
+                    if (request.type.startsWith(input)) {
+                      temp.add(request);
+                    }
+                  });
+                  setState(() {});
+                }
+              }),
             ),
           ),
           Flexible(
@@ -93,54 +121,150 @@ class _SearchReqState extends State<SearchReq> {
               width: widthSize,
               height: heightSize * 0.54,
               child: Card(
-                color: ataaWhite,
-                elevation: 8,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)),
-                child: ListView.builder(
-                    itemCount: 10,
-                    itemBuilder: (context, index) {
-                      return Card(
-                          color: ataaGreen,
-                          elevation: 8,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)),
-                          child: ListTile(
-                            title: Text(
-                              title,
-                              style: TextStyle(color: ataaGold, fontSize: 20),
-                            ),
-                            subtitle: Text(
-                              subTitle,
-                              style: TextStyle(color: ataaGold),
-                            ),
-                            leading:
-                                Icon(Icons.receipt, color: ataaGold, size: 25),
-                            // trailing: IconButton(
-                            //   icon: Icon(Icons.arrow_back_ios, size: 25),
-                            //   color: ataaGold,
-                            // size: 25,
+                  color: ataaWhite,
+                  elevation: 8,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  child: tab == 0
+                      ? FutureBuilder(
+                          future: donations,
+                          builder: (context, snapshot) {
+                            donations = snapshot.data;
+                            print(switched);
+                            print(temp.toString());
+                            if (temp == null || switched) {
+                              print('hi');
+                              temp = snapshot.data;
+                              switched = false;
+                            }
+                            // else if (temp.length == 0) temp = snapshot.data;
 
-                            // this is for when the user press on the arrow icon it will open to him instead of doing nothing.
-                            // but i had an issue with Multiple Widgets used the same GlobalKey
-
-                            // onPressed: () {
-                            //   // setState(() {
-                            //   //   if (isOpen) {
-                            //   //     _slidableKey.currentState.close();
-                            //   //     isOpen = !isOpen;
-                            //   //   } else {
-                            //   //     _slidableKey.currentState.open(
-                            //   //         actionType:
-                            //   //             SlideActionType.secondary);
-                            //   //     isOpen = !isOpen;
-                            //   //   }
-                            //   // });
-                            //   print('Hi');
-                            // },
-                          ));
-                    }),
-              ),
+                            return temp == null
+                                ? Center(
+                                    child: CircularProgressIndicator(
+                                      backgroundColor:
+                                          Color.fromRGBO(244, 234, 146, 1),
+                                      valueColor: AlwaysStoppedAnimation(
+                                          Color.fromRGBO(28, 102, 74, 1)),
+                                    ),
+                                  )
+                                : new ListView.builder(
+                                    itemCount: temp.length,
+                                    itemBuilder: (context, index) {
+                                      return Card(
+                                          color: ataaGreen,
+                                          elevation: 8,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20)),
+                                          child: ListTile(
+                                            title: Text(
+                                              temp[index].type,
+                                              style: TextStyle(
+                                                  color: ataaGold,
+                                                  fontSize: 20),
+                                            ),
+                                            subtitle: Text(
+                                              temp[index]
+                                                      .timeStamp
+                                                      .year
+                                                      .toString() +
+                                                  '-' +
+                                                  temp[index]
+                                                      .timeStamp
+                                                      .month
+                                                      .toString() +
+                                                  '-' +
+                                                  temp[index]
+                                                      .timeStamp
+                                                      .day
+                                                      .toString() +
+                                                  ' ' +
+                                                  temp[index]
+                                                      .timeStamp
+                                                      .hour
+                                                      .toString() +
+                                                  ':' +
+                                                  temp[index]
+                                                      .timeStamp
+                                                      .minute
+                                                      .toString(),
+                                              style: TextStyle(color: ataaGold),
+                                            ),
+                                            leading: Icon(Icons.receipt,
+                                                color: ataaGold, size: 25),
+                                          ));
+                                    });
+                          })
+                      : FutureBuilder(
+                          future: requests,
+                          builder: (context, snapshot) {
+                            requests = snapshot.data;
+                            print(switched);
+                            print(temp.toString());
+                            if (temp == null || switched) {
+                              print('hi');
+                              temp = snapshot.data;
+                              switched = false;
+                            }
+                            // else if (temp.length == 0) temp = snapshot.data;
+                            return temp == null
+                                ? Center(
+                                    child: CircularProgressIndicator(
+                                      backgroundColor:
+                                          Color.fromRGBO(244, 234, 146, 1),
+                                      valueColor: AlwaysStoppedAnimation(
+                                          Color.fromRGBO(28, 102, 74, 1)),
+                                    ),
+                                  )
+                                : new ListView.builder(
+                                    itemCount: temp.length,
+                                    itemBuilder: (context, index) {
+                                      return Card(
+                                          color: ataaGreen,
+                                          elevation: 8,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20)),
+                                          child: ListTile(
+                                            title: Text(
+                                              temp[index].type,
+                                              style: TextStyle(
+                                                  color: ataaGold,
+                                                  fontSize: 20),
+                                            ),
+                                            subtitle: Text(
+                                              temp[index]
+                                                      .timeStamp
+                                                      .year
+                                                      .toString() +
+                                                  '-' +
+                                                  temp[index]
+                                                      .timeStamp
+                                                      .month
+                                                      .toString() +
+                                                  '-' +
+                                                  temp[index]
+                                                      .timeStamp
+                                                      .day
+                                                      .toString() +
+                                                  ' ' +
+                                                  temp[index]
+                                                      .timeStamp
+                                                      .hour
+                                                      .toString() +
+                                                  ':' +
+                                                  temp[index]
+                                                      .timeStamp
+                                                      .minute
+                                                      .toString(),
+                                              style: TextStyle(color: ataaGold),
+                                            ),
+                                            leading: Icon(Icons.receipt,
+                                                color: ataaGold, size: 25),
+                                          ));
+                                    });
+                          })),
             ),
           ),
         ],

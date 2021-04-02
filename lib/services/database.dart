@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:Ataa/models/Periodic_donation.dart';
 import 'package:Ataa/models/donation.dart';
 import 'package:Ataa/models/donation_request.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:Ataa/models/app_user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -411,5 +412,43 @@ class Database {
         .collection('donation_requests')
         .doc(rid)
         .update({'status': 'canceled'});
+  }
+
+  static Future<List<Donation>> FetchActiveDonations() async {
+    List<Donation> donations = [];
+    await _firestore
+        .collection('donations')
+        .where('status', isEqualTo: 'active')
+        .get()
+        .then((snapshot) {
+      snapshot.docs.forEach((doc) {
+        donations.add(Donation(
+            type: doc.data()['type'],
+            timeStamp:
+                DateTime.parse(doc.data()['timeStamp'].toDate().toString()),
+            status: doc.data()['status'],
+            did: doc.id));
+      });
+    });
+    return donations;
+  }
+
+  static Future<List<DonationRequest>> FetchActiveRequests() async {
+    List<DonationRequest> requests = [];
+    await _firestore
+        .collection('donation_requests')
+        .where('status', isEqualTo: 'active')
+        .get()
+        .then((snapshot) {
+      snapshot.docs.forEach((doc) {
+        requests.add(DonationRequest(
+            type: doc.data()['type'],
+            timeStamp:
+                DateTime.parse(doc.data()['timeStamp'].toDate().toString()),
+            status: doc.data()['status'],
+            rid: doc.id));
+      });
+    });
+    return requests;
   }
 }

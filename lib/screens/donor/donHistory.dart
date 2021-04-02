@@ -19,7 +19,6 @@ class _DonHistorySheetState extends State<DonHistorySheet> {
   _DonHistorySheetState(this.type);
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -61,7 +60,7 @@ class _DonHistorySheetState extends State<DonHistorySheet> {
                                 children: [
                                   Center(
                                     child: SizedBox(
-                                      height: hieghtSize *0.25,
+                                      height: hieghtSize * 0.25,
                                       child: Image.network(
                                         donations[index].imageURL,
                                         fit: BoxFit.contain,

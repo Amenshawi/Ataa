@@ -42,7 +42,6 @@ class _RecieverPageState extends State<RecieverPage> {
               SizedBox(height: hieghtSize * 0.07),
               GestureDetector(
                 onTap: () {
-                  print('hi');
                   showSheet(context, 'Request a Donation', ReqForm(), false);
                 },
                 child: CreateButtons(
@@ -64,7 +63,6 @@ class _RecieverPageState extends State<RecieverPage> {
                   spike: false,
                 ),
                 onTap: () {
-                  print('Hi there!');
                   showSheet(context, 'Cancel a Request', CancelReq(type, user),
                       false);
                 },
@@ -78,7 +76,6 @@ class _RecieverPageState extends State<RecieverPage> {
               SizedBox(height: hieghtSize * 0.07),
               GestureDetector(
                 onTap: () {
-                  print('Hi there!');
                   showSheet(context, 'Search', SearchReq(type, user), false);
                 },
                 child: CreateButtons(
@@ -88,8 +85,6 @@ class _RecieverPageState extends State<RecieverPage> {
                   cardName: 'Search Requests',
                   space: false,
                   spike: false,
-                  // context: context,
-                  // sheetName: 'Schedul',
                 ),
               ),
               GestureDetector(
