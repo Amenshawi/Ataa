@@ -1,7 +1,7 @@
 import 'package:Ataa/models/app_user.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
+import 'package:provider/provider.dart';
 import '../home_page.dart';
 import '../location_page.dart';
 
@@ -16,10 +16,13 @@ class AddLocationSheet extends StatefulWidget {
 class _AddLocationSheetState extends State<AddLocationSheet> {
   double hieghtSize, widthSize;
   bool private = false;
-  bool isSwitched = false;
-  AppUser user;
-  var changeLocation;
   LatLng location;
+
+  void _changeLocation(LatLng _location) {
+    setState(() {
+      this.location = _location;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +58,9 @@ class _AddLocationSheetState extends State<AddLocationSheet> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        LocationPage(user, changeLocation)));
+                                    builder: (context) => LocationPage(
+                                        Provider.of<AppUser>(context),
+                                        _changeLocation)));
                           }),
                           readOnly: true,
                           cursorColor: ataaGreen,
