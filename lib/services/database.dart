@@ -414,7 +414,7 @@ class Database {
         .update({'status': 'canceled'});
   }
 
-  static Future<List<Donation>> FetchActiveDonations() async {
+  static Future<List<Donation>> fetchActiveDonations() async {
     List<Donation> donations = [];
     await _firestore
         .collection('donations')
@@ -433,7 +433,7 @@ class Database {
     return donations;
   }
 
-  static Future<List<DonationRequest>> FetchActiveRequests() async {
+  static Future<List<DonationRequest>> fetchActiveRequests() async {
     List<DonationRequest> requests = [];
     await _firestore
         .collection('donation_requests')

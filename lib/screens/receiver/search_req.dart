@@ -1,4 +1,6 @@
 import 'package:Ataa/models/app_user.dart';
+import 'package:Ataa/models/donation.dart';
+import 'package:Ataa/models/donation_request.dart';
 import 'package:Ataa/services/database.dart';
 import 'package:flutter/material.dart';
 
@@ -22,10 +24,11 @@ class _SearchReqState extends State<SearchReq> {
   final AppUser user;
   var donations;
   var requests;
-  var temp;
+  var shownDonations;
+  var shownRequests;
+  bool searching = false;
   int tab = 0;
   final TextEditingController searchController = TextEditingController();
-  bool switched = false;
   // final _slidableKey = GlobalKey<SlidableState>();
 
   _SearchReqState(this.type, this.user);
@@ -49,11 +52,13 @@ class _SearchReqState extends State<SearchReq> {
               unselectedLabelColor: ataaGreenField,
               labelColor: ataaGreen,
               onTap: (index) {
+                this.setState(() {});
                 setState(() {
-                  switched = true;
-                  temp = null;
                   tab = index;
-                  searchController.text = '';
+                  searching = false;
+                  searchController.clear();
+                  if (shownDonations != null) shownDonations.clear();
+                  if (shownRequests != null) shownRequests.clear();
                 });
               },
               tabs: [
@@ -88,29 +93,39 @@ class _SearchReqState extends State<SearchReq> {
                 disabledBorder: InputBorder.none,
               ),
               onChanged: ((input) {
-                print('before change');
-                print(temp.toString());
-                if (input == '' || input == null) {
-                  temp = null;
-                  print('empty');
-                  print(temp.toString());
-                  setState(() {});
-                } else if (tab == 0) {
-                  temp = [];
-                  donations.forEach((donation) {
-                    if (donation.type.startsWith(input)) {
-                      temp.add(donation);
-                    }
-                  });
-                  setState(() {});
+                searching = true;
+                if (tab == 0) {
+                  shownDonations.clear();
+                  if (input == '' || input == null) {
+                    if (shownDonations != null) shownDonations.clear();
+                    if (shownRequests != null) shownRequests.clear();
+                    searching = false;
+                    setState(() {});
+                  } else {
+                    searching = true;
+                    donations.forEach((donation) {
+                      if (donation.type.startsWith(input)) {
+                        shownDonations.add(donation);
+                      }
+                    });
+                    setState(() {});
+                  }
                 } else {
-                  temp = [];
-                  requests.forEach((request) {
-                    if (request.type.startsWith(input)) {
-                      temp.add(request);
-                    }
-                  });
-                  setState(() {});
+                  if (input == '' || input == null) {
+                    if (shownDonations != null) shownDonations.clear();
+                    if (shownRequests != null) shownRequests.clear();
+                    searching = false;
+                    setState(() {});
+                  } else {
+                    searching = true;
+                    shownRequests.clear();
+                    requests.forEach((request) {
+                      if (request.type.startsWith(input)) {
+                        shownRequests.add(request);
+                      }
+                    });
+                    setState(() {});
+                  }
                 }
               }),
             ),
@@ -130,16 +145,17 @@ class _SearchReqState extends State<SearchReq> {
                           future: donations,
                           builder: (context, snapshot) {
                             donations = snapshot.data;
-                            print(switched);
-                            print(temp.toString());
-                            if (temp == null || switched) {
-                              print('hi');
-                              temp = snapshot.data;
-                              switched = false;
+                            if (shownDonations == null) {
+                              shownDonations = snapshot.data;
+                            } else if (shownDonations.length == 0 &&
+                                !searching) {
+                              shownDonations = snapshot.data;
+                            } else if (shownDonations.length != 0 &&
+                                shownDonations[0] is DonationRequest) {
+                              shownDonations = snapshot.data;
                             }
-                            // else if (temp.length == 0) temp = snapshot.data;
 
-                            return temp == null
+                            return shownDonations == null
                                 ? Center(
                                     child: CircularProgressIndicator(
                                       backgroundColor:
@@ -149,7 +165,7 @@ class _SearchReqState extends State<SearchReq> {
                                     ),
                                   )
                                 : new ListView.builder(
-                                    itemCount: temp.length,
+                                    itemCount: shownDonations.length,
                                     itemBuilder: (context, index) {
                                       return Card(
                                           color: ataaGreen,
@@ -159,33 +175,33 @@ class _SearchReqState extends State<SearchReq> {
                                                   BorderRadius.circular(20)),
                                           child: ListTile(
                                             title: Text(
-                                              temp[index].type,
+                                              shownDonations[index].type,
                                               style: TextStyle(
                                                   color: ataaGold,
                                                   fontSize: 20),
                                             ),
                                             subtitle: Text(
-                                              temp[index]
+                                              shownDonations[index]
                                                       .timeStamp
                                                       .year
                                                       .toString() +
                                                   '-' +
-                                                  temp[index]
+                                                  shownDonations[index]
                                                       .timeStamp
                                                       .month
                                                       .toString() +
                                                   '-' +
-                                                  temp[index]
+                                                  shownDonations[index]
                                                       .timeStamp
                                                       .day
                                                       .toString() +
                                                   ' ' +
-                                                  temp[index]
+                                                  shownDonations[index]
                                                       .timeStamp
                                                       .hour
                                                       .toString() +
                                                   ':' +
-                                                  temp[index]
+                                                  shownDonations[index]
                                                       .timeStamp
                                                       .minute
                                                       .toString(),
@@ -198,17 +214,18 @@ class _SearchReqState extends State<SearchReq> {
                           })
                       : FutureBuilder(
                           future: requests,
-                          builder: (context, snapshot) {
-                            requests = snapshot.data;
-                            print(switched);
-                            print(temp.toString());
-                            if (temp == null || switched) {
-                              print('hi');
-                              temp = snapshot.data;
-                              switched = false;
+                          builder: (context, snapshot2) {
+                            requests = snapshot2.data;
+                            if (shownRequests == null) {
+                              shownRequests = snapshot2.data;
+                            } else if (shownRequests.length == 0 &&
+                                !searching) {
+                              shownRequests = snapshot2.data;
+                            } else if (shownRequests.length != 0 &&
+                                shownRequests[0] is Donation) {
+                              shownRequests = snapshot2.data;
                             }
-                            // else if (temp.length == 0) temp = snapshot.data;
-                            return temp == null
+                            return shownRequests == null
                                 ? Center(
                                     child: CircularProgressIndicator(
                                       backgroundColor:
@@ -218,7 +235,7 @@ class _SearchReqState extends State<SearchReq> {
                                     ),
                                   )
                                 : new ListView.builder(
-                                    itemCount: temp.length,
+                                    itemCount: shownRequests.length,
                                     itemBuilder: (context, index) {
                                       return Card(
                                           color: ataaGreen,
@@ -228,33 +245,33 @@ class _SearchReqState extends State<SearchReq> {
                                                   BorderRadius.circular(20)),
                                           child: ListTile(
                                             title: Text(
-                                              temp[index].type,
+                                              shownRequests[index].type,
                                               style: TextStyle(
                                                   color: ataaGold,
                                                   fontSize: 20),
                                             ),
                                             subtitle: Text(
-                                              temp[index]
+                                              shownRequests[index]
                                                       .timeStamp
                                                       .year
                                                       .toString() +
                                                   '-' +
-                                                  temp[index]
+                                                  shownRequests[index]
                                                       .timeStamp
                                                       .month
                                                       .toString() +
                                                   '-' +
-                                                  temp[index]
+                                                  shownRequests[index]
                                                       .timeStamp
                                                       .day
                                                       .toString() +
                                                   ' ' +
-                                                  temp[index]
+                                                  shownRequests[index]
                                                       .timeStamp
                                                       .hour
                                                       .toString() +
                                                   ':' +
-                                                  temp[index]
+                                                  shownRequests[index]
                                                       .timeStamp
                                                       .minute
                                                       .toString(),
