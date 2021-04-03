@@ -38,8 +38,8 @@ class _SearchReqState extends State<SearchReq> {
     Size size = MediaQuery.of(context).size;
     heightSize = size.height;
     widthSize = size.width;
-    donations = Database.FetchActiveDonations();
-    requests = Database.FetchActiveRequests();
+    donations = Database.fetchActiveDonations();
+    requests = Database.fetchActiveRequests();
     return DefaultTabController(
       length: 2,
       child: Column(
