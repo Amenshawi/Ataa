@@ -1,4 +1,5 @@
 import 'package:Ataa/models/app_user.dart';
+import 'package:Ataa/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -9,16 +10,21 @@ final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGold = Color.fromRGBO(244, 234, 146, .8);
 
 class AddLocationSheet extends StatefulWidget {
+  String type;
+  AddLocationSheet(this.type);
   @override
-  _AddLocationSheetState createState() => _AddLocationSheetState();
+  _AddLocationSheetState createState() => _AddLocationSheetState(type);
 }
 
 class _AddLocationSheetState extends State<AddLocationSheet> {
   double hieghtSize, widthSize;
   bool private = false;
   LatLng location;
-
-  void _changeLocation(LatLng _location) {
+  String type;
+  AppUser user;
+  TextEditingController descController = TextEditingController();
+  _AddLocationSheetState(this.type);
+  void changeLocation(LatLng _location) {
     setState(() {
       this.location = _location;
     });
@@ -26,6 +32,7 @@ class _AddLocationSheetState extends State<AddLocationSheet> {
 
   @override
   Widget build(BuildContext context) {
+    user = Provider.of<AppUser>(context);
     Size size = MediaQuery.of(context).size;
     hieghtSize = size.height;
     widthSize = size.width;
@@ -60,7 +67,7 @@ class _AddLocationSheetState extends State<AddLocationSheet> {
                                 MaterialPageRoute(
                                     builder: (context) => LocationPage(
                                         Provider.of<AppUser>(context),
-                                        _changeLocation)));
+                                        changeLocation)));
                           }),
                           readOnly: true,
                           cursorColor: ataaGreen,
@@ -120,6 +127,7 @@ class _AddLocationSheetState extends State<AddLocationSheet> {
                     Padding(
                       padding: const EdgeInsets.only(right: 8.0, left: 8.0),
                       child: TextField(
+                        controller: descController,
                         style: TextStyle(
                             color: ataaGreen,
                             fontSize: 19,
@@ -153,6 +161,7 @@ class _AddLocationSheetState extends State<AddLocationSheet> {
                     backgroundColor: ataaGreen,
                     child: Icon(Icons.done, color: ataaGold, size: 30),
                     onPressed: () {
+                     Database.addStand(location, type, descController.text, user.uid);
                       Navigator.pop(context);
                     }),
               )

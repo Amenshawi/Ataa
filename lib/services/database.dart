@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:Ataa/models/Periodic_donation.dart';
 import 'package:Ataa/models/donation.dart';
 import 'package:Ataa/models/donation_request.dart';
+import 'package:Ataa/services/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:Ataa/models/app_user.dart';
@@ -14,7 +15,7 @@ import 'package:provider/provider.dart';
 class Database {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   static final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
-  static String _uid;
+  static String _uid ;
   Database();
 
   static Future addUser(String uid, String email, String fname, String lname,
@@ -59,6 +60,9 @@ class Database {
   }
 
   static AppUser _fetchDataFromSnapshot(QuerySnapshot snapshot) {
+     print('--------------------------------------------------------------------------------------------');
+    print('the uid in fetch:' + _uid);
+     print('number of files fetched: ' +snapshot.docs.indexOf(snapshot.docs.last).toString());
     return AppUser(
         uid: snapshot.docs.first.data()['uid'],
         email: snapshot.docs.first.data()['email'],
@@ -450,5 +454,15 @@ class Database {
       });
     });
     return requests;
+  }
+  static void addStand(LatLng location, String type, String desc, String uid) async{
+     GeoPoint geopoint = GeoPoint(location.latitude, location.longitude);
+     await _firestore.collection('charity_stands').add({
+       'added_by': uid,
+       'description':desc,
+       'location':geopoint,
+       'status': 'pending',
+       'type':type
+     });  
   }
 }

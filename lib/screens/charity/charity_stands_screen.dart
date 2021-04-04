@@ -177,21 +177,21 @@ class _CharityStandsPageState extends State<CharityStandsPage> {
                   child: sideButton(inerCardNames[0], inerCardIcons[0], color),
                   onTap: () {
                     showSheet(
-                        context, inerCardNames[0], AddLocationSheet(), false);
+                        context, inerCardNames[0], AddLocationSheet('water'), false);
                   },
                 ),
                 GestureDetector(
                   child: sideButton(inerCardNames[1], inerCardIcons[1], color),
                   onTap: () {
                     showSheet(
-                        context, inerCardNames[1], AddLocationSheet(), false);
+                        context, inerCardNames[1], AddLocationSheet('clothes'), false);
                   },
                 ),
                 GestureDetector(
                   child: sideButton(inerCardNames[2], inerCardIcons[2], color),
                   onTap: () {
                     showSheet(
-                        context, inerCardNames[2], AddLocationSheet(), false);
+                        context, inerCardNames[2], AddLocationSheet('fridge'), false);
                   },
                 )
                 // )
