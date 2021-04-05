@@ -60,9 +60,6 @@ class Database {
   }
 
   static AppUser _fetchDataFromSnapshot(QuerySnapshot snapshot) {
-     print('--------------------------------------------------------------------------------------------');
-    print('the uid in fetch:' + _uid);
-     print('number of files fetched: ' +snapshot.docs.indexOf(snapshot.docs.last).toString());
     return AppUser(
         uid: snapshot.docs.first.data()['uid'],
         email: snapshot.docs.first.data()['email'],
