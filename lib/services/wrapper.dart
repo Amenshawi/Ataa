@@ -15,7 +15,10 @@ class Wrapper extends StatelessWidget {
     User fuser = Provider.of<User>(context);
     if (fuser == null) {
       return LoginPage();
+    } else if (fuser.uid == '0') {
+      return LoginPage();
     } else {
+      Database.uid = fuser.uid;
       return StreamProvider.value(
         value: Database.user,
         child: MaterialApp(

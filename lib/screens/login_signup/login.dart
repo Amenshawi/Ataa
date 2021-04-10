@@ -153,10 +153,10 @@ class _LoginPageState extends State<LoginPage> {
                               elevation: 100.0,
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.push(context, 
-                                   MaterialPageRoute(
-                                    builder: (context) => 
-                                    SignupPage()));
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => SignupPage()));
                                 },
                                 child: Center(
                                   heightFactor: 3.0,
@@ -209,6 +209,7 @@ class _LoginPageState extends State<LoginPage> {
         });
       } else {
         setState(() {
+          print(e.code);
           isLoading = false;
           visible = true;
         });

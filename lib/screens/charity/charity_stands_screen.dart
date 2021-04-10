@@ -1,8 +1,10 @@
 // import 'package:Ataa/NavigationPage.dart';
 import 'package:Ataa/Custom/Sheet.dart';
 import 'package:Ataa/Custom/create_buttons.dart';
+import 'package:Ataa/models/CustomMarker.dart';
 import 'package:Ataa/models/app_user.dart';
 import 'package:Ataa/screens/charity/add_location_sheet.dart';
+import 'package:Ataa/screens/charity/locations_view.dart';
 import 'package:Ataa/screens/location_page.dart';
 import 'package:flutter/material.dart';
 import 'package:Ataa/services/database.dart';
@@ -22,7 +24,7 @@ class CharityStandsPage extends StatefulWidget {
 class _CharityStandsPageState extends State<CharityStandsPage> {
   double hieghtSize, widthSize;
   bool search = false;
-
+  Set<Marker> markers;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -181,22 +183,22 @@ class _CharityStandsPageState extends State<CharityStandsPage> {
                 GestureDetector(
                   child: sideButton(inerCardNames[0], inerCardIcons[0], color),
                   onTap: () {
-                    showSheet(
-                        context, inerCardNames[0], AddLocationSheet('water'), false);
+                    showSheet(context, inerCardNames[0],
+                        AddLocationSheet('water'), false);
                   },
                 ),
                 GestureDetector(
                   child: sideButton(inerCardNames[1], inerCardIcons[1], color),
                   onTap: () {
-                    showSheet(
-                        context, inerCardNames[1], AddLocationSheet('clothes'), false);
+                    showSheet(context, inerCardNames[1],
+                        AddLocationSheet('clothes'), false);
                   },
                 ),
                 GestureDetector(
                   child: sideButton(inerCardNames[2], inerCardIcons[2], color),
                   onTap: () {
-                    showSheet(
-                        context, inerCardNames[2], AddLocationSheet('fridge'), false);
+                    showSheet(context, inerCardNames[2],
+                        AddLocationSheet('fridge'), false);
                   },
                 )
                 // )
@@ -215,10 +217,6 @@ class _CharityStandsPageState extends State<CharityStandsPage> {
       decoration: BoxDecoration(
           color: color ? ataaWhite : ataaGreen,
           borderRadius: BorderRadius.circular(15)),
-      // child: Card(
-      //   color: ataaGreen,
-      //   shape: RoundedRectangleBorder(
-      //       borderRadius: BorderRadius.circular(10)),
       child: ListTile(
         title: Text(name,
             style: TextStyle(
@@ -268,28 +266,27 @@ class _CharityStandsPageState extends State<CharityStandsPage> {
                   elevation: 100.0,
                   child: GestureDetector(
                     onTap: () async {
-                      Set<Marker> markers = await Database.fetchStands();
-                      Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LocationPage(
-                                        Provider.of<AppUser>(context),
-                                        null, markers: markers,)));
-                  },
+                      await Database.fetchStands().then((value) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    LocationView(customMarkers: value)));
+                      });
+                    },
                     child: Center(
                       heightFactor: 3.0,
                       child: Text(
-                        "Find Syands",
+                        "Find Stands",
                         style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromRGBO(
-                            28, 102, 74, 1)),
-                          ),
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromRGBO(28, 102, 74, 1)),
                       ),
                     ),
                   ),
-                ) 
+                ),
+              )
             ],
           ),
         ),

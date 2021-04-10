@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:Ataa/models/CustomMarker.dart';
 import 'package:Ataa/models/Periodic_donation.dart';
 import 'package:Ataa/models/donation.dart';
 import 'package:Ataa/models/donation_request.dart';
@@ -18,7 +19,7 @@ import 'package:geocoder/geocoder.dart';
 class Database {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   static final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
-  static String _uid ;
+  static String uid;
   Database();
 
   static Future addUser(String uid, String email, String fname, String lname,
@@ -40,7 +41,7 @@ class Database {
   }
 
   static Future fetchUserData(User fUser) async {
-    _uid = fUser.uid;
+    uid = fUser.uid;
     return await _firestore
         .collection('users')
         .where('uid', isEqualTo: fUser.uid)
@@ -79,7 +80,7 @@ class Database {
   static Stream<AppUser> get user {
     return _firestore
         .collection('users')
-        .where('uid', isEqualTo: _uid)
+        .where('uid', isEqualTo: uid)
         .snapshots()
         .map((_fetchDataFromSnapshot));
   }
@@ -455,61 +456,36 @@ class Database {
     });
     return requests;
   }
-  static void addStand(LatLng location, String type, String desc, String uid) async{
-     GeoPoint geopoint = GeoPoint(location.latitude, location.longitude);
-     await _firestore.collection('charity_stands').add({
-       'added_by': uid,
-       'description':desc,
-       'location':geopoint,
-       'status': 'pending',
-       'type':type
-     });  
+
+  static void addStand(
+      LatLng location, String type, String desc, String uid) async {
+    GeoPoint geopoint = GeoPoint(location.latitude, location.longitude);
+    await _firestore.collection('charity_stands').add({
+      'added_by': uid,
+      'description': desc,
+      'location': geopoint,
+      'status': 'pending',
+      'type': type
+    });
   }
-  static Future<Set<Marker>> fetchStands() async{
-    Set<Marker> markers = {};
+
+  static Future<Set<CustomMarker>> fetchStands() async {
+    Set<CustomMarker> markers = {};
     BitmapDescriptor icon;
     InfoWindow window;
-    await _firestore.collection('charity_stands').where('status', isEqualTo: 'active')
-    .get().then((collection){
-      collection.docs.forEach((doc)async{
-          GeoPoint geoPoint = doc.data()['location'];
-          String type = doc.data()['type'];
-          if(type == 'clothes'){
-            icon = await BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(200,200)), '/assets/Images/clothes.png');
-            var tempadd = await Geocoder.local.findAddressesFromCoordinates(Coordinates(geoPoint.latitude,geoPoint.longitude));
-            var templine = tempadd.first;
-            String snippet = templine.addressLine;
-            window = InfoWindow(title:'Clothes', 
-            snippet: snippet
-            );
-          }
-          else if(type == 'water'){
-            icon = await BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(1000,1080)), '/assets/Images/water-tap.jpg');
-            var tempadd = await Geocoder.local.findAddressesFromCoordinates(Coordinates(geoPoint.latitude,geoPoint.longitude));
-            var templine = tempadd.first;
-            String snippet = templine.addressLine;
-            window = InfoWindow(title:'Water Tap', 
-            snippet: snippet
-            );
-          }
-          else if(type == 'fridge'){
-            icon = await BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(512,512)), '/assets/Images/food.png');
-            var tempadd = await Geocoder.local.findAddressesFromCoordinates(Coordinates(geoPoint.latitude,geoPoint.longitude));
-            var templine = tempadd.first;
-            String snippet = templine.addressLine;
-            window = InfoWindow(title:'Fridge', 
-            snippet: snippet
-            );
-          }
-        markers.add(Marker(
-          markerId: MarkerId(doc.id),
-          position: LatLng(geoPoint.latitude, geoPoint.longitude),
-          icon: icon,
-          infoWindow: window
-          ));
-          print(doc.id);
-        }
-      );
+    await _firestore
+        .collection('charity_stands')
+        .where('status', isEqualTo: 'active')
+        .get()
+        .then((collection) {
+      collection.docs.forEach((doc) async {
+        GeoPoint geoPoint = doc.data()['location'];
+        markers.add(CustomMarker(
+            type: doc.data()['type'],
+            marker: Marker(
+                markerId: MarkerId(doc.id),
+                position: LatLng(geoPoint.latitude, geoPoint.longitude))));
+      });
     });
     return markers;
   }
