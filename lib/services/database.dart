@@ -5,12 +5,15 @@ import 'package:Ataa/models/donation.dart';
 import 'package:Ataa/models/donation_request.dart';
 import 'package:Ataa/services/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:Ataa/models/app_user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:provider/provider.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geocoder/geocoder.dart';
 
 class Database {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -461,5 +464,53 @@ class Database {
        'status': 'pending',
        'type':type
      });  
+  }
+  static Future<Set<Marker>> fetchStands() async{
+    Set<Marker> markers = {};
+    BitmapDescriptor icon;
+    InfoWindow window;
+    await _firestore.collection('charity_stands').where('status', isEqualTo: 'active')
+    .get().then((collection){
+      collection.docs.forEach((doc)async{
+          GeoPoint geoPoint = doc.data()['location'];
+          String type = doc.data()['type'];
+          if(type == 'clothes'){
+            icon = await BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(200,200)), '/assets/Images/clothes.png');
+            var tempadd = await Geocoder.local.findAddressesFromCoordinates(Coordinates(geoPoint.latitude,geoPoint.longitude));
+            var templine = tempadd.first;
+            String snippet = templine.addressLine;
+            window = InfoWindow(title:'Clothes', 
+            snippet: snippet
+            );
+          }
+          else if(type == 'water'){
+            icon = await BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(1000,1080)), '/assets/Images/water-tap.jpg');
+            var tempadd = await Geocoder.local.findAddressesFromCoordinates(Coordinates(geoPoint.latitude,geoPoint.longitude));
+            var templine = tempadd.first;
+            String snippet = templine.addressLine;
+            window = InfoWindow(title:'Water Tap', 
+            snippet: snippet
+            );
+          }
+          else if(type == 'fridge'){
+            icon = await BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(512,512)), '/assets/Images/food.png');
+            var tempadd = await Geocoder.local.findAddressesFromCoordinates(Coordinates(geoPoint.latitude,geoPoint.longitude));
+            var templine = tempadd.first;
+            String snippet = templine.addressLine;
+            window = InfoWindow(title:'Fridge', 
+            snippet: snippet
+            );
+          }
+        markers.add(Marker(
+          markerId: MarkerId(doc.id),
+          position: LatLng(geoPoint.latitude, geoPoint.longitude),
+          icon: icon,
+          infoWindow: window
+          ));
+          print(doc.id);
+        }
+      );
+    });
+    return markers;
   }
 }

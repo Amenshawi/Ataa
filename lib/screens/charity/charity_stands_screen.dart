@@ -1,8 +1,13 @@
 // import 'package:Ataa/NavigationPage.dart';
 import 'package:Ataa/Custom/Sheet.dart';
 import 'package:Ataa/Custom/create_buttons.dart';
+import 'package:Ataa/models/app_user.dart';
 import 'package:Ataa/screens/charity/add_location_sheet.dart';
+import 'package:Ataa/screens/location_page.dart';
 import 'package:flutter/material.dart';
+import 'package:Ataa/services/database.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGreenField = Color.fromRGBO(28, 102, 74, .5);
@@ -256,44 +261,35 @@ class _CharityStandsPageState extends State<CharityStandsPage> {
                 ),
               ),
               Expanded(
-                child: TextField(
-                  style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: ataaGreen),
-                  decoration: InputDecoration(
-                    fillColor: ataaWhite,
-                    filled: true,
-                    hintText: 'Search for a location...',
-                    hintStyle: TextStyle(
-                        color: ataaGreen,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w600),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(40),
-                        borderSide: BorderSide.none),
+                child: Material(
+                  borderRadius: BorderRadius.circular(20.0),
+                  shadowColor: Colors.grey,
+                  color: Colors.white70,
+                  elevation: 100.0,
+                  child: GestureDetector(
+                    onTap: () async {
+                      Set<Marker> markers = await Database.fetchStands();
+                      Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LocationPage(
+                                        Provider.of<AppUser>(context),
+                                        null, markers: markers,)));
+                  },
+                    child: Center(
+                      heightFactor: 3.0,
+                      child: Text(
+                        "Find Syands",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromRGBO(
+                            28, 102, 74, 1)),
+                          ),
+                      ),
+                    ),
                   ),
-                  onChanged: (val) {
-                    if (val != '') {
-                      setState(() async {
-                        // charities = await database.searchForCharity(val);
-                        setState(
-                            () {}); //IDK why is has to be here but it's the only way I could find to make it work
-                        // print(charities.first.data());
-                      });
-                    } else {
-                      // setState(() {
-                      //   charities = null;
-                      // });
-                    }
-                  },
-                  onTap: () {
-                    setState(() {
-                      search = true;
-                    });
-                  },
-                ),
-              ),
+                ) 
             ],
           ),
         ),

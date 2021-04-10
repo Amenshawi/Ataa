@@ -12,13 +12,14 @@ import 'package:provider/provider.dart';
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGold = Color.fromRGBO(244, 234, 146, 1);
 
-class LocationPage extends StatefulWidget {
+class LocationPage extends StatefulWidget{
   final AppUser user;
   final changeLocation;
+  final Set<Marker> markers;
 
-  LocationPage(this.user, this.changeLocation);
+  LocationPage(this.user, this.changeLocation, {this.markers});
   @override
-  _LocationPageState createState() => _LocationPageState(user, changeLocation);
+  _LocationPageState createState() => _LocationPageState(user, changeLocation,markers: markers);
 }
 
 class _LocationPageState extends State<LocationPage> {
@@ -28,17 +29,22 @@ class _LocationPageState extends State<LocationPage> {
   LatLng currentPosition = LatLng(37.4219983, -122.084);
   bool foundLocation = false;
   GoogleMapController mapController;
-  Set<Marker> marker = {};
+  Set<Marker> markers = {};
 
   bool once = false;
 
   Position location = Position();
   /*Location location = new Location();
   LocationData _locationData;*/
-
+  @override
+  initState(){
+    super.initState();
+    if(markers == null)
+    markers = {};
+  }
   TextEditingController addressController = TextEditingController();
 
-  _LocationPageState(this.user, this.changeLocation);
+  _LocationPageState(this.user, this.changeLocation,{this.markers});
   @override
   Widget build(BuildContext context) {
     user = Provider.of<AppUser>(context);
@@ -50,7 +56,7 @@ class _LocationPageState extends State<LocationPage> {
                 GoogleMap(
                   myLocationEnabled: true,
                   zoomControlsEnabled: false,
-                  markers: marker,
+                  markers: markers,
                   onMapCreated: _onMapCreated,
                   onCameraMove: _onCameraMove,
                   onCameraIdle: _onCameraIdle,
@@ -244,7 +250,7 @@ class _LocationPageState extends State<LocationPage> {
     mapController = controller;
 
     setState(() {
-      marker.add(
+      markers.add(
           Marker(markerId: MarkerId('address'), position: currentPosition));
       print(" current marker position " + currentPosition.toString());
     });
@@ -253,8 +259,8 @@ class _LocationPageState extends State<LocationPage> {
   void _onCameraMove(CameraPosition camera) {
     setState(() {
       currentPosition = LatLng(camera.target.latitude, camera.target.longitude);
-      marker.remove(Marker);
-      marker.add(
+      markers.remove(Marker);
+      markers.add(
           Marker(markerId: MarkerId('address'), position: currentPosition));
     });
   }
