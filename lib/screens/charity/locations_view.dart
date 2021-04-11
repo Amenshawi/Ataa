@@ -1,6 +1,8 @@
 import 'dart:typed_data';
+import 'package:Ataa/Custom/Sheet.dart';
 import 'package:Ataa/models/CustomMarker.dart';
 import 'package:Ataa/models/app_user.dart';
+import 'package:Ataa/screens/charity/report_stand.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:Ataa/services/database.dart';
@@ -17,11 +19,12 @@ final Color ataaGold = Color.fromRGBO(244, 234, 146, 1);
 
 class LocationView extends StatefulWidget {
   Set<CustomMarker> customMarkers;
-
-  LocationView({this.customMarkers});
+  final bool report;
+  
+  LocationView(this.report, {this.customMarkers});
   @override
   _LocationViewState createState() =>
-      _LocationViewState(customMarkers: customMarkers);
+      _LocationViewState(this.report, customMarkers: customMarkers);
 }
 
 class _LocationViewState extends State<LocationView> {
@@ -34,6 +37,7 @@ class _LocationViewState extends State<LocationView> {
   Set<Marker> markers = {};
   Set<CustomMarker> customMarkers = {};
   bool once = false;
+  final bool report;
 
   Position location = Position();
   /*Location location = new Location();
@@ -46,7 +50,7 @@ class _LocationViewState extends State<LocationView> {
 
   TextEditingController addressController = TextEditingController();
 
-  _LocationViewState({this.customMarkers});
+  _LocationViewState(this.report, {this.customMarkers});
   @override
   Widget build(BuildContext context) {
     user = Provider.of<AppUser>(context);
@@ -58,6 +62,7 @@ class _LocationViewState extends State<LocationView> {
           ? Expanded(
               child: Stack(children: [
                 GoogleMap(
+                  onCameraMove: _onCameraMove,
                   myLocationEnabled: true,
                   zoomControlsEnabled: false,
                   markers: markers,
@@ -90,12 +95,6 @@ class _LocationViewState extends State<LocationView> {
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold),
                             decoration: InputDecoration(
-                              suffixIcon: IconButton(
-                                icon: Icon(Icons.search, color: ataaGreen),
-                                onPressed: () {
-                                  _findLocationFromAddress();
-                                },
-                              ),
                               prefixIcon:
                                   Icon(Icons.location_pin, color: ataaGreen),
                               enabledBorder: InputBorder.none,
@@ -245,33 +244,48 @@ class _LocationViewState extends State<LocationView> {
     ));
   }
 
-  void _findLocationFromAddress() async {
-    var result =
-        await Geocoder.local.findAddressesFromQuery(addressController.text);
-    var first = result.first;
-    mapController.animateCamera(CameraUpdate.newCameraPosition(
-      CameraPosition(
-        bearing: 0,
-        target: LatLng(first.coordinates.latitude, first.coordinates.longitude),
-        zoom: 16.0,
-      ),
-    ));
+  void _onCameraMove(CameraPosition camera) {
+    setState(() {
+      currentPosition = LatLng(camera.target.latitude, camera.target.longitude);
+      markers.remove(Marker);
+      markers.add(
+          Marker(markerId: MarkerId('address'), position: currentPosition));
+    });
   }
 
   _addMarkers(Set<CustomMarker> customMarkers) {
     Uint8List icon;
     customMarkers.forEach((customMarker) async {
       if (customMarker.type == 'fridge') {
-        icon = await getBytesFromAsset('assets/Images/food.png', 130);
+        icon = await getBytesFromAsset('assets/Images/food.png', 150);
       } else if (customMarker.type == 'water') {
-        icon = await getBytesFromAsset('assets/Images/water-tap.png', 130);
+        icon = await getBytesFromAsset('assets/Images/water-tap.png', 150);
       } else {
-        icon = await getBytesFromAsset('assets/Images/clothes.png', 130);
+        icon = await getBytesFromAsset('assets/Images/clothes.png', 150);
       }
       var marker = Marker(
           markerId: customMarker.marker.markerId,
           position: customMarker.marker.position,
-          icon: BitmapDescriptor.fromBytes(icon));
+          icon: BitmapDescriptor.fromBytes(icon),
+          onTap: ()async{
+            if(report){
+              showSheet(context, 'Report a Stand',ReportStandSheet(customMarker.marker.markerId.value), false);
+            }
+            else{
+              Coordinates coordinates =
+                new Coordinates(currentPosition.latitude, currentPosition.longitude);
+              var addresses =
+                await Geocoder.local.findAddressesFromCoordinates(coordinates);
+              var first = addresses.first;
+              String temp = first.addressLine;
+
+              setState(() {
+                addressController.text = temp;
+                addressLine = temp;
+             });
+            }
+          }
+        );
       markers.add(marker);
     });
   }
@@ -284,5 +298,23 @@ class _LocationViewState extends State<LocationView> {
     return (await fi.image.toByteData(format: ui.ImageByteFormat.png))
         .buffer
         .asUint8List();
+  }
+  showSheet(context, sheetName, content, padding) {
+    showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+        ),
+        elevation: 100,
+        isScrollControlled: true,
+        builder: (BuildContext bc) {
+          return Sheet(
+            sheetName: sheetName,
+            content: content,
+            padding: padding,
+          );
+        }).whenComplete((){
+          Navigator.pop(context);
+        });
   }
 }

@@ -182,21 +182,48 @@ class _CharityStandsPageState extends State<CharityStandsPage> {
               children: [
                 GestureDetector(
                   child: sideButton(inerCardNames[0], inerCardIcons[0], color),
-                  onTap: () {
+                  onTap: () async{
+                    if(color){
+                      await Database.fetchStands().then((value) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    LocationView(true,customMarkers: value)));
+                      });
+                    }else 
                     showSheet(context, inerCardNames[0],
                         AddLocationSheet('water'), false);
                   },
                 ),
                 GestureDetector(
                   child: sideButton(inerCardNames[1], inerCardIcons[1], color),
-                  onTap: () {
+                  onTap: () async{
+                    if(color){
+                      await Database.fetchStands().then((value) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    LocationView(true,customMarkers: value)));
+                      });
+                    }else 
                     showSheet(context, inerCardNames[1],
                         AddLocationSheet('clothes'), false);
                   },
                 ),
                 GestureDetector(
                   child: sideButton(inerCardNames[2], inerCardIcons[2], color),
-                  onTap: () {
+                  onTap: () async{
+                    if(color){
+                      await Database.fetchStands().then((value) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    LocationView(true,customMarkers: value)));
+                      });
+                    }else 
                     showSheet(context, inerCardNames[2],
                         AddLocationSheet('fridge'), false);
                   },
@@ -271,7 +298,7 @@ class _CharityStandsPageState extends State<CharityStandsPage> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    LocationView(customMarkers: value)));
+                                    LocationView(false,customMarkers: value)));
                       });
                     },
                     child: Center(

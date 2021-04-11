@@ -471,8 +471,6 @@ class Database {
 
   static Future<Set<CustomMarker>> fetchStands() async {
     Set<CustomMarker> markers = {};
-    BitmapDescriptor icon;
-    InfoWindow window;
     await _firestore
         .collection('charity_stands')
         .where('status', isEqualTo: 'active')
@@ -484,9 +482,19 @@ class Database {
             type: doc.data()['type'],
             marker: Marker(
                 markerId: MarkerId(doc.id),
-                position: LatLng(geoPoint.latitude, geoPoint.longitude))));
+                position: LatLng(geoPoint.latitude, geoPoint.longitude)),
+                ));
       });
     });
     return markers;
+  }
+  static void reportStand(String standId, String comment, String uid) async{
+    await _firestore.collection('stand_reports')
+    .add({
+      'reporter': uid,
+      'standID': standId,
+      'comment': comment,
+      'status': 'active'
+    });
   }
 }

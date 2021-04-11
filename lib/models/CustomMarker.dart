@@ -5,6 +5,8 @@ class CustomMarker {
   Marker marker;
   String type;
   Icon icon;
+  String title;
+  String snippet;
 
-  CustomMarker({this.marker, this.type, this.icon});
+  CustomMarker({this.marker, this.type, this.icon, this.title, this.snippet});
 }
