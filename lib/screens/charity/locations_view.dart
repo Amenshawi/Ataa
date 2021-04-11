@@ -20,7 +20,7 @@ final Color ataaGold = Color.fromRGBO(244, 234, 146, 1);
 class LocationView extends StatefulWidget {
   Set<CustomMarker> customMarkers;
   final bool report;
-  
+
   LocationView(this.report, {this.customMarkers});
   @override
   _LocationViewState createState() =>
@@ -247,9 +247,6 @@ class _LocationViewState extends State<LocationView> {
   void _onCameraMove(CameraPosition camera) {
     setState(() {
       currentPosition = LatLng(camera.target.latitude, camera.target.longitude);
-      markers.remove(Marker);
-      markers.add(
-          Marker(markerId: MarkerId('address'), position: currentPosition));
     });
   }
 
