@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_controller/google_maps_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:toast/toast.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGreenField = Color.fromRGBO(28, 102, 74, .5);
@@ -320,8 +321,34 @@ class _DonationFormState extends State<DonationForm> {
                           status: 'Active',
                           notifyAt: notifyAt);
                       Database.addDonation(donation);
-                      Navigator.pop(context);
-                    }),
+                      /* _dialog(
+                        context,
+                        'Confirmation',
+                        Color.fromRGBO(28, 102, 74, 1.0),
+                        'Your Donation Was posted Successfully',
+                        'Continue'
+                        );*/
+                        Toast.show(
+                          'Donation Posted Successfully',
+                          context,
+                          border: Border(
+                            bottom: BorderSide(color: ataaWhite, width: 5, style: BorderStyle.solid),
+                            top: BorderSide(color: ataaWhite, width: 5, style: BorderStyle.solid),
+                            left:  BorderSide(color: ataaWhite, width: 5, style: BorderStyle.solid),
+                            right:  BorderSide(color: ataaWhite, width: 5, style: BorderStyle.solid),
+                            ),
+                          duration: Toast.LENGTH_LONG,
+                          gravity: Toast.TOP,
+                          backgroundColor: ataaGreen,
+                          textColor: ataaWhite,
+                          backgroundRadius: 10
+                        );
+                        print(Toast.TOP);
+                        print(Toast.BOTTOM);
+                        print(Toast.CENTER);
+                        Navigator.pop(context);
+                    }
+                )
               )
             ],
           ),
@@ -387,48 +414,5 @@ class _DonationFormState extends State<DonationForm> {
       _image = image;
       imagePicked = true;
     });
-  }
-
-  void _dialog(context, String title, Color titleColor, String message,
-      String buttonLabel) {
-    Dialog errorDialog = Dialog(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0)), //this right here
-      child: Container(
-        height: 250.0,
-        width: 300.0,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Text(
-                title,
-                style: TextStyle(color: titleColor, fontSize: 30.0),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Text(
-                message,
-                style: TextStyle(
-                    color: Color.fromRGBO(28, 102, 74, 1), fontSize: 20),
-              ),
-            ),
-            Padding(padding: EdgeInsets.only(top: 25.0)),
-            FlatButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  buttonLabel,
-                  style: TextStyle(
-                      color: Color.fromRGBO(28, 102, 74, 1), fontSize: 20),
-                ))
-          ],
-        ),
-      ),
-    );
-    showDialog(context: context, builder: (BuildContext bc) => errorDialog);
   }
 }
