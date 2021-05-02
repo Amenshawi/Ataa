@@ -8,9 +8,13 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_controller/google_maps_controller.dart';
 import 'package:Ataa/screens/location_page.dart';
 import 'package:provider/provider.dart';
+import 'package:toast/toast.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
-final Color ataaGold = Color.fromRGBO(244, 234, 146, 1);
+final Color ataaGreenField = Color.fromRGBO(28, 102, 74, .5);
+final Color ataaGold = Color.fromRGBO(244, 234, 146, .8);
+final Color ataaWhite = Color.fromRGBO(255, 255, 255, 0.75);
+final Color ataaRed = Color.fromRGBO(255, 88, 88, 1);
 
 class Profile extends StatefulWidget {
   @override
@@ -399,29 +403,24 @@ class _ProfileState extends State<Profile> {
                         var newPassword2 = newPassword2Controller.text;
                         if (newPassword == newPassword2) {
                           if (await _auth.changePassword(newPassword)) {
-                            print('password changed !');
-                            Navigator.pop(context);
+                            showPopup('password changed !', false);
                           } else {
-                            print(
-                                'password too weak or error with the connection');
-                            //error message
+                            showPopup(
+                                'password too weak or error with the connection',
+                                true);
                           }
                         } else {
-                          print('passwords don\'t match');
-                          //error message
+                          showPopup('passwords don\'t match', true);
                         }
                       } else {
                         var correctPassword = await _auth.confirmPassword(
                             oldPasswordController.text, user);
-                        print(
-                            'correct password: ' + correctPassword.toString());
                         if (correctPassword) {
-                          print('before setState');
                           setState(() {
                             visiblePassword = !visiblePassword;
                           });
                         } else {
-                          print('wrong pawword');
+                          showPopup('wrong pawword', true);
                         }
                       }
                     },
@@ -739,7 +738,7 @@ class _ProfileState extends State<Profile> {
                                   borderSide: BorderSide(color: ataaGreen)),
                               focusedBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(color: ataaGreen)),
-                              labelText: 'Old Password',
+                              labelText: 'Password',
                               labelStyle: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w500,
@@ -764,28 +763,24 @@ class _ProfileState extends State<Profile> {
                         var newEmail2 = newEmail2Controller.text;
                         if (newEmail1 == newEmail2) {
                           if (await _auth.changeEmail(newEmail1, user)) {
-                            print('Email changed !');
-                            Navigator.pop(context);
+                            showPopup('Email changed', false);
                           } else {
-                            print('Email inavild or error with the connection');
-                            //error message
+                            showPopup(
+                                'Email inavild or error with the connection',
+                                true);
                           }
                         } else {
-                          print('emails don\'t match');
-                          //error message
+                          showPopup('emails don\'t match', true);
                         }
                       } else {
                         var correctPassword = await _auth.confirmPassword(
                             oldPasswordController.text, user);
-                        print(
-                            'correct password: ' + correctPassword.toString());
                         if (correctPassword) {
-                          print('before setState');
                           setState(() {
                             visiblePassword = !visiblePassword;
                           });
                         } else {
-                          print('wrong pawword');
+                          showPopup('wrong pawword', true);
                         }
                       }
                     },
@@ -810,5 +805,25 @@ class _ProfileState extends State<Profile> {
               child: SingleChildScrollView(child: emailSheet(user)));
         });
     oldPasswordController = TextEditingController();
+  }
+
+  showPopup(String text, bool error) {
+    Toast.show(text, context,
+        border: Border(
+          bottom:
+              BorderSide(color: ataaWhite, width: 5, style: BorderStyle.solid),
+          top: BorderSide(color: ataaWhite, width: 5, style: BorderStyle.solid),
+          left:
+              BorderSide(color: ataaWhite, width: 5, style: BorderStyle.solid),
+          right:
+              BorderSide(color: ataaWhite, width: 5, style: BorderStyle.solid),
+        ),
+        duration: 4,
+        gravity: Toast.TOP,
+        backgroundColor: ataaGreen,
+        textColor: error ? ataaRed : ataaWhite,
+        backgroundRadius: 10);
+
+    if (!error) Navigator.pop(context);
   }
 }

@@ -12,14 +12,15 @@ import 'package:provider/provider.dart';
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGold = Color.fromRGBO(244, 234, 146, 1);
 
-class LocationPage extends StatefulWidget{
+class LocationPage extends StatefulWidget {
   final AppUser user;
   final changeLocation;
   final Set<Marker> markers;
 
   LocationPage(this.user, this.changeLocation, {this.markers});
   @override
-  _LocationPageState createState() => _LocationPageState(user, changeLocation,markers: markers);
+  _LocationPageState createState() =>
+      _LocationPageState(user, changeLocation, markers: markers);
 }
 
 class _LocationPageState extends State<LocationPage> {
@@ -34,17 +35,15 @@ class _LocationPageState extends State<LocationPage> {
   bool once = false;
 
   Position location = Position();
-  /*Location location = new Location();
-  LocationData _locationData;*/
   @override
-  initState(){
+  initState() {
     super.initState();
-    if(markers == null)
-    markers = {};
+    if (markers == null) markers = {};
   }
+
   TextEditingController addressController = TextEditingController();
 
-  _LocationPageState(this.user, this.changeLocation,{this.markers});
+  _LocationPageState(this.user, this.changeLocation, {this.markers});
   @override
   Widget build(BuildContext context) {
     user = Provider.of<AppUser>(context);
@@ -77,7 +76,6 @@ class _LocationPageState extends State<LocationPage> {
                       Card(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
-                            //side: BorderSide(color: ataaGreen, width: 3))
                           ),
                           elevation: 30,
                           color: Colors.white,

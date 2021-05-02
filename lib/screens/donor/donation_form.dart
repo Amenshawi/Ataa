@@ -1,4 +1,3 @@
-// import 'dart:io';
 import 'dart:io';
 import 'package:Ataa/models/app_user.dart';
 import 'package:Ataa/services/database.dart';
@@ -14,6 +13,7 @@ final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGreenField = Color.fromRGBO(28, 102, 74, .5);
 final Color ataaGold = Color.fromRGBO(244, 234, 146, .8);
 final Color ataaWhite = Color.fromRGBO(255, 255, 255, 0.75);
+final Color ataaRed = Color.fromRGBO(255, 88, 88, 1);
 
 class DonationForm extends StatefulWidget {
   final String type;
@@ -176,7 +176,6 @@ class _DonationFormState extends State<DonationForm> {
                 height: heightSize * 0.2,
                 width: widthSize * 0.75,
                 child: Card(
-                  // color: ataaGreen,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
                   elevation: 8,
@@ -297,59 +296,50 @@ class _DonationFormState extends State<DonationForm> {
                   : Container(),
               SizedBox(height: heightSize * 0.03),
               Container(
-                height: heightSize * 0.05,
-                width: widthSize * 0.2,
-                child: FloatingActionButton(
-                    elevation: 8,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    backgroundColor: ataaGreen,
-                    child: Icon(Icons.done, color: ataaGold, size: 30),
-                    onPressed: () {
-                      _image = File(_image.path);
-                      if (notifyAt == null) {
-                        notifyAt =
-                            DateTime.now().add(new Duration(minutes: time));
-                      }
-                      final donation = Donation(
-                          user: user,
-                          type: type,
-                          image: _image,
-                          desc: descController.text,
-                          anonymous: anonymous,
-                          location: location,
-                          status: 'Active',
-                          notifyAt: notifyAt);
-                      Database.addDonation(donation);
-                      /* _dialog(
-                        context,
-                        'Confirmation',
-                        Color.fromRGBO(28, 102, 74, 1.0),
-                        'Your Donation Was posted Successfully',
-                        'Continue'
-                        );*/
-                        Toast.show(
-                          'Donation Posted Successfully',
-                          context,
-                          border: Border(
-                            bottom: BorderSide(color: ataaWhite, width: 5, style: BorderStyle.solid),
-                            top: BorderSide(color: ataaWhite, width: 5, style: BorderStyle.solid),
-                            left:  BorderSide(color: ataaWhite, width: 5, style: BorderStyle.solid),
-                            right:  BorderSide(color: ataaWhite, width: 5, style: BorderStyle.solid),
-                            ),
-                          duration: Toast.LENGTH_LONG,
-                          gravity: Toast.TOP,
-                          backgroundColor: ataaGreen,
-                          textColor: ataaWhite,
-                          backgroundRadius: 10
-                        );
-                        print(Toast.TOP);
-                        print(Toast.BOTTOM);
-                        print(Toast.CENTER);
-                        Navigator.pop(context);
-                    }
-                )
-              )
+                  height: heightSize * 0.05,
+                  width: widthSize * 0.2,
+                  child: FloatingActionButton(
+                      elevation: 8,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      backgroundColor: ataaGreen,
+                      child: Icon(Icons.done, color: ataaGold, size: 30),
+                      onPressed: () {
+                        try {
+                          if (_image == null) throw 'no image';
+                          _image = File(_image.path);
+                          if (notifyAt == null) {
+                            notifyAt =
+                                DateTime.now().add(new Duration(minutes: time));
+                          }
+                          if (descController.text == '') throw 'no desc';
+                          if (location == null) throw 'no location';
+                          final donation = Donation(
+                              user: user,
+                              type: type,
+                              image: _image,
+                              desc: descController.text,
+                              anonymous: anonymous,
+                              location: location,
+                              status: 'Active',
+                              notifyAt: notifyAt);
+
+                          Database.addDonation(donation);
+                          showPopup('Donation Posted Successfully', false);
+                        } catch (e) {
+                          if (e == 'no image') {
+                            showPopup(
+                                'Please add a picture\nIf a picture is unavaliable, consider adding any picture that represnets the item.',
+                                true);
+                          } else if (e == 'no desc') {
+                            showPopup('Please add a description', true);
+                          } else if (e == 'no location') {
+                            showPopup('Please add a location', true);
+                          } else {
+                            showPopup(e.toString(), true);
+                          }
+                        }
+                      }))
             ],
           ),
         ),
@@ -394,6 +384,26 @@ class _DonationFormState extends State<DonationForm> {
     setState(() {
       this.location = _location;
     });
+  }
+
+  showPopup(String text, bool error) {
+    Toast.show(text, context,
+        border: Border(
+          bottom:
+              BorderSide(color: ataaWhite, width: 5, style: BorderStyle.solid),
+          top: BorderSide(color: ataaWhite, width: 5, style: BorderStyle.solid),
+          left:
+              BorderSide(color: ataaWhite, width: 5, style: BorderStyle.solid),
+          right:
+              BorderSide(color: ataaWhite, width: 5, style: BorderStyle.solid),
+        ),
+        duration: 4,
+        gravity: Toast.TOP,
+        backgroundColor: ataaGreen,
+        textColor: error ? ataaRed : ataaWhite,
+        backgroundRadius: 10);
+
+    if (!error) Navigator.pop(context);
   }
 
   _imgFromCamera() async {

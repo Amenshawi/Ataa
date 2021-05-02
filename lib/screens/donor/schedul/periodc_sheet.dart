@@ -1,6 +1,5 @@
 import 'package:Ataa/custom/Sheet.dart';
 import 'package:Ataa/Custom/custom_daytile_builder.dart';
-import 'package:Ataa/screens/donor/donation_form.dart';
 import 'package:Ataa/models/app_user.dart';
 import 'package:Ataa/services/database.dart';
 import 'package:flutter/material.dart';
@@ -111,20 +110,11 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
                           ),
                           iconSize: 20,
                           style: TextStyle(
-                              color: ataaGreen,
-                              // fontSize: 22,
-                              fontWeight: FontWeight.bold),
-                          // underline: Container(height: 2, color: ataaWhite),
+                              color: ataaGreen, fontWeight: FontWeight.bold),
                           onChanged: (String newValue) {
                             setState(() {
                               type = newValue;
                             });
-                            // if (newValue == 'Food')
-                            //   showSheet(context, newValue,
-                            //       DonationForm(newValue, user, true), true);
-                            // else
-                            //   showSheet(context, newValue,
-                            //       DonationForm(newValue, user, false), false);
                           },
                           items: <String>[
                             'Food',
@@ -149,18 +139,6 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
                 ),
               ),
               SizedBox(height: heightSize * 0.01),
-              /*Card(
-                color: ataaGreen,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25)),
-                child: ListTile(
-                    title: Text(
-                      'From: ${_startDate.year}/${_startDate.month}/${_startDate.day} \nTo: ${_endDate.year}/${_endDate.month}/${_endDate.day}',
-                      style: TextStyle(color: ataaGold, fontSize: 20),
-                    ),
-                    trailing: Icon(Icons.date_range_rounded, color: ataaGold),
-                    onTap: _pickDate),
-              ),*/
               Card(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
@@ -271,20 +249,6 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
                       height: heightSize * 0.3,
                       child: monthCalendarro,
                     ),
-
-              /* Card(
-                color: ataaGreen,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25)),
-                child: ListTile(
-                    title: Text(
-                      'Time: ${_timeOfDay.hour}: ${_timeOfDay.minute} ${period}',
-                      style: TextStyle(color: ataaGold, fontSize: 20),
-                    ),
-                    trailing: Icon(Icons.timer, color: ataaGold),
-                    onTap: _pickTime),
-              ),*/
-              // ),
               Container(
                   height: heightSize * 0.05,
                   width: widthSize * 0.2,
@@ -299,10 +263,7 @@ class _PeriodcSheetState extends State<PeriodcSheet> {
                         Database.addWeekly(user, type, date, weekdays);
                       else
                         Database.addMonthly(user, type, date, monthDays);
-                      // Database.addDonation(user, type, _image,
-                      //     descController.text, anonymous, location);
                       Navigator.pop(context);
-                      // call db.addDonation here
                     },
                   ))
             ],

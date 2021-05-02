@@ -1,7 +1,5 @@
-import 'package:Ataa/screens/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
 import 'signup.dart';
 import 'package:Ataa/services/auth.dart';
 import 'package:Ataa/screens/login_signup/forget_password.dart';
@@ -43,9 +41,7 @@ class _LoginPageState extends State<LoginPage> {
                             image: AssetImage('assets/Images/Ataa-Logo.png')),
                         Container(
                           padding: EdgeInsets.only(top: 300),
-                          // alignment: Alignment.center,
                           margin: EdgeInsets.all(10.0),
-                          // child:
                           child: Form(
                             key: _formKey,
                             child: Column(children: [
@@ -106,8 +102,6 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         Container(
                           padding: EdgeInsets.only(top: 590.0),
-                          // alignment: Alignment.bottomCenter,
-                          // height: 100.0,
                           margin: EdgeInsets.all(10.0),
                           child: Column(children: [
                             isLoading
@@ -188,9 +182,7 @@ class _LoginPageState extends State<LoginPage> {
           .hasMatch(email)) {
         throw ('invalid email');
       }
-
-      final user = await _auth.loginWithEmailAndPassword(email, password);
-
+      await _auth.loginWithEmailAndPassword(email, password);
       print("user is signed in");
       isLoading = false;
     } on FirebaseAuthException catch (e) {
@@ -231,6 +223,7 @@ class _LoginPageState extends State<LoginPage> {
       c.text = emailInput;
     }
     return TextField(
+      textInputAction: null,
       style: TextStyle(
           color: Color.fromRGBO(244, 234, 146, 1.0),
           fontSize: 22,

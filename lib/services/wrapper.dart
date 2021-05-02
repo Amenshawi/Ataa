@@ -1,4 +1,3 @@
-import 'package:Ataa/models/app_user.dart';
 import 'package:Ataa/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';

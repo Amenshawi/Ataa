@@ -1,6 +1,5 @@
 import 'package:Ataa/custom/sheet.dart';
 import 'package:Ataa/screens/donor/donation_form.dart';
-import 'package:Ataa/models/app_user.dart';
 import 'package:Ataa/services/database.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +9,6 @@ final Color ataaGold = Color.fromRGBO(244, 234, 146, .8);
 final Color ataaWhite = Color.fromRGBO(255, 255, 255, 0.75);
 
 class ScheduleSheet extends StatefulWidget {
-  //final String type;
   ScheduleSheet();
   @override
   _ScheduleSheetState createState() => _ScheduleSheetState();
@@ -49,7 +47,6 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
           padding: EdgeInsets.only(
               top: heightSize * 0.04, bottom: heightSize * 0.04),
           child: Column(
-            // crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
@@ -79,20 +76,11 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                           ),
                           iconSize: 20,
                           style: TextStyle(
-                              color: ataaGreen,
-                              // fontSize: 22,
-                              fontWeight: FontWeight.bold),
-                          // underline: Container(height: 2, color: ataaWhite),
+                              color: ataaGreen, fontWeight: FontWeight.bold),
                           onChanged: (String newValue) {
                             setState(() {
                               type = newValue;
                             });
-                            // if (newValue == 'Food')
-                            //   showSheet(context, newValue,
-                            //       DonationForm(newValue, user, true), true);
-                            // else
-                            //   showSheet(context, newValue,
-                            //       DonationForm(newValue, user, false), false);
                           },
                           items: <String>[
                             'Food',
@@ -160,11 +148,8 @@ class _ScheduleSheetState extends State<ScheduleSheet> {
                           _timeOfDay.hour,
                           _timeOfDay.minute);
                       Navigator.pop(context);
-                      showSheet(
-                          context,
-                          'Schedule A Donation',
-                          DonationForm(type, false, notifyAt: date),
-                          false);
+                      showSheet(context, 'Schedule A Donation',
+                          DonationForm(type, false, notifyAt: date), false);
                     },
                   ))
             ],

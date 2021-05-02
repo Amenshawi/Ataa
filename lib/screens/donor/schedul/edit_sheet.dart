@@ -121,23 +121,7 @@ class _EditSheetState extends State<EditSheet> {
                                 dismissal: SlidableDismissal(
                                     child: SlidableDrawerDismissal()),
                                 child: ListTile(
-                                  title:
-                                      // Row(
-                                      //     mainAxisAlignment:
-                                      //         MainAxisAlignment.spaceBetween,
-                                      //     children: [
-                                      //       Text(
-                                      //         donations[index].type,
-                                      //         style: TextStyle(
-                                      //             color: ataaGold, fontSize: 20),
-                                      //       ),
-                                      //       Text(
-                                      //         donations[index].status,
-                                      //         style: TextStyle(
-                                      //             color: ataaGold, fontSize: 20),
-                                      //       )
-                                      //     ]),
-                                      Text(
+                                  title: Text(
                                     donations[index].type,
                                     style: TextStyle(
                                         color: ataaGold, fontSize: 20),

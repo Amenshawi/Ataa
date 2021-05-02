@@ -29,8 +29,6 @@ class _SearchReqState extends State<SearchReq> {
   bool searching = false;
   int tab = 0;
   final TextEditingController searchController = TextEditingController();
-  // final _slidableKey = GlobalKey<SlidableState>();
-
   _SearchReqState(this.type, this.user);
 
   @override

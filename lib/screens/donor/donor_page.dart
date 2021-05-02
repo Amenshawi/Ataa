@@ -127,8 +127,6 @@ class _DonorPageState extends State<DonorPage> {
                         cardName: 'Donation History',
                         space: false,
                         spike: false,
-                        // context: context,
-                        // sheetName: 'Schedul',
                       ),
                     ),
                     FlipCard(
@@ -368,7 +366,6 @@ class _DonorPageState extends State<DonorPage> {
       itemCount: charities.length,
       itemBuilder: (BuildContext context, int index) {
         return Container(
-          // margin: EdgeInsets.all(20),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             color: ataaGreen,

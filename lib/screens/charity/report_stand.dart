@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import '../home_page.dart';
-import '../location_page.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGold = Color.fromRGBO(244, 234, 146, .8);
@@ -108,7 +107,8 @@ class _ReportStandSheetState extends State<ReportStandSheet> {
                     backgroundColor: ataaGreen,
                     child: Icon(Icons.done, color: ataaGold, size: 30),
                     onPressed: () {
-                     Database.reportStand(standID, descController.text, user.uid);
+                      Database.reportStand(
+                          standID, descController.text, user.uid);
                       Navigator.pop(context);
                     }),
               )

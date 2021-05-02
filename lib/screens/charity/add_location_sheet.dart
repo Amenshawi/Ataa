@@ -5,9 +5,11 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import '../home_page.dart';
 import '../location_page.dart';
+import 'package:toast/toast.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGold = Color.fromRGBO(244, 234, 146, .8);
+final Color ataaRed = Color.fromRGBO(255, 88, 88, 1);
 
 class AddLocationSheet extends StatefulWidget {
   String type;
@@ -161,8 +163,15 @@ class _AddLocationSheetState extends State<AddLocationSheet> {
                     backgroundColor: ataaGreen,
                     child: Icon(Icons.done, color: ataaGold, size: 30),
                     onPressed: () {
-                     Database.addStand(location, type, descController.text, user.uid);
-                      Navigator.pop(context);
+                      try {
+                        if (location == null) throw 'no location';
+                        Database.addStand(
+                            location, type, descController.text, user.uid);
+                        showPopup('Charity stand has been added', false);
+                      } catch (e) {
+                        if (e == 'no location')
+                          showPopup('Please add a location', true);
+                      }
                     }),
               )
             ],
@@ -170,5 +179,25 @@ class _AddLocationSheetState extends State<AddLocationSheet> {
         )
       ]),
     );
+  }
+
+  showPopup(String text, bool error) {
+    Toast.show(text, context,
+        border: Border(
+          bottom:
+              BorderSide(color: ataaWhite, width: 5, style: BorderStyle.solid),
+          top: BorderSide(color: ataaWhite, width: 5, style: BorderStyle.solid),
+          left:
+              BorderSide(color: ataaWhite, width: 5, style: BorderStyle.solid),
+          right:
+              BorderSide(color: ataaWhite, width: 5, style: BorderStyle.solid),
+        ),
+        duration: 4,
+        gravity: Toast.TOP,
+        backgroundColor: ataaGreen,
+        textColor: error ? ataaRed : ataaWhite,
+        backgroundRadius: 10);
+
+    if (!error) Navigator.pop(context);
   }
 }

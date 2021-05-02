@@ -5,7 +5,6 @@ import 'package:Ataa/models/app_user.dart';
 import 'package:Ataa/screens/charity/report_stand.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:Ataa/services/database.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -83,7 +82,6 @@ class _LocationViewState extends State<LocationView> {
                       Card(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
-                            //side: BorderSide(color: ataaGreen, width: 3))
                           ),
                           elevation: 30,
                           color: Colors.white,
@@ -264,25 +262,24 @@ class _LocationViewState extends State<LocationView> {
           markerId: customMarker.marker.markerId,
           position: customMarker.marker.position,
           icon: BitmapDescriptor.fromBytes(icon),
-          onTap: ()async{
-            if(report){
-              showSheet(context, 'Report a Stand',ReportStandSheet(customMarker.marker.markerId.value), false);
-            }
-            else{
-              Coordinates coordinates =
-                new Coordinates(currentPosition.latitude, currentPosition.longitude);
-              var addresses =
-                await Geocoder.local.findAddressesFromCoordinates(coordinates);
+          onTap: () async {
+            if (report) {
+              showSheet(context, 'Report a Stand',
+                  ReportStandSheet(customMarker.marker.markerId.value), false);
+            } else {
+              Coordinates coordinates = new Coordinates(
+                  currentPosition.latitude, currentPosition.longitude);
+              var addresses = await Geocoder.local
+                  .findAddressesFromCoordinates(coordinates);
               var first = addresses.first;
               String temp = first.addressLine;
 
               setState(() {
                 addressController.text = temp;
                 addressLine = temp;
-             });
+              });
             }
-          }
-        );
+          });
       markers.add(marker);
     });
   }
@@ -296,6 +293,7 @@ class _LocationViewState extends State<LocationView> {
         .buffer
         .asUint8List();
   }
+
   showSheet(context, sheetName, content, padding) {
     showModalBottomSheet(
         context: context,
@@ -310,8 +308,8 @@ class _LocationViewState extends State<LocationView> {
             content: content,
             padding: padding,
           );
-        }).whenComplete((){
-          Navigator.pop(context);
-        });
+        }).whenComplete(() {
+      Navigator.pop(context);
+    });
   }
 }

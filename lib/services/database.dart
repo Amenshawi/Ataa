@@ -4,17 +4,12 @@ import 'package:Ataa/models/CustomMarker.dart';
 import 'package:Ataa/models/Periodic_donation.dart';
 import 'package:Ataa/models/donation.dart';
 import 'package:Ataa/models/donation_request.dart';
-import 'package:Ataa/services/auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:Ataa/models/app_user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:provider/provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geocoder/geocoder.dart';
 
 class Database {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -479,18 +474,18 @@ class Database {
       collection.docs.forEach((doc) async {
         GeoPoint geoPoint = doc.data()['location'];
         markers.add(CustomMarker(
-            type: doc.data()['type'],
-            marker: Marker(
-                markerId: MarkerId(doc.id),
-                position: LatLng(geoPoint.latitude, geoPoint.longitude)),
-                ));
+          type: doc.data()['type'],
+          marker: Marker(
+              markerId: MarkerId(doc.id),
+              position: LatLng(geoPoint.latitude, geoPoint.longitude)),
+        ));
       });
     });
     return markers;
   }
-  static void reportStand(String standId, String comment, String uid) async{
-    await _firestore.collection('stand_reports')
-    .add({
+
+  static void reportStand(String standId, String comment, String uid) async {
+    await _firestore.collection('stand_reports').add({
       'reporter': uid,
       'standID': standId,
       'comment': comment,

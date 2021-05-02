@@ -1,5 +1,4 @@
 import 'package:Ataa/models/app_user.dart';
-import 'package:Ataa/models/donation.dart';
 import 'package:Ataa/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -26,7 +25,6 @@ class _CancelSheetState extends State<CancelSheet> {
   var allDonations;
   var currentList;
   bool isOpen = false;
-  // final _slidableKey = GlobalKey<SlidableState>();
   @override
   void initState() {
     // TODO: implement initState
@@ -123,7 +121,6 @@ class _CancelSheetState extends State<CancelSheet> {
                                       borderRadius: BorderRadius.circular(20)),
                                   child: Slidable(
                                       key: ValueKey(index),
-                                      // key: _slidableKey,
                                       actionPane: SlidableDrawerActionPane(),
                                       secondaryActions: [
                                         IconSlideAction(
@@ -187,7 +184,6 @@ class _CancelSheetState extends State<CancelSheet> {
                                           icon: Icon(Icons.arrow_back_ios,
                                               size: 25),
                                           color: ataaGold,
-                                          // size: 25,
 
                                           // this is for when the user press on the arrow icon it will open to him instead of doing nothing.
                                           // but i had an issue with Multiple Widgets used the same GlobalKey

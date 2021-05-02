@@ -43,7 +43,6 @@ class _SearchSheetState extends State<SearchSheet> {
               padding: EdgeInsets.all(10),
             ),
             TextField(
-              // controller: emailController,
               decoration: InputDecoration(
                   hintText: 'Search for a charity...',
                   hintStyle: TextStyle(

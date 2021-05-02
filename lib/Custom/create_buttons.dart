@@ -71,7 +71,6 @@ class _CreateButtonsState extends State<CreateButtons> {
                                 : 'assets/Images/history_4.png',
                             height: 100,
                             width: 80,
-                            // color: Colors.yellow.shade800,
                             color: ataaGold,
                           ),
                         ),

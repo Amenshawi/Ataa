@@ -24,7 +24,6 @@ class _CancelReqState extends State<CancelReq> {
   final AppUser user;
   bool isOpen = false;
   var requests;
-  // final _slidableKey = GlobalKey<SlidableState>();
 
   _CancelReqState(this.type, this.user);
 
@@ -64,7 +63,6 @@ class _CancelReqState extends State<CancelReq> {
                                 borderRadius: BorderRadius.circular(20)),
                             child: Slidable(
                                 key: ValueKey(index),
-                                // key: _slidableKey,
                                 actionPane: SlidableDrawerActionPane(),
                                 secondaryActions: [
                                   IconSlideAction(
@@ -123,7 +121,6 @@ class _CancelReqState extends State<CancelReq> {
                                   trailing: IconButton(
                                     icon: Icon(Icons.arrow_back_ios, size: 25),
                                     color: ataaGold,
-                                    // size: 25,
 
                                     // this is for when the user press on the arrow icon it will open to him instead of doing nothing.
                                     // but i had an issue with Multiple Widgets used the same GlobalKey
