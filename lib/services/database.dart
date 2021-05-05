@@ -395,7 +395,8 @@ class Database {
         .get()
         .then((snapshot) {
       snapshot.docs.forEach((doc) {
-        if (doc.data()['status'] == 'active')
+        if (doc.data()['status'] == 'active' &&
+            !(doc.data()['type'] == null || doc.data()['type'] == ''))
           requests.add(new DonationRequest(
               type: doc.data()['type'],
               timeStamp:
