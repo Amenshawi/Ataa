@@ -160,16 +160,10 @@ class Database {
     GeoPoint geopoint =
         GeoPoint(donation.location.latitude, donation.location.longitude);
     final url = await uploadImage(donation.image);
-    final ref = await _firestore
-        .collection('users')
-        .where('uid', isEqualTo: donation.user.uid)
-        .get()
-        .then((value) {
-      return value.docs[0].reference;
-    });
+
     await _firestore.collection('donations').add({
       'type': donation.type,
-      'user': ref,
+      'user': donation.user.uid,
       'image': url,
       'desc': donation.desc,
       'anonymous': donation.anonymous,
@@ -331,17 +325,10 @@ class Database {
   }
 
   static Future<List<Donation>> fetchDonations(AppUser user) async {
-    final ref = await _firestore
-        .collection('users')
-        .where('uid', isEqualTo: user.uid)
-        .get()
-        .then((value) {
-      return value.docs[0].reference;
-    });
     List<Donation> donations = [];
     await _firestore
         .collection('donations')
-        .where('user', isEqualTo: ref)
+        .where('user', isEqualTo: user.uid)
         .get()
         .then((snapshot) {
       snapshot.docs.forEach((doc) {
