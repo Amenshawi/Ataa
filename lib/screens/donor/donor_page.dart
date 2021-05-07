@@ -9,6 +9,7 @@ import 'package:Ataa/Services/database.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:Ataa/screens/donor/schedul/edit_sheet.dart';
 import 'package:Ataa/screens/donor/schedul/schedule_sheet.dart';
+import 'package:toast/toast.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGreenField = Color.fromRGBO(28, 102, 74, .5);
@@ -335,7 +336,9 @@ class _DonorPageState extends State<DonorPage> {
                         charities = await Database.searchForCharity(val);
                         setState(
                             () {}); //IDK why is has to be here but it's the only way I could find to make it work
-                        print(charities.first.data());
+                        if (charities.length == 0) {
+                          showPopup('No such charity found', false);
+                        }
                       });
                     } else {
                       setState(() {
@@ -391,7 +394,6 @@ class _DonorPageState extends State<DonorPage> {
             selected: true,
             onTap: () {
               print('Hello world!');
-              // go to charity page here.
             },
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -399,6 +401,24 @@ class _DonorPageState extends State<DonorPage> {
         );
       },
     );
+  }
+
+  showPopup(String text, bool error) {
+    Toast.show(text, context,
+        border: Border(
+          bottom:
+              BorderSide(color: ataaWhite, width: 5, style: BorderStyle.solid),
+          top: BorderSide(color: ataaWhite, width: 5, style: BorderStyle.solid),
+          left:
+              BorderSide(color: ataaWhite, width: 5, style: BorderStyle.solid),
+          right:
+              BorderSide(color: ataaWhite, width: 5, style: BorderStyle.solid),
+        ),
+        duration: 3,
+        gravity: Toast.TOP,
+        backgroundColor: ataaGreen,
+        textColor: error ? ataaRed : ataaWhite,
+        backgroundRadius: 10);
   }
 }
 
