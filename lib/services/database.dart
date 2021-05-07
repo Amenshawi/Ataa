@@ -376,7 +376,8 @@ class Database {
       'anonymous': request.anonymous,
       'location': geopoint,
       'timeStamp': request.timeStamp,
-      'status': request.status
+      'status': request.status,
+      'importance': request.importance
     }).then((value) {
       print('donation request added');
       return;

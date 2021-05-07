@@ -21,12 +21,11 @@ class _ReqFormState extends State<ReqForm> {
   double hieghtSize, widthSize;
   bool private = false;
   bool isSwitched = false;
-  var changeLocation;
   LatLng location;
-  String selectedType;
-  final types = ['food','clothes','electronics','furniture'];
-  String selectedImportance;
-  final importance = ['high','medium','low'];
+  String selectedType = 'food';
+  final types = ['food', 'clothes', 'electronics', 'furniture'];
+  String selectedImportance = 'High';
+  final importance = ['high', 'medium', 'low'];
   @override
   Widget build(BuildContext context) {
     AppUser user = Provider.of<AppUser>(context);
@@ -40,100 +39,137 @@ class _ReqFormState extends State<ReqForm> {
     return Container(
       width: widthSize,
       child: Column(children: [
-        // Card(
-        //   elevation: 8,
-        //   shape:
-        //       RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        //   color: ataaGreen,
-        //   child:
         Padding(
           padding: EdgeInsets.only(
               top: hieghtSize * 0.02, bottom: hieghtSize * 0.04),
-          // child: Column(
-          //   children: [
-          //     Text('Type'),
-          //     TextField(
-          //       decoration: InputDecoration(
-          //         hintText: 'Food, Clothes, Electronics, Furniture',
-          //         hintStyle: TextStyle(color: ataaGold, fontSize: 20),
-          //       ),
-          //     ),
-          //   ],
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  SizedBox(width: widthSize* 0.05,),
-                  Text('Type',
-                          style: TextStyle(color: ataaGreen, fontSize: 22, fontWeight: FontWeight.bold),),
+                  SizedBox(
+                    width: widthSize * 0.05,
+                  ),
+                  Text(
+                    'Type',
+                    style: TextStyle(
+                        color: ataaGreen,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ],
               ),
               Container(
-                height: hieghtSize *0.1,
+                height: hieghtSize * 0.1,
                 child: Card(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
                   elevation: 50,
                   color: Color.fromRGBO(255, 255, 255, 0.75),
                   child: Container(
-                    height: hieghtSize *0.09,
+                    height: hieghtSize * 0.09,
                     child: CupertinoPicker(
                       looping: true,
                       itemExtent: 30,
-                      onSelectedItemChanged: (value){
+                      onSelectedItemChanged: (value) {
                         selectedType = types[value];
                       },
                       children: [
-                      Text('food', 
-                      style: TextStyle(color: ataaGreen, fontSize: 22, fontWeight: FontWeight.bold),),
-                      Text('clothes',
-                      style: TextStyle(color: ataaGreen, fontSize: 22, fontWeight: FontWeight.bold),),
-                      Text('electronics',
-                      style: TextStyle(color: ataaGreen, fontSize: 22, fontWeight: FontWeight.bold),),
-                      Text('furniture',
-                      style: TextStyle(color: ataaGreen, fontSize: 22, fontWeight: FontWeight.bold),)
-                    ],),
+                        Text(
+                          'food',
+                          style: TextStyle(
+                              color: ataaGreen,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          'clothes',
+                          style: TextStyle(
+                              color: ataaGreen,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          'electronics',
+                          style: TextStyle(
+                              color: ataaGreen,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          'furniture',
+                          style: TextStyle(
+                              color: ataaGreen,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
-              SizedBox(height: hieghtSize* 0.01,),
+              SizedBox(
+                height: hieghtSize * 0.01,
+              ),
               Row(
                 children: [
-                  SizedBox(width: widthSize* 0.05,),
-                  Text('Importance',
-                          style: TextStyle(color: ataaGreen, fontSize: 22, fontWeight: FontWeight.bold),),
+                  SizedBox(
+                    width: widthSize * 0.05,
+                  ),
+                  Text(
+                    'Importance',
+                    style: TextStyle(
+                        color: ataaGreen,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ],
               ),
               Container(
-                height: hieghtSize *0.1,
+                height: hieghtSize * 0.1,
                 child: Card(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
                   elevation: 50,
                   color: Color.fromRGBO(255, 255, 255, 0.75),
                   child: Container(
-                    height: hieghtSize *0.09,
+                    height: hieghtSize * 0.09,
                     child: CupertinoPicker(
                       looping: true,
                       itemExtent: 30,
-                      onSelectedItemChanged: (value){
+                      onSelectedItemChanged: (value) {
                         selectedImportance = importance[value];
                       },
                       children: [
-                      Text('high', 
-                      style: TextStyle(color: ataaGreen, fontSize: 22, fontWeight: FontWeight.bold),),
-                      Text('medium',
-                      style: TextStyle(color: ataaGreen, fontSize: 22, fontWeight: FontWeight.bold),),
-                      Text('low',
-                      style: TextStyle(color: ataaGreen, fontSize: 22, fontWeight: FontWeight.bold),),
-                    ],),
+                        Text(
+                          'high',
+                          style: TextStyle(
+                              color: ataaGreen,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          'medium',
+                          style: TextStyle(
+                              color: ataaGreen,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          'low',
+                          style: TextStyle(
+                              color: ataaGreen,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-              SizedBox(height: hieghtSize* 0.01,),
-             /* customCard(Icons.receipt, 'Type',
-                  'Food, Clothes, Devices, Furniture', typeController),
-              customCard(Icons.label_important_outline, 'importance',
-                  'High, Medium, Low', importanceController),*/
+              SizedBox(
+                height: hieghtSize * 0.01,
+              ),
               Card(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20)),
@@ -172,7 +208,6 @@ class _ReqFormState extends State<ReqForm> {
                             setState(() {
                               isSwitched = !isSwitched;
                               private = !private;
-                              // database.changePrivacy(user, value);
                             });
                           },
                           activeTrackColor: ataaGreen,
@@ -264,10 +299,13 @@ class _ReqFormState extends State<ReqForm> {
             ],
           ),
         ),
-        // ),
-        // ),
       ]),
     );
   }
 
+  changeLocation(LatLng _location) {
+    setState(() {
+      this.location = _location;
+    });
+  }
 }
