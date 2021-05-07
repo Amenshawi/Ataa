@@ -5,12 +5,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:toast/toast.dart';
 
 import '../home_page.dart';
 import '../location_page.dart';
 
 final Color ataaGreen = Color.fromRGBO(28, 102, 74, 1);
 final Color ataaGold = Color.fromRGBO(244, 234, 146, .8);
+final Color ataaRed = Color.fromRGBO(255, 88, 88, 1);
 
 class ReqForm extends StatefulWidget {
   @override
@@ -292,6 +294,23 @@ class _ReqFormState extends State<ReqForm> {
                             anonymous: private,
                             importance: selectedImportance);
                         Database.addDonationRequest(request);
+                        Toast.show('Request Posted Successfully', context,
+                          border: Border(
+                            bottom: 
+                              BorderSide(color: ataaWhite, width: 5, style: BorderStyle.solid),
+                            top: 
+                              BorderSide(color: ataaWhite, width: 5, style: BorderStyle.solid),
+                            left: 
+                              BorderSide(color: ataaWhite, width: 5, style: BorderStyle.solid),
+                            right:
+                              BorderSide(color: ataaWhite, width: 5, style: BorderStyle.solid),
+                          ),
+                          duration: 4,
+                          gravity: Toast.TOP,
+                          backgroundColor: ataaGreen,
+                          textColor: ataaWhite,
+                          backgroundRadius: 10
+                        );
                         Navigator.pop(context);
                       }),
                 ),

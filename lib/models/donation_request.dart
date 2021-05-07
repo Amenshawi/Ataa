@@ -20,6 +20,6 @@ class DonationRequest {
       this.importance,
       this.rid}) {
     if (this.timeStamp == null) this.timeStamp = DateTime.now();
-    if (this.status == null) this.status = 'active';
+    if (this.status == null) this.status = 'pending';
   }
 }
